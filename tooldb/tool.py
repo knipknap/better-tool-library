@@ -8,6 +8,9 @@ class Tool(object):
         self.id = id or str(uuid.uuid1())
         self.label = label
         self.shape = shape
+        self.pocket = None
+        self.diameter = None
+        self.length = None
         self.params = {}
 
     def __str__(self):

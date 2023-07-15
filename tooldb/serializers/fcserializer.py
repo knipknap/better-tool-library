@@ -15,6 +15,12 @@ TOOL_EXT = '.fctb'
 LIBRARY_EXT = '.fctl'
 SHAPE_EXT = '.fcstd'
 
+def parse_unit(value):
+    return float(value.rstrip(' m').replace(',', '.')) if value else None
+
+def format_unit(value):
+    return str(value).replace('.', ',') if value else None
+
 class FCSerializer(DictSerializer):
     def __init__(self, path):
         self.path = path
@@ -105,6 +111,7 @@ class FCSerializer(DictSerializer):
             else:
                 library.tools.append(tool)
                 library.fc_tool_ids[tool.id] = int(nr)
+                tool.pocket = int(nr)
 
         return library
 
@@ -113,9 +120,13 @@ class FCSerializer(DictSerializer):
         attrs["version"] = tool.API_VERSION
         attrs["name"] = tool.label
         attrs["shape"] = tool.shape
-
-        attrs["parameter"] = tool.params
+        attrs["parameter"] = tool.params.copy()
         attrs["attribute"] = {}
+
+        # Update parameters from well-known parameters.
+        params = attrs['parameter']
+        params['Diameter'] = '{} mm'.format(format_unit(tool.diameter))
+        params['Length'] = '{} mm'.format(format_unit(tool.length))
 
         filename = self._tool_filename_from_name(tool.id)
         with open(filename, "w") as fp:
@@ -131,6 +142,15 @@ class FCSerializer(DictSerializer):
         tool = Tool(attrs['name'],
                     attrs['shape'],
                     id=id)
+
+        # Extract well-known parameters.
+        params = attrs['parameter']
+        diameter = params.pop('Diameter', None)
+        tool.diameter = parse_unit(diameter)
+        length = params.pop('Length', None)
+        tool.length = parse_unit(length)
+
+        # In any case, remember all other parameters.
         tool.params = attrs['parameter']
         return tool
 
