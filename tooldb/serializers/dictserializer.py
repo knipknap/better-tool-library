@@ -29,10 +29,10 @@ class DictSerializer():
         return attrs
 
     def deserialize_tool(self, attrs):
-        tool = Tool(attrs['id'],
-                    attrs['name'],
-                    attrs['label'],
-                    attrs['shape'])
+        tool = Tool(attrs['label'],
+                    attrs['shape'],
+                    id=attrs['id'],
+                    name=attrs['name'])
         tool.params = attrs['parameter']
         return tool
 

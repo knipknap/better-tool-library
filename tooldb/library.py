@@ -15,9 +15,3 @@ class Library(object):
 
     def serialize(self, serializer):
         return serializer.serialize_library(self)
-
-    def add_tool(self, tool):
-        self.tools.append(tool)
-
-    def delete_tool(self, tool):
-        self.tools.pop(tool)

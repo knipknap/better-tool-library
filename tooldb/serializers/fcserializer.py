@@ -65,10 +65,11 @@ class FCSerializer(DictSerializer):
         tools = []
         for tool in library.tools:
             tool_ref = {
-                'nr': tool.id,
+                'nr': int(tool.id),
                 'path': tool.name,
             }
             tools.append(tool_ref)
+            self.serialize_tool(tool)
         attrs["tools"] = tools
 
         filename = self._library_filename_from_name(library.name)
@@ -94,7 +95,7 @@ class FCSerializer(DictSerializer):
             else:
                 tool = self.deserialize_tool(name)
                 tool.id = int(nr)
-                library.add_tool(tool)
+                library.tools.append(tool)
 
         return library
 
@@ -118,10 +119,9 @@ class FCSerializer(DictSerializer):
         with open(filename, "r") as fp:
             attrs = json.load(fp)
 
-        tool = Tool(None,
-                    name,
-                    attrs['name'],
-                    attrs['shape'])
+        tool = Tool(attrs['name'],
+                    attrs['shape'],
+                    name=name)
         tool.params = attrs['parameter']
         return tool
 

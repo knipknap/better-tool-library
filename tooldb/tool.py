@@ -4,9 +4,9 @@ import uuid
 class Tool(object):
     API_VERSION = 1
 
-    def __init__(self, id, name, label, shape):
-        self.id = id or str(uuid.uuid1())
-        self.name = name
+    def __init__(self, label, shape, id=None, name=None):
+        self.id = int(id) if id else None
+        self.name = name or str(uuid.uuid1())
         self.label = label
         self.shape = shape
         self.params = {}
