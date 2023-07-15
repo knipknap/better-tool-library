@@ -1,0 +1,7 @@
+**/__pycache__/
+*.swo
+*.swp
+*.pyc
+*.pyo
+*.db
+.venv

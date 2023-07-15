@@ -1,0 +1,16 @@
+{
+  "attribute": {},
+  "name": "3,175mm single flute DLC coated Hozly",
+  "parameter": {
+    "Chipload": "0,000 mm",
+    "CuttingEdgeHeight": "15,000 mm",
+    "Diameter": "3,170 mm",
+    "Flutes": "0",
+    "Length": "38,000 mm",
+    "Material": "HSS",
+    "ShankDiameter": "3,170 mm",
+    "SpindleDirection": "Forward"
+  },
+  "shape": "endmill.fcstd",
+  "version": 1
+}
