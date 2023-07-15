@@ -12,12 +12,12 @@ def select_library(libraries):
         return libraries[0]
 
     # Print the list of libraries including a number.
-    libraries = list(enumerate(sorted(libraries), start=1))
+    libraries = list(enumerate(sorted(libraries, key=lambda l: l.label), start=1))
     default = None
     for n, lib in libraries:
-        if lib == 'Default':
+        if lib.label == 'Default':
             default = n
-        print('{}) {}{}'.format(n, lib, '*' if lib == 'Default' else ''))
+        print('{}) {}{}'.format(n, lib.label, '*' if lib.label == 'Default' else ''))
 
     # Let the user choose.
     while True:
@@ -107,10 +107,10 @@ db.deserialize(serializer)
 if args.command == 'ls':
     for obj in args.objects:
         if obj == 'libraries':
-            for lib in db.libraries:
+            for lib in db.libraries.values():
                 print(lib)
         elif obj == 'tools':
-            for tool in db.tools:
+            for tool in db.tools.values():
                 print(tool)
         elif obj == 'all' or not obj:
             db.dump(serializer)
@@ -118,16 +118,15 @@ if args.command == 'ls':
             parser.error('invalid object requested: {}'.format(args.object))
 
 elif args.command == 'export':
+    print("Exporting as {}".format(args.output_format))
     output_serializer_cls = serializers.serializers[args.output_format]
-    output_serializer = serializer_cls(args.output)
+    output_serializer = output_serializer_cls(args.output)
     db.serialize(output_serializer)
 
 elif args.command == 'create':
     if args.object == 'tool':
-        libraries = db.get_library_names(serializer)
-        library_name = select_library(libraries)
-        library = db.get_library_by_name(library_name)
-        print('Tool will be added to library "{}".'.format(library_name))
+        library = select_library(db.get_libraries())
+        print('Tool will be added to library "{}".'.format(library.label))
 
         tool = create_tool(args.shape)
         db.add_tool(tool, library=library)

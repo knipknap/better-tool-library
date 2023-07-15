@@ -50,11 +50,11 @@ class FCSerializer(DictSerializer):
     def _shape_filename_from_name(self, name):
         return name+SHAPE_EXT
 
-    def get_library_names(self):
+    def get_library_ids(self):
         return [self._name_from_filename(f)
                 for f in self._get_library_filenames()]
 
-    def get_tool_names(self):
+    def get_tool_ids(self):
         return [self._name_from_filename(f)
                 for f in self._get_tool_filenames()]
 
@@ -62,25 +62,35 @@ class FCSerializer(DictSerializer):
         attrs = {}
         attrs["version"] = library.API_VERSION
 
+        # The convoluted "next_tool_id" is required due to ill-defined data structures in
+        # FreeCAD tool library: Tool IDs are not unique across libraries. See also the
+        # docstring for Library.fc_tool_ids.
         tools = []
-        for tool in library.tools:
+        next_tool_id = max(int(i or 0) for i in library.fc_tool_ids.values())+1
+        for n, tool in enumerate(library.tools):
+            fc_tool_id = library.fc_tool_ids.get(tool.id)
+            if not fc_tool_id:
+                fc_tool_id = next_tool_id
+                fc_tool_id += 1
+
+            tool_filename = self._tool_filename_from_name(tool.id)
             tool_ref = {
-                'nr': int(tool.id),
-                'path': tool.name,
+                'nr': fc_tool_id,
+                'path': os.path.basename(tool_filename),
             }
             tools.append(tool_ref)
             self.serialize_tool(tool)
         attrs["tools"] = tools
 
-        filename = self._library_filename_from_name(library.name)
+        filename = self._library_filename_from_name(library.id)
         with open(filename, "w") as fp:
             json.dump(attrs, fp, sort_keys=True, indent=2)
         return attrs
 
-    def deserialize_library(self, name):
-        library = Library(None, name)
+    def deserialize_library(self, id):
+        library = Library(id, id=id)
+        filename = self._library_filename_from_name(id)
 
-        filename = self._library_filename_from_name(name)
         with open(filename, "r") as fp:
             attrs = json.load(fp)
 
@@ -93,9 +103,8 @@ class FCSerializer(DictSerializer):
             except Exception as e:
                 sys.stderr.write('WARN: skipping {}: {}\n'.format(path, e))
             else:
-                tool = self.deserialize_tool(name)
-                tool.id = int(nr)
                 library.tools.append(tool)
+                library.fc_tool_ids[tool.id] = int(nr)
 
         return library
 
@@ -108,32 +117,32 @@ class FCSerializer(DictSerializer):
         attrs["parameter"] = tool.params
         attrs["attribute"] = {}
 
-        filename = self._tool_filename_from_name(tool.name)
+        filename = self._tool_filename_from_name(tool.id)
         with open(filename, "w") as fp:
             json.dump(attrs, fp, sort_keys=True, indent=2)
 
         return attrs
 
-    def deserialize_tool(self, name):
-        filename = self._tool_filename_from_name(name)
+    def deserialize_tool(self, id):
+        filename = self._tool_filename_from_name(id)
         with open(filename, "r") as fp:
             attrs = json.load(fp)
 
         tool = Tool(attrs['name'],
                     attrs['shape'],
-                    name=name)
+                    id=id)
         tool.params = attrs['parameter']
         return tool
 
     def dump(self):
-        for name in self.get_library_names():
-            print("--------------- Library:", name, "------------------")
-            data = self.deserialize_library(name)
-            data = DictSerializer.serialize_library(self, data)
+        for id in self.get_library_ids():
+            lib = self.deserialize_library(id)
+            print("--------------- Library: {} ({}) ---------------".format(lib.label, lib.id))
+            data = DictSerializer.serialize_library(self, lib)
             print(json.dumps(data, sort_keys=True, indent=2))
 
-        for name in self.get_tool_names():
-            print("--------------- Tool:", name, "------------------")
-            data = self.deserialize_tool(name)
-            data = DictSerializer.serialize_tool(self, data)
+        for id in self.get_tool_ids():
+            tool = self.deserialize_tool(name)
+            print("--------------- Tool: {} ({}) ---------------".format(tool.label, tool.id))
+            data = DictSerializer.serialize_tool(self, tool)
             print(json.dumps(data, sort_keys=True, indent=2))

@@ -1,10 +1,13 @@
 from .. import Library, Tool
 
 class DictSerializer():
-    def get_library_names(self):
-        return ['DummyLibrary']
+    def __init__(self, *args, **kwargs):
+        pass
 
-    def get_tool_names(self):
+    def get_library_ids(self):
+        return []
+
+    def get_tool_ids(self):
         return []
 
     def serialize_library(self, library):
@@ -14,14 +17,13 @@ class DictSerializer():
         attrs["tools"] = tool_refs
         return attrs
 
-    def deserialize_library(self, name):
-        return Library(None, name)
+    def deserialize_library(self, id):
+        raise NotImplemented()
 
     def serialize_tool(self, tool):
         attrs = {}
         attrs["version"] = tool.API_VERSION
         attrs["id"] = tool.id
-        attrs["name"] = tool.name
         attrs["label"] = tool.label
         attrs["shape"] = tool.shape
 
@@ -31,8 +33,7 @@ class DictSerializer():
     def deserialize_tool(self, attrs):
         tool = Tool(attrs['label'],
                     attrs['shape'],
-                    id=attrs['id'],
-                    name=attrs['name'])
+                    id=attrs['id'])
         tool.params = attrs['parameter']
         return tool
 
