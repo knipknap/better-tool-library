@@ -19,6 +19,7 @@ class Tool(object):
         self.id = id or str(uuid.uuid1())
         self.label = label
         self.shape = shape
+        self.shape_svg = None
         self.pocket = None
         self.diameter = None
         self.flutes = None
@@ -60,8 +61,9 @@ class Tool(object):
             print('{}  Summary = {}'.format(indent, summary))
             return
 
-        print('{}  Shape    = {}'.format(indent, self.shape.capitalize()))
-        print('{}  Pocket   = {} mm'.format(indent, self.pocket))
+        shape_svg_len = len(self.shape_svg) if self.shape_svg else None
+        print('{}  Shape SVG size = {}'.format(indent, shape_svg_len))
+        print('{}  Pocket         = {} mm'.format(indent, self.pocket))
 
         print('{}  Well-known properties:'.format(indent))
         for name in Tool.well_known:

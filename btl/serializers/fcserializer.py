@@ -73,6 +73,22 @@ class FCSerializer(DictSerializer):
         return [self._name_from_filename(f)
                 for f in self._get_tool_filenames()]
 
+    def _read_shape_svg_from_name(self, name):
+        svg_path = os.path.join(self.shape_path, name+'.svg')
+        try:
+            with open(svg_path, 'r') as fp:
+                return fp.read()
+        except OSError:
+            return None
+
+    def _write_shape_svg_from_name(self, name, shape_svg):
+        svg_path = os.path.join(self.shape_path, name+'.svg')
+        try:
+            with open(svg_path, 'w') as fp:
+                return fp.write(shape_svg)
+        except OSError:
+            return None
+
     def deserialize_libraries(self):
         return [self.deserialize_library(id)
                 for id in self._get_library_ids()]
@@ -141,6 +157,8 @@ class FCSerializer(DictSerializer):
         attrs["shape"] = self._shape_filename_from_name(tool.shape)
         attrs["parameter"] = tool.params.copy()
         attrs["attribute"] = {}
+        if tool.shape_svg:
+            self._write_shape_svg_from_name(tool.shape, tool.shape_svg)
 
         # Update parameters from well-known parameters.
         params = attrs['parameter']
@@ -163,6 +181,7 @@ class FCSerializer(DictSerializer):
 
         shape = self._shape_name_from_filename(attrs['shape'])
         tool = Tool(attrs['name'], shape, id=id)
+        tool.shape_svg = self._read_shape_svg_from_name(shape)
 
         # Extract well-known parameters.
         params = attrs['parameter']
