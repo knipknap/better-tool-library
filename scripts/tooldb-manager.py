@@ -125,7 +125,7 @@ elif args.command == 'export':
 
 elif args.command == 'create':
     if args.object == 'tool':
-        library = select_library(db.get_libraries())
+        library = select_library(list(db.get_libraries()))
         print('Tool will be added to library "{}".'.format(library.label))
 
         tool = create_tool(args.shape)
