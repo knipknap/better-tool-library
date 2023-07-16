@@ -4,9 +4,9 @@
   "parameter": {
     "Chipload": "0,00 mm",
     "CuttingEdgeHeight": "4,00 mm",
-    "Diameter": "1,50 mm",
+    "Diameter": "1,5 mm",
     "Flutes": "4",
-    "Length": "50,00 mm",
+    "Length": "50,0 mm",
     "Material": "HSS",
     "ShankDiameter": "4,00 mm",
     "SpindleDirection": "Forward"

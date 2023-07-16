@@ -52,7 +52,7 @@ def create_tool(shape):
             if enum and val not in enum:
                 continue
             break
-        tool.params[propname] = val
+        tool.set_param(propname, val)
 
     return tool
 
@@ -131,6 +131,7 @@ elif args.command == 'create':
         tool = create_tool(args.shape)
         db.add_tool(tool, library=library)
         library.serialize(serializer)
+        print("Tool id is {}.".format(tool.id))
     elif args.object == 'library':
         tool = Library()
         parser.error('sorry, not yet implemented') #TODO
