@@ -16,23 +16,38 @@ class LibraryUI():
         self.form = FreeCADGui.PySideUic.loadUi(ui_path)
 
         self.form.buttonBox.clicked.connect(self.form.close)
+        self.form.comboBoxLibrary.currentIndexChanged.connect(self.library_selected)
 
         self.load()
 
     def load(self):
         self.tooldb.deserialize(self.serializer)
 
-        # Update the library list.
-        self.form.comboBoxLibrary.clear()
+        # Update the library dropdown menu.
+        combo = self.form.comboBoxLibrary
+        combo.clear()
         libraries = self.tooldb.get_libraries()
-        if not libraries:
-            return
         for library in libraries:
-            self.form.comboBoxLibrary.addItem(library.label, library.id)
+            combo.addItem(library.label, library.id)
+
+        # This also triggers an update of the tool list.
+        if combo.currentIndex() == -1:
+            combo.setCurrentIndex(0)
+
+    def library_selected(self, index):
+        self.update_tool_list()
+
+    def update_tool_list(self):
+        # Find the selected library.
+        library_id = self.form.comboBoxLibrary.currentData()
+        if not library_id:
+            return
+        library = self.tooldb.get_library_by_id(library_id)
 
         # Update the tool list.
         listwidget = self.form.listWidgetTools
-        for tool in libraries[0].tools:
+        listwidget.clear()
+        for tool in library.tools:
             cell = TwoLineTableCell()
             cell.setTextUp(tool.label)
             cell.setTextDown(tool.id)
@@ -44,7 +59,7 @@ class LibraryUI():
             listwidget.setItemWidget(widget_item, cell)
 
     def show(self):
-        self.form.show()
+        self.form.exec()
 
     def add_tool_to_job(self, tool):
         jobs = FreeCAD.ActiveDocument.findObjects("Path::FeaturePython", "Job.*")
