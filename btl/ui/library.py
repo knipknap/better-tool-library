@@ -9,18 +9,6 @@ from .tablecell import TwoLineTableCell
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "library.ui")
 
-def pixmap_from_svg_string(string):
-    ba = QtCore.QByteArray(string)
-    pixmap = QtGui.QPixmap()
-    pixmap.loadFromData(ba, "SVG")
-    return pixmap
-
-def pixmap_from_tool(tool):
-    svg = tool.get_shape_svg()
-    if svg:
-        return pixmap_from_svg_string(svg)
-    return None
-
 class LibraryUI():
     def __init__(self, tooldb, serializer):
         self.tooldb = tooldb
