@@ -36,6 +36,3 @@ class DictSerializer():
                     id=attrs['id'])
         tool.params = attrs['parameter']
         return tool
-
-    def dump(self):
-        return

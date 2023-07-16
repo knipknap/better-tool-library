@@ -40,6 +40,3 @@ class LinuxCNCSerializer():
         # In LinuxCNC, tools cannot exist on their own outside a library.
         # So nothing to be done here.
         return
-
-    def dump(self):
-        return # Not implemented

@@ -93,6 +93,3 @@ class CamoticsSerializer():
         # In Camotics, tools cannot exist on their own outside a library.
         # So nothing to be done here.
         raise NotImplemented
-
-    def dump(self):
-        return # Not implemented
