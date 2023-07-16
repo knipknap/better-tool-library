@@ -23,7 +23,7 @@
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="0">
-      <widget class="QListView" name="listViewTools"/>
+      <widget class="QListWidget" name="listWidgetTools"/>
      </item>
      <item row="1" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_2">

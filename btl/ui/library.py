@@ -1,12 +1,10 @@
-# Feed and Speed Calculator
-# Provides a basic feeds and speeds calculator for use with FreeCAD Path
-
 import os
 import re
 import FreeCAD
 import FreeCADGui
 import Path
 from PySide import QtGui
+from .tablecell import TwoLineTableCell
 
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "library.ui")
@@ -26,11 +24,24 @@ class LibraryUI():
 
         # Update the library list.
         self.form.comboBoxLibrary.clear()
-        for library in self.tooldb.get_libraries():
+        libraries = self.tooldb.get_libraries()
+        if not libraries:
+            return
+        for library in libraries:
             self.form.comboBoxLibrary.addItem(library.label, library.id)
 
         # Update the tool list.
-        #TODO
+        listwidget = self.form.listWidgetTools
+        for tool in libraries[0].tools:
+            cell = TwoLineTableCell()
+            cell.setTextUp(tool.label)
+            cell.setTextDown(tool.id)
+            #cell.setIcon(icon)
+
+            widget_item = QtGui.QListWidgetItem(listwidget)
+            widget_item.setSizeHint(cell.sizeHint())
+            listwidget.addItem(widget_item)
+            listwidget.setItemWidget(widget_item, cell)
 
     def show(self):
         self.form.show()

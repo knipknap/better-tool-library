@@ -57,6 +57,6 @@ def on_workbench_activated(workbench):
     tool_button.clicked.connect(on_library_open_clicked)
     toolbar.addWidget(tool_button)
 
-    print('Better Tool Library loaded:', workbench)
+    print('Better Tool Library loaded successfully.')
 
 FreeCADGui.getMainWindow().workbenchActivated.connect(on_workbench_activated)

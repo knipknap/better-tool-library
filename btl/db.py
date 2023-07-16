@@ -14,13 +14,13 @@ class ToolDB(object):
         return self.libraries[id]
 
     def get_libraries(self):
-        return self.libraries.values()
+        return list(self.libraries.values())
 
     def get_tool_by_id(self, id):
         return self.tools[id]
 
     def get_tools(self):
-        return self.tools.values()
+        return list(self.tools.values())
 
     def add_tool(self, tool, library=None):
         self.tools[tool.id] = tool
