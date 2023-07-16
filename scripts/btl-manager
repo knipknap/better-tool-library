@@ -2,8 +2,8 @@
 import os
 import sys
 import argparse
-from tooldb import ToolDB, Tool, Library, serializers
-from tooldb.shape import get_shape_file_from_shape, get_properties_from_shape
+from btl import ToolDB, Tool, Library, serializers
+from btl.shape import get_shape_file_from_shape, get_properties_from_shape
 
 
 def select_library(libraries):
