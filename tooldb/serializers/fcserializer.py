@@ -72,12 +72,14 @@ class FCSerializer(DictSerializer):
         # FreeCAD tool library: Tool IDs are not unique across libraries. See also the
         # docstring for Library.fc_tool_ids.
         tools = []
-        next_tool_id = max(int(i or 0) for i in library.fc_tool_ids.values())+1
+        next_tool_id = 1
+        if library.fc_tool_ids:
+            next_tool_id = max(int(i or 0) for i in library.fc_tool_ids.values())+1
         for n, tool in enumerate(library.tools):
             fc_tool_id = library.fc_tool_ids.get(tool.id)
             if not fc_tool_id:
                 fc_tool_id = next_tool_id
-                fc_tool_id += 1
+                next_tool_id += 1
 
             tool_filename = self._tool_filename_from_name(tool.id)
             tool_ref = {
