@@ -55,10 +55,10 @@ class ToolDB(object):
         self.deserialize_libraries(serializer)
         self.deserialize_tools(serializer)
 
-    def dump(self, unused_tools=True):
+    def dump(self, unused_tools=True, summarize=False):
         used_tools = set()
         for library in self.libraries.values():
-            library.dump()
+            library.dump(summarize=summarize)
             used_tools |= set(t.id for t in library.tools)
 
         if not unused_tools:
@@ -69,6 +69,6 @@ class ToolDB(object):
         print("------------")
         for tool_id, tool in self.tools.items():
             if tool_id not in used_tools:
-                tool.dump()
+                tool.dump(summarize=summarize)
         else:
             print("(none)")

@@ -8,7 +8,7 @@
     "Flutes": "2",
     "Length": "50,0 mm",
     "Material": "HSS",
-    "ShankDiameter": "4,000 mm",
+    "ShankDiameter": "4,0 mm",
     "SpindleDirection": "Forward"
   },
   "shape": "endmill.fcstd",

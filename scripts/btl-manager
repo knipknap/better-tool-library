@@ -77,6 +77,14 @@ lsparser.add_argument('objects',
                       nargs='*',
                       choices=['all', 'libraries', 'tools'])
 
+# "show" command arguments
+lsparser = subparsers.add_parser('show', help='list objects with details')
+lsparser.add_argument('-s', '--summarize', action='store_true', help='summarize tool parameters')
+lsparser.add_argument('objects',
+                      help='which DB object to work with',
+                      nargs='*',
+                      choices=['all', 'libraries', 'tools'])
+
 # "export" command arguments
 exportparser = subparsers.add_parser('export', help='export tools and libraries in a defined format')
 exportparser.add_argument('-f', '--format',
@@ -105,17 +113,22 @@ db = ToolDB()
 db.deserialize(serializer)
 
 if args.command == 'ls':
-    for obj in args.objects:
-        if obj == 'libraries':
-            for lib in db.libraries.values():
-                print(lib)
-        elif obj == 'tools':
-            for tool in db.tools.values():
-                print(tool)
-        elif obj == 'all' or not obj:
-            db.dump()
-        else:
-            parser.error('invalid object requested: {}'.format(args.object))
+    if 'all' in args.objects or 'libraries' in args.objects:
+        for lib in db.libraries.values():
+            print(lib)
+    if 'all' in args.objects or 'tools' in args.objects:
+        for tool in db.tools.values():
+           print(tool)
+
+elif args.command == 'show':
+    if 'all' in args.objects:
+        db.dump(summarize=args.summarize)
+    if 'libraries' in args.objects:
+        for library in db.get_libraries():
+            library.dump(summarize=args.summarize)
+    if 'tools' in args.objects:
+        for tool in db.get_tools():
+            tool.dump(summarize=args.summarize)
 
 elif args.command == 'export':
     print("Exporting as {}".format(args.output_format))

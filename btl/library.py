@@ -22,11 +22,11 @@ class Library(object):
     def serialize(self, serializer):
         return serializer.serialize_library(self)
 
-    def dump(self):
+    def dump(self, summarize=False):
         title = 'Library "{}" ({})'.format(self.label, self.id)
         print("-"*len(title))
         print(title)
         print("-"*len(title))
         for tool in self.tools:
-            tool.dump()
+            tool.dump(summarize=summarize)
             print()

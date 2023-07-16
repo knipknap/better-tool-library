@@ -3,8 +3,17 @@ import uuid
 
 class Tool(object):
     API_VERSION = 1
-    well_known = ('diameter',
-                  'length')
+
+    # The parameters need to be ordered by "importance"; this order is
+    # used the generate a summary description of the tool, showing the
+    # important parameters first. See get_param_summary().
+    well_known_format = (('shape', '{}', str.capitalize),
+                         ('diameter', 'D{}mm', float),
+                         ('flutes', '{}-flute', int),
+                         ('shaft', 'Shaft {}mm', float),
+                         ('length', 'L{}mm', float),
+                         ('material', '{}', str))
+    well_known = tuple(p[0] for p in well_known_format)
 
     def __init__(self, label, shape, id=None):
         self.id = id or str(uuid.uuid1())
@@ -12,7 +21,10 @@ class Tool(object):
         self.shape = shape
         self.pocket = None
         self.diameter = None
+        self.flutes = None
+        self.shaft = None
         self.length = None
+        self.material = None
         self.params = {}
 
     def __str__(self):
@@ -25,21 +37,34 @@ class Tool(object):
         else:
             self.params[name] = value
 
+    def get_param_summary(self):
+        summary = ''
+        for name, fmt, formatter in Tool.well_known_format:
+            value = getattr(self, name)
+            if value is not None:
+                summary += ' ' + fmt.format(formatter(value))
+        return summary.strip()
+
     def serialize(self, serializer):
         return serializer.serialize_tool(self)
 
-    def dump(self, indent=0):
+    def dump(self, indent=0, summarize=False):
         indent = ' '*indent
         print('{}Tool "{}" ({})'.format(
             indent,
             self.label,
             self.id
         ))
-        print('{}  Shape    = {}'.format(indent, self.shape))
+        if summarize:
+            summary = self.get_param_summary()
+            print('{}  Summary = {}'.format(indent, summary))
+            return
+
+        print('{}  Shape    = {}'.format(indent, self.shape.capitalize()))
         print('{}  Pocket   = {} mm'.format(indent, self.pocket))
 
         print('{}  Well-known properties:'.format(indent))
-        for name in sorted(Tool.well_known):
+        for name in Tool.well_known:
             value = getattr(self, name)
             label = name.capitalize()
             print('{}    {: <20} = {}'.format(indent, label, value))

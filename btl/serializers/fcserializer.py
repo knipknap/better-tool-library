@@ -21,6 +21,12 @@ def parse_unit(value):
 def format_unit(value):
     return str(value).replace('.', ',') if value else None
 
+def int_or_none(value):
+    try:
+        return int(value) or None
+    except ValueError:
+        return None
+
 class FCSerializer(DictSerializer):
     def __init__(self, path):
         self.path = path
@@ -139,7 +145,10 @@ class FCSerializer(DictSerializer):
         # Update parameters from well-known parameters.
         params = attrs['parameter']
         params['Diameter'] = '{} mm'.format(format_unit(tool.diameter))
+        params['ShankDiameter'] = '{} mm'.format(format_unit(tool.shaft))
         params['Length'] = '{} mm'.format(format_unit(tool.length))
+        params['Flutes'] = '{}'.format(tool.flutes or 0)
+        params['Material'] = '{}'.format(tool.material or 'HSS')
 
         filename = self._tool_filename_from_name(tool.id)
         with open(filename, "w") as fp:
@@ -157,11 +166,13 @@ class FCSerializer(DictSerializer):
 
         # Extract well-known parameters.
         params = attrs['parameter']
-        diameter = params.pop('Diameter', None)
-        tool.diameter = parse_unit(diameter)
-        length = params.pop('Length', None)
-        tool.length = parse_unit(length)
+        params['diameter'] = parse_unit(params.pop('Diameter'))
+        shank = params.pop('ShankDiameter')
+        params['shaft'] = parse_unit(params.pop('ShaftDiameter', shank))
+        params['length'] = parse_unit(params.pop('Length'))
+        params['flutes'] = int_or_none(params.pop('Flutes'))
+        params['material'] = params.pop('Material')
+        for name, value in params.items():
+            tool.set_param(name, value)
 
-        # In any case, remember all other parameters.
-        tool.params = attrs['parameter']
         return tool
