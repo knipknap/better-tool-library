@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import uuid
+from .shape import get_builtin_shape_svg_from_shape_name
 
 class Tool(object):
     API_VERSION = 1
@@ -45,6 +46,10 @@ class Tool(object):
             if value is not None:
                 summary += ' ' + fmt.format(formatter(value))
         return summary.strip()
+
+    def get_shape_svg(self):
+        return get_builtin_shape_svg_from_shape_name(self.shape) \
+            or self.shape_svg
 
     def serialize(self, serializer):
         return serializer.serialize_tool(self)

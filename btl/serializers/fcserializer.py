@@ -76,7 +76,7 @@ class FCSerializer(DictSerializer):
     def _read_shape_svg_from_name(self, name):
         svg_path = os.path.join(self.shape_path, name+'.svg')
         try:
-            with open(svg_path, 'r') as fp:
+            with open(svg_path, 'rb') as fp:
                 return fp.read()
         except OSError:
             return None
@@ -84,7 +84,7 @@ class FCSerializer(DictSerializer):
     def _write_shape_svg_from_name(self, name, shape_svg):
         svg_path = os.path.join(self.shape_path, name+'.svg')
         try:
-            with open(svg_path, 'w') as fp:
+            with open(svg_path, 'wb') as fp:
                 return fp.write(shape_svg)
         except OSError:
             return None

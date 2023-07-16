@@ -9,12 +9,29 @@ builtin_shapes = [os.path.splitext(os.path.basename(f))[0]
                   for f in glob.glob(os.path.join(const.builtin_shape_pattern))]
 
 def get_shape_file_from_shape(shape):
+    # Check whether this shape is a reference to a filename. In this case it is
+    # considered a custom user-defined shape.
     if os.path.isfile(shape):
         return shape
+
+    # Check whether this is a built-in type. If so, return the result.
     shape_file = os.path.join(const.builtin_shape_dir, shape+const.builtin_shape_ext)
     if os.path.isfile(shape_file):
         return shape_file
+
     raise Exception('shape not found: {}\nSupported built-in types: {}'.format(shape, builtin_shapes))
+
+def get_builtin_shape_svg_from_shape_name(name):
+    """
+    Returns the SVG or the shape as a string. This is the SVG file
+    content, not the filename.
+    """
+    svg_path = os.path.join(const.builtin_shape_dir, name+'.svg')
+    try:
+        with open(svg_path, 'rb') as fp:
+            return fp.read()
+    except OSError:
+        return None
 
 def get_properties_from_shape(shape_file):
     """
