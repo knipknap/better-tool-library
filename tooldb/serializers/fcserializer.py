@@ -56,13 +56,17 @@ class FCSerializer(DictSerializer):
     def _shape_filename_from_name(self, name):
         return name+SHAPE_EXT
 
-    def get_library_ids(self):
+    def _get_library_ids(self):
         return [self._name_from_filename(f)
                 for f in self._get_library_filenames()]
 
-    def get_tool_ids(self):
+    def _get_tool_ids(self):
         return [self._name_from_filename(f)
                 for f in self._get_tool_filenames()]
+
+    def deserialize_libraries(self):
+        return [self.deserialize_library(id)
+                for id in self._get_library_ids()]
 
     def serialize_library(self, library):
         attrs = {}
@@ -117,6 +121,10 @@ class FCSerializer(DictSerializer):
 
         return library
 
+    def deserialize_tools(self):
+        return [self.deserialize_tool(id)
+                for id in self._get_tool_ids()]
+
     def serialize_tool(self, tool):
         attrs = {}
         attrs["version"] = tool.API_VERSION
@@ -157,13 +165,13 @@ class FCSerializer(DictSerializer):
         return tool
 
     def dump(self):
-        for id in self.get_library_ids():
+        for id in self._get_library_ids():
             lib = self.deserialize_library(id)
             print("--------------- Library: {} ({}) ---------------".format(lib.label, lib.id))
             data = DictSerializer.serialize_library(self, lib)
             print(json.dumps(data, sort_keys=True, indent=2))
 
-        for id in self.get_tool_ids():
+        for id in self._get_tool_ids():
             tool = self.deserialize_tool(name)
             print("--------------- Tool: {} ({}) ---------------".format(tool.label, tool.id))
             data = DictSerializer.serialize_tool(self, tool)

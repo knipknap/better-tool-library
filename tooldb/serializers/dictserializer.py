@@ -4,11 +4,8 @@ class DictSerializer():
     def __init__(self, *args, **kwargs):
         pass
 
-    def get_library_ids(self):
-        return []
-
-    def get_tool_ids(self):
-        return []
+    def deserialize_libraries(self):
+        return [] # Not implemented
 
     def serialize_library(self, library):
         attrs = {}
@@ -19,6 +16,9 @@ class DictSerializer():
 
     def deserialize_library(self, id):
         raise NotImplemented()
+
+    def deserialize_tools(self):
+        return []
 
     def serialize_tool(self, tool):
         attrs = {}

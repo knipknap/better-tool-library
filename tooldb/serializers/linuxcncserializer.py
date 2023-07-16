@@ -10,6 +10,9 @@ class LinuxCNCSerializer():
     def get_tool_ids(self):
         return []  # Not implemented
 
+    def deserialize_libraries(self):
+        return [] # Not implemented
+
     def serialize_library(self, library):
         with open(self.path, 'w') as fp:
             for tool in library.tools:
@@ -22,6 +25,11 @@ class LinuxCNCSerializer():
 
     def deserialize_library(self, id):
         raise NotImplemented()
+
+    def deserialize_tools(self):
+        # In LinuxCNC, tools cannot exist on their own outside a library.
+        # So nothing to be done here.
+        return []
 
     def serialize_tool(self, tool):
         # In LinuxCNC, tools cannot exist on their own outside a library.

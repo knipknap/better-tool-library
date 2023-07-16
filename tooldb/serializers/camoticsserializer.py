@@ -39,13 +39,14 @@ class CamoticsSerializer():
     def _library_filename_from_library(self, library):
         return self._library_filename_from_id(library.id)
 
-    def get_library_ids(self):
+    def _get_library_ids(self):
         files = glob.glob(os.path.join(self.path, '*'+LIBRARY_EXT))
         return sorted(os.path.basename(os.path.splitext(f)[0])
                       for f in files if os.path.isfile(f))
 
-    def get_tool_ids(self):
-        return []  # Not implemented
+    def deserialize_libraries(self):
+        return [self.deserialize_library(id)
+                for id in self._get_library_ids()]
 
     def serialize_library(self, library):
         toollist = {}
@@ -78,6 +79,11 @@ class CamoticsSerializer():
 
         return library
 
+    def deserialize_tools(self):
+        # In Camotics, tools cannot exist on their own outside a library.
+        # So nothing to be done here.
+        return []
+
     def serialize_tool(self, tool):
         # In Camotics, tools cannot exist on their own outside a library.
         # So nothing to be done here.
@@ -86,7 +92,7 @@ class CamoticsSerializer():
     def deserialize_tool(self, attrs):
         # In Camotics, tools cannot exist on their own outside a library.
         # So nothing to be done here.
-        return
+        raise NotImplemented
 
     def dump(self):
         return # Not implemented
