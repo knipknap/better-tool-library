@@ -113,7 +113,7 @@ if args.command == 'ls':
             for tool in db.tools.values():
                 print(tool)
         elif obj == 'all' or not obj:
-            db.dump(serializer)
+            db.dump()
         else:
             parser.error('invalid object requested: {}'.format(args.object))
 

@@ -55,5 +55,20 @@ class ToolDB(object):
         self.deserialize_libraries(serializer)
         self.deserialize_tools(serializer)
 
-    def dump(self, serializer):
-        data = serializer.dump()
+    def dump(self, unused_tools=True):
+        used_tools = set()
+        for library in self.libraries.values():
+            library.dump()
+            used_tools |= set(t.id for t in library.tools)
+
+        if not unused_tools:
+            return
+
+        print("------------")
+        print("Unused tools")
+        print("------------")
+        for tool_id, tool in self.tools.items():
+            if tool_id not in used_tools:
+                tool.dump()
+        else:
+            print("(none)")
