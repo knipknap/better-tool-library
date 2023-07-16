@@ -14,20 +14,14 @@ class TwoLineTableCell(QtGui.QWidget):
         self.allQHBoxLayout.addLayout(self.textQVBoxLayout, 1)
         self.setLayout(self.allQHBoxLayout)
 
-        # setStyleSheet
-        self.textUpQLabel.setStyleSheet('''
-            color: rgb(0, 0, 255);
-        ''')
-        self.textDownQLabel.setStyleSheet('''
-            color: rgb(255, 0, 0);
-        ''')
+        #self.textUpQLabel.setStyleSheet('''color: rgb(0, 0, 255);''')
 
-    def setTextUp (self, text):
-        self.textUpQLabel.setText(text)
+    def set_upper_text(self, text):
+        self.textUpQLabel.setText('<big><b>'+text+'</b></big>')
 
-    def setTextDown (self, text):
+    def set_lower_text(self, text):
         self.textDownQLabel.setText(text)
 
-    def setIcon (self, imagePath):
-        self.iconQLabel.setPixmap(QtGui.QPixmap(imagePath))
+    def set_icon(self, image_file):
+        self.iconQLabel.setPixmap(QtGui.QPixmap(image_file))
 

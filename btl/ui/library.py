@@ -49,8 +49,8 @@ class LibraryUI():
         listwidget.clear()
         for tool in library.tools:
             cell = TwoLineTableCell()
-            cell.setTextUp(tool.label)
-            cell.setTextDown(tool.id)
+            cell.set_upper_text(tool.label)
+            cell.set_lower_text(tool.get_param_summary())
             #cell.setIcon(icon)
 
             widget_item = QtGui.QListWidgetItem(listwidget)
