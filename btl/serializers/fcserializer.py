@@ -24,7 +24,7 @@ def format_unit(value):
 def int_or_none(value):
     try:
         return int(value) or None
-    except ValueError:
+    except TypeError:
         return None
 
 class FCSerializer(DictSerializer):
@@ -166,12 +166,12 @@ class FCSerializer(DictSerializer):
 
         # Extract well-known parameters.
         params = attrs['parameter']
-        params['diameter'] = parse_unit(params.pop('Diameter'))
-        shank = params.pop('ShankDiameter')
+        params['diameter'] = parse_unit(params.pop('Diameter', None))
+        shank = params.pop('ShankDiameter', None)
         params['shaft'] = parse_unit(params.pop('ShaftDiameter', shank))
-        params['length'] = parse_unit(params.pop('Length'))
-        params['flutes'] = int_or_none(params.pop('Flutes'))
-        params['material'] = params.pop('Material')
+        params['length'] = parse_unit(params.pop('Length', None))
+        params['flutes'] = int_or_none(params.pop('Flutes', None))
+        params['material'] = params.pop('Material', None)
         for name, value in params.items():
             tool.set_param(name, value)
 
