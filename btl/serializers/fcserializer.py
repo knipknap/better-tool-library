@@ -56,6 +56,9 @@ class FCSerializer(DictSerializer):
     def _shape_filename_from_name(self, name):
         return name+SHAPE_EXT
 
+    def _shape_name_from_filename(self, filename):
+        return os.path.splitext(filename)[0]
+
     def _get_library_ids(self):
         return [self._name_from_filename(f)
                 for f in self._get_library_filenames()]
@@ -129,7 +132,7 @@ class FCSerializer(DictSerializer):
         attrs = {}
         attrs["version"] = tool.API_VERSION
         attrs["name"] = tool.label
-        attrs["shape"] = tool.shape
+        attrs["shape"] = self._shape_filename_from_name(tool.shape)
         attrs["parameter"] = tool.params.copy()
         attrs["attribute"] = {}
 
@@ -149,9 +152,8 @@ class FCSerializer(DictSerializer):
         with open(filename, "r") as fp:
             attrs = json.load(fp)
 
-        tool = Tool(attrs['name'],
-                    attrs['shape'],
-                    id=id)
+        shape = self._shape_name_from_filename(attrs['shape'])
+        tool = Tool(attrs['name'], shape, id=id)
 
         # Extract well-known parameters.
         params = attrs['parameter']
