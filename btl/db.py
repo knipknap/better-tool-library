@@ -16,6 +16,9 @@ class ToolDB(object):
     def get_libraries(self):
         return list(self.libraries.values())
 
+    def remove_library(self, library):
+        self.libraries.pop(library.id, None)
+
     def get_tool_by_id(self, id):
         return self.tools[id]
 
@@ -27,9 +30,16 @@ class ToolDB(object):
         if library:
            library.tools.append(tool)
 
-    def serialize_libraries(self, serializer):
+    def remove_tool(self, tool, library=None):
+        if library:
+           library.remove_tool(tool)
+           return
         for library in self.libraries.values():
-            serializer.serialize_library(library)
+           library.remove_tool(tool)
+        self.tools.pop(tool.id, None)
+
+    def serialize_libraries(self, serializer):
+        serializer.serialize_libraries(self.libraries.values())
 
     def deserialize_libraries(self, serializer):
         self.libraries = dict()

@@ -44,6 +44,19 @@ class CamoticsSerializer():
         return sorted(os.path.basename(os.path.splitext(f)[0])
                       for f in files if os.path.isfile(f))
 
+    def _remove_library_by_id(self, id):
+        filename = self._library_filename_from_id(id)
+        os.remove(filename)
+
+    def serialize_libraries(self, libraries):
+        existing = set(self._get_library_ids())
+        for library in libraries:
+            self.serialize_library(library)
+            if library.id in existing:
+                existing.remove(library.id)
+        for id in existing:
+            self._remove_library_by_id(id)
+
     def deserialize_libraries(self):
         return [self.deserialize_library(id)
                 for id in self._get_library_ids()]

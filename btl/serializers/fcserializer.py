@@ -1,7 +1,6 @@
 import os
 import sys
 import glob
-import shutil
 import json
 from .dictserializer import DictSerializer
 from .. import Library, Tool
@@ -65,6 +64,10 @@ class FCSerializer(DictSerializer):
     def _shape_name_from_filename(self, filename):
         return os.path.splitext(filename)[0]
 
+    def _remove_library_by_id(self, id):
+        filename = self._library_filename_from_name(id)
+        os.remove(filename)
+
     def _get_library_ids(self):
         return [self._name_from_filename(f)
                 for f in self._get_library_filenames()]
@@ -88,6 +91,15 @@ class FCSerializer(DictSerializer):
                 return fp.write(shape_svg)
         except OSError:
             return None
+
+    def serialize_libraries(self, libraries):
+        existing = set(self._get_library_ids())
+        for library in libraries:
+            self.serialize_library(library)
+            if library.id in existing:
+                existing.remove(library.id)
+        for id in existing:
+            self._remove_library_by_id(id)
 
     def deserialize_libraries(self):
         return [self.deserialize_library(id)

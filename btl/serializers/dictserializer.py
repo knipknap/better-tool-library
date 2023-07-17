@@ -4,6 +4,10 @@ class DictSerializer():
     def __init__(self, *args, **kwargs):
         pass
 
+    def serialize_libraries(self, libraries):
+        for library in libraries:
+            self.serialize_library(library)
+
     def deserialize_libraries(self):
         return [] # Not implemented
 

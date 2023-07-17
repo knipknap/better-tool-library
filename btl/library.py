@@ -19,6 +19,9 @@ class Library(object):
     def __str__(self):
         return '{} "{}"'.format(self.id, self.label)
 
+    def remove_tool(self, tool):
+        self.tools = [t for t in self.tools if t.id != tool.id]
+
     def serialize(self, serializer):
         return serializer.serialize_library(self)
 

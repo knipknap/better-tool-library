@@ -27,6 +27,14 @@ def select_library(libraries):
             continue
         return libraries[selection-1][1]
 
+def get_libraries(db, name):
+    if args.library == 'all':
+        return db.get_libraries()
+    try:
+        return [db.get_library_by_id(name)]
+    except KeyError:
+        return []
+
 def create_tool(shape):
     shape_file = get_shape_file_from_shape(shape)
 
@@ -104,6 +112,16 @@ createtoolparser.add_argument('shape', help='the type of tool. may be built-in s
 
 createlibraryparser = createsubparsers.add_parser('library', help='create a new library')
 
+# "remove" command arguments
+removeparser = subparsers.add_parser('remove', help='remove tools or libraries')
+removesubparsers = removeparser.add_subparsers(dest='object', metavar='OBJECT')
+
+removetoolparser = removesubparsers.add_parser('tool', help='remove the tool from the given library')
+removetoolparser.add_argument('library', help='the library id, or "all"')
+removetoolparser.add_argument('tool', help='the tool id, or "all"')
+
+removelibraryparser = removesubparsers.add_parser('library', help='remove the library')
+removelibraryparser.add_argument('library', help='the library id, or "all"')
 
 args = parser.parse_args()
 
@@ -150,6 +168,31 @@ elif args.command == 'create':
         parser.error('sorry, not yet implemented') #TODO
     else:
         parser.error('requested unsupported object: {}'.format(args.object))
+    db.serialize(serializer)
+
+elif args.command == 'remove':
+    if args.object == 'tool':
+        try:
+            tool = db.get_tool_by_id(args.tool)
+        except KeyError:
+            removetoolparser.error('Tool with ID {} not found.'.format(args.tool))
+        try:
+            libraries = get_libraries(db, args.library)
+        except KeyError:
+            removetoolparser.error('Library with ID {} not found.'.format(args.library))
+        for library in libraries:
+            print('Removing tool {} from library "{}".'.format(tool.id, library.label))
+            library.remove_tool(tool)
+        if args.library == 'all':
+            print('Removing tool from DB.')
+            db.remove_tool(tool)
+    elif args.object == 'library':
+        for library in get_libraries(db, args.library):
+            print('Removing library "{}".'.format(library.label))
+            db.remove_library(library)
+    else:
+        parser.error('requested unsupported object: {}'.format(args.object))
+    db.dump()
     db.serialize(serializer)
 
 else:
