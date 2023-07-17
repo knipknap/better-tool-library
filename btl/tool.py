@@ -8,7 +8,7 @@ class Tool(object):
     # The parameters need to be ordered by "importance"; this order is
     # used the generate a summary description of the tool, showing the
     # important parameters first. See get_param_summary().
-    well_known_format = (('shape', '{}', str.capitalize),
+    well_known_format = (('shape', '{}', lambda x: str(x).capitalize()),
                          ('diameter', 'D{}mm', float),
                          ('flutes', '{}-flute', int),
                          ('shaft', 'Shaft {}mm', float),
