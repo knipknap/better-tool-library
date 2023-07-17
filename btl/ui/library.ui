@@ -22,14 +22,7 @@
   <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QListWidget" name="listWidgetTools">
-       <property name="sortingEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
+     <item row="4" column="0">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <property name="sizeConstraint">
         <enum>QLayout::SetMinimumSize</enum>
@@ -57,9 +50,76 @@
         </widget>
        </item>
        <item>
+        <widget class="QToolButton" name="toolButtonAddLibrary">
+         <property name="toolTip">
+          <string>Add a library</string>
+         </property>
+         <property name="text">
+          <string>+</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButtonExportLibrary">
+         <property name="toolTip">
+          <string>Export the current library</string>
+         </property>
+         <property name="text">
+          <string>Export Library</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButtonCreateTool">
+         <property name="toolTip">
+          <string>Create a new tool</string>
+         </property>
+         <property name="text">
+          <string>Create New Tool</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QDialogButtonBox" name="buttonBox">
+         <property name="focusPolicy">
+          <enum>Qt::TabFocus</enum>
+         </property>
          <property name="standardButtons">
           <set>QDialogButtonBox::Close</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="3" column="0">
+      <widget class="QListWidget" name="listWidgetTools">
+       <property name="alternatingRowColors">
+        <bool>true</bool>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLineEdit" name="lineEditSearch">
+         <property name="frame">
+          <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string>Find a tool</string>
+         </property>
+         <property name="clearButtonEnabled">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -69,6 +129,14 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>lineEditSearch</tabstop>
+  <tabstop>listWidgetTools</tabstop>
+  <tabstop>comboBoxLibrary</tabstop>
+  <tabstop>toolButtonAddLibrary</tabstop>
+  <tabstop>toolButtonExportLibrary</tabstop>
+  <tabstop>toolButtonCreateTool</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

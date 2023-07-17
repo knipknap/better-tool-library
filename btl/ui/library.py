@@ -17,6 +17,8 @@ class LibraryUI():
 
         self.form.buttonBox.clicked.connect(self.form.close)
         self.form.comboBoxLibrary.currentIndexChanged.connect(self.library_selected)
+        self.form.lineEditSearch.setFocus()
+        self.form.lineEditSearch.textChanged.connect(self.update_search)
 
         self.load()
 
@@ -57,6 +59,15 @@ class LibraryUI():
             widget_item.setSizeHint(cell.sizeHint())
             listwidget.addItem(widget_item)
             listwidget.setItemWidget(widget_item, cell)
+
+    def update_search(self):
+        listwidget = self.form.listWidgetTools
+        term = self.form.lineEditSearch.text()
+        for i in range(listwidget.count()):
+            item = listwidget.item(i)
+            cell = listwidget.itemWidget(item)
+            cell.highlight(term)
+            item.setHidden(not cell.contains_text(term))
 
     def show(self):
         self.form.exec()
