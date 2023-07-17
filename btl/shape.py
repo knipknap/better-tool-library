@@ -22,7 +22,8 @@ class Shape():
             + list(aliases.keys())
 
     def __init__(self, name, freecad_filename=None):
-        self.name = Shape.aliases.get(name, name)
+        name = Shape.aliases.get(name, name)
+        self.name = name
         self.filename = freecad_filename
         self.svg = None # Shape SVG as a binary string
 
