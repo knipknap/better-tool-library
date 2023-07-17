@@ -165,7 +165,7 @@ class FCSerializer():
         shape.write_svg_to_file(svg_filename)
 
     def deserialize_shape(self, name):
-        if name in Shape.builtin:
+        if name in Shape.reserved:
             return Shape(name)
 
         filename = self._shape_filename_from_name(name)
