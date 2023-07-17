@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import uuid
-from .shape import get_builtin_shape_svg_from_shape_name
+from .shape import Shape
 
 class Tool(object):
     API_VERSION = 1
@@ -19,8 +19,7 @@ class Tool(object):
     def __init__(self, label, shape, id=None):
         self.id = id or str(uuid.uuid1())
         self.label = label
-        self.shape = shape
-        self.shape_svg = None
+        self.shape = Shape(shape) if isinstance(shape, str) else shape
         self.pocket = None
         self.diameter = None
         self.flutes = None
@@ -30,7 +29,7 @@ class Tool(object):
         self.params = {}
 
     def __str__(self):
-        return '{} "{}" "{}"'.format(self.id, self.label, self.shape)
+        return '{} "{}" "{}"'.format(self.id, self.label, self.shape.name)
 
     def set_param(self, name, value):
         lcname = name.lower()
@@ -47,10 +46,6 @@ class Tool(object):
                 summary += ' ' + fmt.format(formatter(value))
         return summary.strip()
 
-    def get_shape_svg(self):
-        return get_builtin_shape_svg_from_shape_name(self.shape) \
-            or self.shape_svg
-
     def serialize(self, serializer):
         return serializer.serialize_tool(self)
 
@@ -66,7 +61,8 @@ class Tool(object):
             print('{}  Summary = {}'.format(indent, summary))
             return
 
-        shape_svg_len = len(self.shape_svg) if self.shape_svg else None
+        shape_svg = self.shape.get_svg()
+        shape_svg_len = len(shape_svg) if shape_svg else None
         print('{}  Shape SVG size = {}'.format(indent, shape_svg_len))
         print('{}  Pocket         = {} mm'.format(indent, self.pocket))
 

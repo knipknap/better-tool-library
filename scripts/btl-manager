@@ -3,8 +3,10 @@ import os
 import sys
 import argparse
 from btl import ToolDB, Tool, Library, serializers
-from btl.shape import get_shape_file_from_shape, get_properties_from_shape
+from btl.shape import Shape
 
+freecad_path = '/usr/lib/freecad/lib/' #FIXME
+sys.path.append(freecad_path)
 
 def select_library(libraries):
     # No need to choose if there's just one.
@@ -35,12 +37,19 @@ def get_libraries(db, name):
     except KeyError:
         return []
 
-def create_tool(shape):
-    shape_file = get_shape_file_from_shape(shape)
+def create_tool(shape_name):
+    try:
+        shape = Shape(shape_name)
+    except OSError:
+        sys.stderr.write('Shape "{}" not found. Supported built-in shapes: {}'.format(
+            shape_name,
+            Shape.builtin
+        ))
+        sys.exit(1)
 
     # Reading the shape file requires the FreeCAD Python module to be installed.
     try:
-        properties = get_properties_from_shape(shape_file)
+        properties = shape.get_properties()
     except ImportError:
         sys.stderr.write('error: FreeCAD Python module not found.' \
                        + ' Make sure it is installed and in your PYTHONPATH')

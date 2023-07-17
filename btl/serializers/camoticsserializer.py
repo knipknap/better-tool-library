@@ -69,7 +69,7 @@ class CamoticsSerializer():
             toolitem["diameter"] = tool.diameter or 2
             toolitem["description"] = tool.label
             toolitem["length"] = tool.length or 10
-            toolitem["shape"] = SHAPEMAP.get(tool.shape, "Cylindrical")
+            toolitem["shape"] = SHAPEMAP.get(tool.shape.name, "Cylindrical")
             toollist[tool.pocket] = toolitem
 
         lib_filename = self._library_filename_from_library(library)
@@ -91,6 +91,21 @@ class CamoticsSerializer():
             library.tools.append(tool)
 
         return library
+
+    def deserialize_shapes(self):
+        # In Camotics, shapes cannot exist on their own outside a library.
+        # So nothing to be done here.
+        return []
+
+    def serialize_shape(self, shape):
+        # In Camotics, shapes cannot exist on their own outside a library.
+        # So nothing to be done here.
+        return
+
+    def deserialize_shape(self, attrs):
+        # In Camotics, shapes cannot exist on their own outside a library.
+        # So nothing to be done here.
+        raise NotImplemented
 
     def deserialize_tools(self):
         # In Camotics, tools cannot exist on their own outside a library.

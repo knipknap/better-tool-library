@@ -6,6 +6,7 @@ class ToolDB(object):
     def __init__(self):
         self.libraries = dict() # maps library ID to Library
         self.tools = dict()  # maps tool ID to Tool
+        self.shapes = dict()  # maps shape name to Shape
 
     def add_library(self, library):
         self.libraries[library.id] = library
@@ -18,6 +19,9 @@ class ToolDB(object):
 
     def remove_library(self, library):
         self.libraries.pop(library.id, None)
+
+    def add_shape(self, shape):
+        self.shapes[shape.name] = shape
 
     def get_tool_by_id(self, id):
         return self.tools[id]
@@ -49,6 +53,14 @@ class ToolDB(object):
                 if tool.id not in self.tools:
                     self.tools[tool.id] = tool
 
+    def serialize_shapes(self, serializer):
+        for shape in self.shapes.values():
+            serializer.serialize_shape(shape)
+
+    def deserialize_shapes(self, serializer):
+        for shape in serializer.deserialize_shapes():
+            self.add_shape(shape)
+
     def serialize_tools(self, serializer):
         for tool in self.tools.values():
             serializer.serialize_tool(tool)
@@ -59,13 +71,24 @@ class ToolDB(object):
 
     def serialize(self, serializer):
         self.serialize_libraries(serializer)
+        self.serialize_shapes(serializer)
         self.serialize_tools(serializer)
 
     def deserialize(self, serializer):
         self.deserialize_libraries(serializer)
+        self.deserialize_shapes(serializer)
         self.deserialize_tools(serializer)
 
     def dump(self, unused_tools=True, summarize=False):
+        print("--------------")
+        print(" Custom shapes")
+        print("--------------")
+        for shape in self.shapes.values():
+            shape.dump()
+
+        print("------------")
+        print(" Libraries")
+        print("------------")
         used_tools = set()
         for library in self.libraries.values():
             library.dump(summarize=summarize)

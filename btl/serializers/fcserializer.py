@@ -2,8 +2,7 @@ import os
 import sys
 import glob
 import json
-from .dictserializer import DictSerializer
-from .. import Library, Tool
+from .. import Library, Shape, Tool
 
 TOOL_DIR = 'Bit'
 LIBRARY_DIR = 'Library'
@@ -26,7 +25,7 @@ def int_or_none(value):
     except TypeError:
         return None
 
-class FCSerializer(DictSerializer):
+class FCSerializer():
     def __init__(self, path):
         self.path = path
         self.tool_path = os.path.join(path, TOOL_DIR)
@@ -49,6 +48,9 @@ class FCSerializer(DictSerializer):
     def _library_filename_from_name(self, name):
         return os.path.join(self.lib_path, name+LIBRARY_EXT)
 
+    def _get_shape_filenames(self):
+        return sorted(glob.glob(os.path.join(self.shape_path, '*'+SHAPE_EXT)))
+
     def _name_from_filename(self, path):
         return os.path.basename(os.path.splitext(path)[0])
 
@@ -59,10 +61,13 @@ class FCSerializer(DictSerializer):
         return os.path.join(self.tool_path, name+TOOL_EXT)
 
     def _shape_filename_from_name(self, name):
-        return name+SHAPE_EXT
+        return os.path.join(self.shape_path, name+SHAPE_EXT)
 
     def _shape_name_from_filename(self, filename):
         return os.path.splitext(filename)[0]
+
+    def _svg_filename_from_name(self, name):
+        return os.path.join(self.shape_path, name+'.svg')
 
     def _remove_library_by_id(self, id):
         filename = self._library_filename_from_name(id)
@@ -72,25 +77,13 @@ class FCSerializer(DictSerializer):
         return [self._name_from_filename(f)
                 for f in self._get_library_filenames()]
 
+    def _get_shape_names(self):
+        return [self._name_from_filename(f)
+                for f in self._get_shape_filenames()]
+
     def _get_tool_ids(self):
         return [self._name_from_filename(f)
                 for f in self._get_tool_filenames()]
-
-    def _read_shape_svg_from_name(self, name):
-        svg_path = os.path.join(self.shape_path, name+'.svg')
-        try:
-            with open(svg_path, 'rb') as fp:
-                return fp.read()
-        except OSError:
-            return None
-
-    def _write_shape_svg_from_name(self, name, shape_svg):
-        svg_path = os.path.join(self.shape_path, name+'.svg')
-        try:
-            with open(svg_path, 'wb') as fp:
-                return fp.write(shape_svg)
-        except OSError:
-            return None
 
     def serialize_libraries(self, libraries):
         existing = set(self._get_library_ids())
@@ -158,28 +151,52 @@ class FCSerializer(DictSerializer):
 
         return library
 
+    def deserialize_shapes(self):
+        return [self.deserialize_shape(name)
+                for name in self._get_shape_names()]
+
+    def serialize_shape(self, shape):
+        if shape.is_builtin():
+            return
+        filename = self._shape_filename_from_name(shape.name)
+        shape.write_to_file(filename)
+
+        svg_filename = self._svg_filename_from_name(shape.name)
+        shape.write_svg_to_file(svg_filename)
+
+    def deserialize_shape(self, name):
+        if name in Shape.builtin:
+            return Shape(name)
+
+        filename = self._shape_filename_from_name(name)
+        shape = Shape(name, filename)
+
+        svg_filename = self._svg_filename_from_name(name)
+        if os.path.isfile(svg_filename):
+            shape.add_svg_from_file(svg_filename)
+        return shape
+
     def deserialize_tools(self):
         return [self.deserialize_tool(id)
                 for id in self._get_tool_ids()]
 
     def serialize_tool(self, tool):
+        # Prepare common parameters.
         attrs = {}
         attrs["version"] = tool.API_VERSION
         attrs["name"] = tool.label
-        attrs["shape"] = self._shape_filename_from_name(tool.shape)
-        attrs["parameter"] = tool.params.copy()
+        attrs["shape"] = tool.shape.name+SHAPE_EXT
         attrs["attribute"] = {}
-        if tool.shape_svg:
-            self._write_shape_svg_from_name(tool.shape, tool.shape_svg)
 
-        # Update parameters from well-known parameters.
-        params = attrs['parameter']
+        # Add well-known parameters.
+        params = attrs["parameter"] = tool.params.copy()
         params['Diameter'] = '{} mm'.format(format_unit(tool.diameter))
         params['ShankDiameter'] = '{} mm'.format(format_unit(tool.shaft))
         params['Length'] = '{} mm'.format(format_unit(tool.length))
         params['Flutes'] = '{}'.format(tool.flutes or 0)
         params['Material'] = '{}'.format(tool.material or 'HSS')
 
+        # Write everything.
         filename = self._tool_filename_from_name(tool.id)
         with open(filename, "w") as fp:
             json.dump(attrs, fp, sort_keys=True, indent=2)
@@ -191,9 +208,10 @@ class FCSerializer(DictSerializer):
         with open(filename, "r") as fp:
             attrs = json.load(fp)
 
-        shape = self._shape_name_from_filename(attrs['shape'])
+        # Create a tool.
+        shape_name = self._shape_name_from_filename(attrs['shape'])
+        shape = Shape(shape_name, attrs['shape'])
         tool = Tool(attrs['name'], shape, id=id)
-        tool.shape_svg = self._read_shape_svg_from_name(shape)
 
         # Extract well-known parameters.
         params = attrs['parameter']
@@ -203,6 +221,8 @@ class FCSerializer(DictSerializer):
         params['length'] = parse_unit(params.pop('Length', None))
         params['flutes'] = int_or_none(params.pop('Flutes', None))
         params['material'] = params.pop('Material', None)
+
+        # Define all parameters, including the "not well-known" (custom) parameters.
         for name, value in params.items():
             tool.set_param(name, value)
 

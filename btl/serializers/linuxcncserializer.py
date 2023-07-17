@@ -54,6 +54,21 @@ class LinuxCNCSerializer():
     def deserialize_library(self, id):
         raise NotImplemented()
 
+    def deserialize_shapes(self):
+        # In LinuxCNC, shapes cannot exist on their own outside a library.
+        # So nothing to be done here.
+        return []
+
+    def serialize_shape(self, shape):
+        # In LinuxCNC, shapes cannot exist on their own outside a library.
+        # So nothing to be done here.
+        return
+
+    def deserialize_shape(self, attrs):
+        # In LinuxCNC, shapes cannot exist on their own outside a library.
+        # So nothing to be done here.
+        return
+
     def deserialize_tools(self):
         # In LinuxCNC, tools cannot exist on their own outside a library.
         # So nothing to be done here.
