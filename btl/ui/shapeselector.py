@@ -7,6 +7,7 @@ from functools import partial
 from itertools import chain
 from PySide import QtGui, QtCore
 from ..const import icon_dir
+from .util import load_ui
 from .flowlayout import FlowLayout
 from .shapebutton import ShapeButton
 
@@ -26,7 +27,7 @@ class CustomShape:
 
 class ShapeSelector():
     def __init__(self, shapes):
-        self.form = FreeCADGui.PySideUic.loadUi(ui_path)
+        self.form = load_ui(ui_path)
 
         self.flow = FlowLayout(self.form.shapeGrid, orientation=QtGui.Qt.Horizontal)
         self.flow.widthChanged.connect(lambda x: self.form.shapeGrid.setMinimumWidth(x))

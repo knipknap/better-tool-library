@@ -3,7 +3,8 @@ import re
 import FreeCAD
 import FreeCADGui
 import Path
-from PySide import QtGui, QtCore
+from PySide import QtGui, QtCore, QtUiTools
+from .util import load_ui
 from .tablecell import TwoLineTableCell
 from .shapeselector import ShapeSelector
 
@@ -14,7 +15,7 @@ class LibraryUI():
     def __init__(self, tooldb, serializer):
         self.tooldb = tooldb
         self.serializer = serializer
-        self.form = FreeCADGui.PySideUic.loadUi(ui_path)
+        self.form = load_ui(ui_path)
 
         self.form.buttonBox.clicked.connect(self.form.close)
         self.form.comboBoxLibrary.currentIndexChanged.connect(self.library_selected)
