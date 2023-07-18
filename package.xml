@@ -12,7 +12,7 @@
     <workbench>
       <classname>BetterToolLibrary</classname>
       <subdirectory>./</subdirectory>
-      <icon>resources/tool-library.svg</icon>
+      <icon>resources/icons/tool-library.svg</icon>
       <freecadmin>0.19.0</freecadmin>
     </workbench>
   </content>
