@@ -5,6 +5,7 @@ import FreeCADGui
 import Path
 from PySide import QtGui, QtCore
 from .tablecell import TwoLineTableCell
+from .shapeselector import ShapeSelector
 
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "library.ui")
@@ -19,6 +20,7 @@ class LibraryUI():
         self.form.comboBoxLibrary.currentIndexChanged.connect(self.library_selected)
         self.form.lineEditSearch.setFocus()
         self.form.lineEditSearch.textChanged.connect(self.update_search)
+        self.form.toolButtonCreateTool.clicked.connect(self.on_create_tool_clicked)
 
         self.load()
 
@@ -80,3 +82,7 @@ class LibraryUI():
                 #tc.HorizFeed = hfeed
                 #tc.VertFeed = vfeed
                 #tc.SpindleSpeed = float(rpm)
+
+    def on_create_tool_clicked(self):
+        selector = ShapeSelector(self.tooldb.shapes.values())
+        selector.show()

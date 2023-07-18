@@ -46,6 +46,9 @@ class Shape():
     def is_builtin(self):
         return self.name in Shape.builtin
 
+    def get_label(self):
+        return self.name.capitalize()
+
     def get_filename(self):
         return self.filename
 
