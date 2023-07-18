@@ -15,13 +15,12 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
-    <widget class="QWidget" name="shapeGrid">
-    </widget>
+    <widget class="QWidget" name="shapeGrid" native="true"/>
    </item>
    <item row="1" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel</set>
      </property>
     </widget>
    </item>

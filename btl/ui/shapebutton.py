@@ -16,9 +16,6 @@ class ShapeButton(QtGui.QToolButton):
 
         self.set_icon_from_svg(shape.get_svg())
 
-    def widget(self):
-        return self
-
     def set_text(self, text):
         self.label.setText(text)
 
