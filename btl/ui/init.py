@@ -2,7 +2,7 @@ import os
 import FreeCAD, FreeCADGui
 from PySide import QtGui
 from .. import ToolDB, serializers
-from .const import icon_dir
+from ..const import icon_dir
 from .library import LibraryUI
 
 ICON_FILE = os.path.join(icon_dir, 'tool-library.svg')
