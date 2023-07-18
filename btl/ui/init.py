@@ -2,11 +2,10 @@ import os
 import FreeCAD, FreeCADGui
 from PySide import QtGui
 from .. import ToolDB, serializers
+from .const import resource_dir
 from .library import LibraryUI
 
-__dir__ = os.path.dirname(__file__)
-RESOURCE_PATH = os.path.join(os.path.dirname(os.path.dirname(__dir__)), 'resources')
-ICON_FILE = os.path.join(RESOURCE_PATH, 'tool-library.svg')
+ICON_FILE = os.path.join(resource_dir, 'tool-library.svg')
 prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Path")
 
 def on_library_open_clicked():
