@@ -12,7 +12,7 @@ class ToolEditor():
         self.form = load_ui(ui_path)
         self.form.buttonBox.clicked.connect(self.form.close)
 
-        props = ToolProperties(tool)
+        props = ToolProperties(tool, parent=self.form)
         self.form.vBox.addWidget(props)
 
     def show(self):
