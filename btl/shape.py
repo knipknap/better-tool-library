@@ -17,6 +17,7 @@ def get_builtin_shape_svg_filename_from_name(name):
 
 class Shape():
     aliases = {'bullnose': 'torus',
+               'thread-mill': 'threadmill',
                'vbit': 'chamfer',
                'v-bit': 'chamfer'}
     builtin = [os.path.splitext(os.path.basename(f))[0]
