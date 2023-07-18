@@ -54,7 +54,7 @@ class ToolProperties(QtGui.QWidget):
         # Add custom properties under a separate title.
         self._makespacing(6)
         row = self.grid.rowCount()
-        label = QtGui.QLabel("<h4>Tool-specific Properties</h4>")
+        label = QtGui.QLabel("<h4>Tool-specific properties</h4>")
         self.grid.addWidget(label, row, 0, columnSpan=2)
 
         # Add entry fields per property
