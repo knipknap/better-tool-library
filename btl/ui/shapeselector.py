@@ -34,7 +34,8 @@ class ShapeSelector():
 
     def on_shape_button_clicked(self, shape):
         self.form.close()
-        tool = Tool('New tool', shape)
+        label = shape.get_label()
+        tool = Tool('New {}'.format(label), shape)
         editor = ToolEditor(tool)
         editor.show()
 
