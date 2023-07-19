@@ -1,8 +1,16 @@
+# The format that FreeCAD uses for these tool library files is unfortunately a mess:
+# - Numbers are locale-dependend, e.g. decimal separator (ugh)
+# - Numbers are represented according to the precision settings of the user interface
+# - Numbers are represented as strings in the JSON
+# - Numbers are represented with units in the JSON
+# - Tool IDs are not unique across libraries
+# Here I do my best to represent all these behaviors.
 import os
+import re
 import sys
 import glob
 import json
-from .. import Library, Shape, Tool
+from .. import Library, Shape, Tool, params
 
 TOOL_DIR = 'Bit'
 LIBRARY_DIR = 'Library'
@@ -12,6 +20,88 @@ BUILTIN_SHAPE_DIR = 'resources/shapes'
 TOOL_EXT = '.fctb'
 LIBRARY_EXT = '.fctl'
 SHAPE_EXT = '.fcstd'
+
+# Map FreeCAD shape file parameter names to our internal param representation.
+fc_property_to_param_type = {
+    'Diameter': params.Diameter,
+    'ShankDiameter': params.Shaft,
+    'ShaftDiameter': params.Shaft,
+    'Length': params.Length,
+    'Flutes': params.Flutes,
+    'Material': params.Material,
+}
+
+fc_property_unit_to_param_type = {
+    'Length': params.DistanceBase,
+}
+
+def _type_from_prop(prop):
+    if isinstance(prop, int):
+        return params.IntBase
+    elif isinstance(prop, float):
+        return params.FloatBase
+    elif isinstance(prop, str):
+        return params.Base
+    elif hasattr(prop, 'Unit') \
+        and prop.Unit.Type in fc_property_unit_to_param_type:
+        #print("UNIT", dir(prop.Unit), prop.Unit.Type, prop.Unit.Signature)
+        return fc_property_unit_to_param_type[prop.Unit.Type]
+    else:
+        raise NotImplementedError(
+            'error: param {} with type {} is unsupported'.format(
+                 propname, prop))
+
+def _tool_property_to_param(propname, value, prop=None):
+    if propname in fc_property_to_param_type:   # Known type.
+        param_type = fc_property_to_param_type[propname]
+        param = param_type()
+    else:  # Try to find type from prop.
+        param_type = params.Base if prop is None else _type_from_prop(prop)
+        param = param_type()
+        param.name = propname
+        param.label = re.sub(r'([A-Z])', r' \1', propname).strip()
+
+    if issubclass(param_type, params.DistanceBase):
+        value = parse_unit(value)
+    elif issubclass(param_type, params.IntBase):
+        value = int_or_none(value)
+    elif issubclass(param_type, params.Material):
+        value = str(value)
+    elif issubclass(param_type, params.Base):
+        value = str(value)
+    else:
+        raise NotImplementedError(
+            'whoops - param {} with type {} is not implemented'.format(
+                 propname, param))
+
+    return param, value
+
+def _shape_property_to_param(propname, attrs, prop):
+    param_type = _type_from_prop(prop)
+    if hasattr(prop, 'Unit'):
+        value = prop.Value
+    else:
+        value = prop
+
+    # Default can be overwritten by more specific known types.
+    param_type = fc_property_to_param_type.get(propname, param_type)
+    if not param_type:
+        raise NotImplemented(
+            'bug: param {} with type {} not supported'.format(
+                 propname, prop))
+
+    param = param_type()
+    if not param.name:
+        param.name = propname
+        param.label = re.sub(r'([A-Z])', r' \1', propname).strip()
+
+    #print("_shape_property_to_param()", propname, prop, param, value)
+
+    # In case of enumerations, collect all allowed values.
+    if hasattr(param, 'enum'):
+        param.enum = attrs.getEnumerationsOfProperty(propname)
+
+    return param, value
 
 def parse_unit(value):
     return float(value.rstrip(' m').replace(',', '.')) if value else None
@@ -142,7 +232,7 @@ class FCSerializer():
             name = self._name_from_filename(path)
             try:
                 tool = self.deserialize_tool(name)
-            except Exception as e:
+            except OSError as e:
                 sys.stderr.write('WARN: skipping {}: {}\n'.format(path, e))
             else:
                 library.tools.append(tool)
@@ -154,6 +244,29 @@ class FCSerializer():
     def deserialize_shapes(self):
         return [self.deserialize_shape(name)
                 for name in self._get_shape_names()]
+
+    def _load_shape_properties(self, filename):
+        # Load the shape file using FreeCad
+        import FreeCAD
+        doc = FreeCAD.open(filename)
+
+        # Find the Attribute object.
+        attrs_list = doc.getObjectsByLabel('Attributes')
+        try:
+            attrs = attrs_list[0]
+        except IndexError:
+            raise Exception(f'shape file {filename} has no "Attributes" FeaturePython object.\n'\
+                          + ' Check the parameter definition in your shape file')
+
+        properties = []
+        for propname in attrs.PropertiesList:
+            prop = getattr(attrs, propname)
+            groupname = attrs.getGroupOfProperty(propname)
+            if groupname in ('', 'Base'):
+                continue
+            properties.append((propname, prop))
+
+        return attrs, properties
 
     def serialize_shape(self, shape):
         if shape.is_builtin():
@@ -171,6 +284,13 @@ class FCSerializer():
         filename = self._shape_filename_from_name(name)
         shape = Shape(name, filename)
 
+        # Collect a list of custom properties from the Attribute object.
+        attrs, properties = self._load_shape_properties(filename)
+        for propname, prop in properties:
+            param, value = _shape_property_to_param(propname, attrs, prop)
+            shape.set_param(param, value)
+
+        # Load the shape image.
         svg_filename = self._svg_filename_from_name(name)
         if os.path.isfile(svg_filename):
             shape.add_svg_from_file(svg_filename)
@@ -187,14 +307,40 @@ class FCSerializer():
         attrs["name"] = tool.label
         attrs["shape"] = tool.shape.name+SHAPE_EXT
         attrs["attribute"] = {}
+        attrs["parameter"] = {}
 
-        # Add well-known parameters.
-        params = attrs["parameter"] = tool.params.copy()
-        params['Diameter'] = '{} mm'.format(format_unit(tool.diameter))
-        params['ShankDiameter'] = '{} mm'.format(format_unit(tool.shaft))
-        params['Length'] = '{} mm'.format(format_unit(tool.length))
-        params['Flutes'] = '{}'.format(tool.flutes or 0)
-        params['Material'] = '{}'.format(tool.material or 'HSS')
+        # Get the list of parameters that are supported by the shape. This
+        # is used to find the type of each parameter.
+        shape_attrs, properties = self._load_shape_properties(tool.shape.filename)
+
+        # Walk through the supported properties, and copy them from the internal
+        # model to the tool file representation.
+        for propname, prop in properties:
+            param, dvalue = _shape_property_to_param(propname, shape_attrs, prop)
+            value = tool.shape.get_param(param, dvalue)
+
+            if isinstance(prop, int):
+                value = str(value or 0)
+            elif isinstance(prop, (float, str)):
+                if value is None:
+                    continue
+            else:
+                try:
+                    prop.Value = value
+                except TypeError:
+                    continue
+                value = prop.UserString
+
+                # this hack is used because FreeCAD writes these parameters using comma
+                # separator when run in the UI, but not when running it here. I couldn't
+                # figure out where this (likely locale dependend) setting is made.
+                try:
+                    float(prop.Value)
+                    value = value.replace('.', ',')
+                except ValueError:
+                    pass
+
+            attrs["parameter"][propname] = value
 
         # Write everything.
         filename = self._tool_filename_from_name(tool.id)
@@ -209,21 +355,24 @@ class FCSerializer():
             attrs = json.load(fp)
 
         # Create a tool.
-        shape_name = self._shape_name_from_filename(attrs['shape'])
-        shape = Shape(shape_name, attrs['shape'])
+        shapename = self._shape_name_from_filename(attrs['shape'])
+        shape = self.deserialize_shape(shapename)
         tool = Tool(attrs['name'], shape, id=id)
 
-        # Extract well-known parameters.
-        params = attrs['parameter']
-        params['diameter'] = parse_unit(params.pop('Diameter', None))
-        shank = params.pop('ShankDiameter', None)
-        params['shaft'] = parse_unit(params.pop('ShaftDiameter', shank))
-        params['length'] = parse_unit(params.pop('Length', None))
-        params['flutes'] = int_or_none(params.pop('Flutes', None))
-        params['material'] = params.pop('Material', None)
+        # Get the list of parameters that are supported by the shape. This
+        # is used to find the type of each parameter.
+        shape_attrs, properties = self._load_shape_properties(tool.shape.filename)
 
-        # Define all parameters, including the "not well-known" (custom) parameters.
-        for name, value in params.items():
-            tool.set_param(name, value)
+        # Walk through the supported properties, and copy them from the tool
+        # to the internal representation.
+        for propname, prop in properties:
+            value = attrs['parameter'].pop(propname)
+            param, value = _tool_property_to_param(propname, value, prop)
+            shape.set_param(param, value)
+
+        # Extract remaining parameters as strings.
+        for name, value in attrs['parameter'].items():
+            param, value = _tool_property_to_param(name, value)
+            shape.set_param(param, value)
 
         return tool

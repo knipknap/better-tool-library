@@ -1,4 +1,3 @@
-import re
 from PySide import QtGui, QtSvg, QtCore
 from .shapewidget import ShapeWidget
 
@@ -43,24 +42,15 @@ class ToolProperties(QtGui.QWidget):
         self.grid.addWidget(label, row, 0, columnSpan=2)
         self._add_property('Pocket', self.tool.pocket)
 
-        # Add well-known properties first.
-        self._makespacing(6)
-        row = self.grid.rowCount()
-        label = QtGui.QLabel("<h4>Common properties</h4>")
-        self.grid.addWidget(label, row, 0, columnSpan=2)
-        for param, value in self.tool.get_well_known_params():
-            self._add_property(param.label, value)
-
         # Add custom properties under a separate title.
         self._makespacing(6)
         row = self.grid.rowCount()
         label = QtGui.QLabel("<h4>Tool-specific properties</h4>")
         self.grid.addWidget(label, row, 0, columnSpan=2)
 
-        # Add entry fields per property
-        for name, value in self.tool.get_custom_params():
-            label = re.sub(r'([A-Z])', r' \1', name).strip()
-            self._add_property(label, value)
+        # Add entry fields per property.
+        for param, value in self.tool.shape.get_params():
+            self._add_property(param.label, value)
 
     def _add_property(self, name, value):
         row = self.grid.rowCount()

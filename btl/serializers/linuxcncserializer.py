@@ -47,7 +47,7 @@ class LinuxCNCSerializer():
                 fp.write("T{} P{} D{} ;{}\n".format(
                     tool.pocket,
                     tool.pocket,
-                    tool.diameter,
+                    tool.shape.get_param('diameter'),
                     tool.label
                 ))
 

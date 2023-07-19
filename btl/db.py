@@ -84,7 +84,7 @@ class ToolDB(object):
         print(" Custom shapes")
         print("--------------")
         for shape in self.shapes.values():
-            shape.dump()
+            shape.dump(summarize=summarize)
 
         print("------------")
         print(" Libraries")

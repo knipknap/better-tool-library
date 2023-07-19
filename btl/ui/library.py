@@ -55,7 +55,7 @@ class LibraryUI():
         for tool in library.tools:
             cell = TwoLineTableCell()
             cell.set_upper_text(tool.label)
-            cell.set_lower_text(tool.get_param_summary())
+            cell.set_lower_text(tool.shape.get_param_summary())
             cell.set_icon_from_svg(tool.shape.get_svg())
 
             widget_item = QtGui.QListWidgetItem(listwidget)
