@@ -19,14 +19,12 @@ class EnumBase(Base):
     choices = []
 
     def validate(self, value):
-        return value in choices
+        return value in self.choices
 
 class IntBase(Base):
-    formatter = int
     type = int
 
 class FloatBase(Base):
-    formatter = float
     type = float
 
 class DistanceBase(FloatBase):
@@ -59,13 +57,16 @@ class Flutes(IntBase):
 class Pocket(IntBase):
     name = 'pocket'
     label = 'Pocket'
-    fmt = '{}'
 
 class Material(EnumBase):
     name = 'material'
     label = 'Material'
-    fmt = '{}'
     choices = 'HSS', 'Carbide'
+
+class SpindleDirection(EnumBase):
+    name = 'spindledirection'
+    label = 'Spindle Direction'
+    choices = 'Forward', 'Reverse', 'None'
 
 # The parameters need to be ordered by importance; this order is
 # used to prioritize which paramaters to show when there is limited

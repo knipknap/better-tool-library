@@ -29,6 +29,7 @@ fc_property_to_param_type = {
     'Length': params.Length,
     'Flutes': params.Flutes,
     'Material': params.Material,
+    'SpindleDirection': params.SpindleDirection,
 }
 
 fc_property_unit_to_param_type = {

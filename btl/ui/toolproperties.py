@@ -1,5 +1,16 @@
 from PySide import QtGui, QtSvg, QtCore
 from .shapewidget import ShapeWidget
+from ..params import EnumBase
+
+class FuncValidator(QtGui.QValidator):
+    def __init__(self, func, parent=None):
+        super(FuncValidator, self).__init__(parent)
+        self.func = func
+
+    def validate(self, string, pos):
+        if not self.func(string):
+            return QtGui.QValidator.Intermediate, string, pos
+        return QtGui.QValidator.Acceptable, string, pos
 
 class ToolProperties(QtGui.QWidget):
     def __init__ (self, tool, parent=None):
@@ -23,6 +34,44 @@ class ToolProperties(QtGui.QWidget):
         self.tool = tool
         self._update()
 
+    def _get_widget_from_param(self, param, value):
+        validator = FuncValidator(param.validate)
+        if isinstance(param, EnumBase):
+            widget = QtGui.QComboBox()
+            for choice in param.choices:
+                widget.addItem(choice)
+        elif issubclass(param.type, str):
+            widget = QtGui.QLineEdit(param.format(value))
+            widget.setValidator(validator)
+        elif issubclass(param.type, int):
+            widget = QtGui.QSpinBox()
+            widget.setValue(int(value))
+        elif issubclass(param.type, float):
+            widget = QtGui.QDoubleSpinBox()
+            widget.setValue(float(value))
+        else:
+            ctype = param.__class__.__name__
+            ptype = param.type.__name__
+            return QtGui.QLabel('unsupported type {} ({})'.format(ctype, ptype))
+        return widget
+
+    def _add_entry(self, name, value, validator=None):
+        row = self.grid.rowCount()
+        label = QtGui.QLabel(name)
+        self.grid.addWidget(label, row, 0)
+        entry = QtGui.QLineEdit(str(value))
+        if validator:
+            entry.setValidator(validator)
+        self.grid.addWidget(entry, row, 1)
+
+    def _add_property(self, param, value):
+        row = self.grid.rowCount()
+        label = QtGui.QLabel(param.label)
+        self.grid.addWidget(label, row, 0)
+
+        widget = self._get_widget_from_param(param, value)
+        self.grid.addWidget(widget, row, 1)
+
     def _makespacing(self, height):
         row = self.grid.rowCount()
         label = QtGui.QLabel(" ")
@@ -40,7 +89,7 @@ class ToolProperties(QtGui.QWidget):
         row = self.grid.rowCount()
         label = QtGui.QLabel("<h4>Tool location</h4>")
         self.grid.addWidget(label, row, 0, columnSpan=2)
-        self._add_property('Pocket', self.tool.pocket)
+        self._add_entry('Pocket', self.tool.pocket)
 
         # Add custom properties under a separate title.
         self._makespacing(6)
@@ -50,11 +99,4 @@ class ToolProperties(QtGui.QWidget):
 
         # Add entry fields per property.
         for param, value in self.tool.shape.get_params():
-            self._add_property(param.label, value)
-
-    def _add_property(self, name, value):
-        row = self.grid.rowCount()
-        label = QtGui.QLabel(name)
-        self.grid.addWidget(label, row, 0)
-        entry = QtGui.QLineEdit(str(value))
-        self.grid.addWidget(entry, row, 1)
+            self._add_property(param, value)
