@@ -1,3 +1,4 @@
+from functools import partial
 from PySide import QtGui, QtSvg, QtCore
 from .shapewidget import ShapeWidget
 from ..params import EnumBase
@@ -36,33 +37,43 @@ class ToolProperties(QtGui.QWidget):
 
     def _get_widget_from_param(self, param, value):
         validator = FuncValidator(param.validate)
+        shape = self.tool.shape
         if isinstance(param, EnumBase):
             widget = QtGui.QComboBox()
             for choice in param.choices:
                 widget.addItem(choice)
+            widget.currentTextChanged.connect(partial(shape.set_param, param))
         elif issubclass(param.type, str):
             widget = QtGui.QLineEdit(param.format(value))
             widget.setValidator(validator)
+            widget.textChanged.connect(partial(shape.set_param, param))
         elif issubclass(param.type, int):
             widget = QtGui.QSpinBox()
             widget.setValue(int(value))
+            widget.valueChanged.connect(partial(shape.set_param, param))
         elif issubclass(param.type, float):
             widget = QtGui.QDoubleSpinBox()
             widget.setValue(float(value))
+            widget.valueChanged.connect(partial(shape.set_param, param))
         else:
             ctype = param.__class__.__name__
             ptype = param.type.__name__
-            return QtGui.QLabel('unsupported type {} ({})'.format(ctype, ptype))
+            text = 'unsupported type {} ({})'.format(ctype, ptype)
+            return QtGui.QLabel(text)
         return widget
+
+    def _on_pocket_edited(self, text):
+        self.tool.pocket = text
 
     def _add_entry(self, name, value, validator=None):
         row = self.grid.rowCount()
         label = QtGui.QLabel(name)
         self.grid.addWidget(label, row, 0)
-        entry = QtGui.QLineEdit(str(value))
+        entry = QtGui.QLineEdit(value)
         if validator:
             entry.setValidator(validator)
         self.grid.addWidget(entry, row, 1)
+        return entry
 
     def _add_property(self, param, value):
         row = self.grid.rowCount()
@@ -89,7 +100,8 @@ class ToolProperties(QtGui.QWidget):
         row = self.grid.rowCount()
         label = QtGui.QLabel("<h4>Tool location</h4>")
         self.grid.addWidget(label, row, 0, columnSpan=2)
-        self._add_entry('Pocket', self.tool.pocket)
+        entry = self._add_entry('Pocket', self.tool.pocket)
+        entry.textChanged.connect(self._on_pocket_edited)
 
         # Add custom properties under a separate title.
         self._makespacing(6)

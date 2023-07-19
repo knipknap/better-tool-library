@@ -16,4 +16,4 @@ class ToolEditor():
         self.form.vBox.addWidget(props)
 
     def show(self):
-        self.form.exec()
+        return self.form.exec()

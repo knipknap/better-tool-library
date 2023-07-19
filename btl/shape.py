@@ -63,7 +63,8 @@ class Shape():
         summary = self.get_label()
         for param in known_types:
             value = self.get_param(param)
-            summary += ' ' + param.format(value)
+            if value:
+                summary += ' ' + param.format(value)
         return summary.strip()
 
     def is_builtin(self):

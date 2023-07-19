@@ -4,9 +4,11 @@ import FreeCAD
 import FreeCADGui
 import Path
 from PySide import QtGui, QtCore, QtUiTools
+from ..tool import Tool
 from .util import load_ui
 from .tablecell import TwoLineTableCell
 from .shapeselector import ShapeSelector
+from .tooleditor import ToolEditor
 
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "library.ui")
@@ -42,12 +44,17 @@ class LibraryUI():
     def library_selected(self, index):
         self.update_tool_list()
 
-    def update_tool_list(self):
-        # Find the selected library.
+    def get_selected_library(self):
         library_id = self.form.comboBoxLibrary.currentData()
         if not library_id:
             return
-        library = self.tooldb.get_library_by_id(library_id)
+        return self.tooldb.get_library_by_id(library_id)
+
+    def update_tool_list(self):
+        # Find the selected library.
+        library = self.get_selected_library()
+        if not library:
+            return
 
         # Update the tool list.
         listwidget = self.form.listWidgetTools
@@ -87,3 +94,18 @@ class LibraryUI():
     def on_create_tool_clicked(self):
         selector = ShapeSelector(self.tooldb)
         selector.show()
+        shape = selector.shape
+        if not shape:
+            return
+
+        label = shape.get_label()
+        tool = Tool('New {}'.format(label), shape)
+        editor = ToolEditor(tool)
+        if not editor.show():
+            return
+
+        print("Saving")
+        library = self.get_selected_library()
+        self.tooldb.add_tool(tool, library)
+        self.tooldb.serialize(self.serializer)
+        self.load()

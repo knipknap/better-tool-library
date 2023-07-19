@@ -2,11 +2,9 @@ import os
 from functools import partial
 from pathlib import Path
 from PySide import QtGui, QtCore
-from ..tool import Tool
 from .util import load_ui
 from .flowlayout import FlowLayout
 from .shapebutton import ShapeButton
-from .tooleditor import ToolEditor
 
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "shapeselector.ui")
@@ -14,6 +12,7 @@ ui_path = os.path.join(__dir__, "shapeselector.ui")
 class ShapeSelector():
     def __init__(self, tooldb):
         self.tooldb = tooldb
+        self.shape = None
         self.form = load_ui(ui_path)
 
         self.flow = FlowLayout(self.form.shapeGrid, orientation=QtGui.Qt.Horizontal)
@@ -33,11 +32,8 @@ class ShapeSelector():
 
 
     def on_shape_button_clicked(self, shape):
+        self.shape = shape
         self.form.close()
-        label = shape.get_label()
-        tool = Tool('New {}'.format(label), shape)
-        editor = ToolEditor(tool)
-        editor.show()
 
     def on_import_clicked(self):
         filename = QtGui.QFileDialog.getOpenFileName(
@@ -50,7 +46,8 @@ class ShapeSelector():
             self.form.close()
             return
 
-        print("selected shape:", filename) # TODO
+        print("selected shape:", filename)
+         # TODO
 
     def show(self):
-        self.form.exec()
+        return self.form.exec()
