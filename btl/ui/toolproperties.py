@@ -49,7 +49,7 @@ class ToolProperties(QtGui.QWidget):
             widget.textChanged.connect(partial(shape.set_param, param))
         elif issubclass(param.type, bool):
             widget = QtGui.QCheckBox()
-            widget.setCheckedState(bool(value))
+            widget.setCheckState(QtCore.Qt.Checked if value else QtCore.Qt.Unchecked)
             widget.stateChanged.connect(partial(shape.set_param, param))
         elif issubclass(param.type, int):
             widget = QtGui.QSpinBox()
