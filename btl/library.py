@@ -8,19 +8,48 @@ class Library(object):
         self.id = id or str(uuid.uuid1())
         self.label = label
         self.tools = []
-
-        # The data-structures of tool libraries in FreeCAD are ill-defined; tool IDs are
-        # not unique across libraries. This forces us to keep a space to store these
-        # library-specific IDs.
-        # Maps unique tool ID to FC library-specific-tool ID, and is empty unless it
-        # was de-serialized from FreeCAD tool libraries.
-        self.fc_tool_ids = dict()
+        self.pockets = {}  # Maps pocket number to tool
 
     def __str__(self):
         return '{} "{}"'.format(self.id, self.label)
 
-    def add_tool(self, tool):
-        self.tools.append(tool)
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def get_next_pocket(self):
+        pocketlist = sorted(self.pockets, reverse=True)
+        return pocketlist[0]+1 if pocketlist else 1
+
+    def get_pocket_from_tool(self, tool):
+        for pocket, thetool in self.pockets.items():
+            if tool == thetool:
+                return pocket
+        return None
+
+    def assign_new_pocket(self, tool, pocket=None):
+        if tool not in self.tools:
+            return
+
+        # If no specific pocket was requested, assign a new one.
+        if pocket is None:
+            pocket = self.get_next_pocket()
+
+        # Otherwise, add the tool. Since the requested pocket may already
+        # be in use, we need to account for that. In this case, we will
+        # add the removed tool into a new pocket.
+        old_tool = self.pockets.pop(pocket, None)
+        old_pocket = self.get_pocket_from_tool(tool)
+        if old_pocket:
+            del self.pockets[old_pocket]
+        self.pockets[pocket] = tool
+        if old_tool:
+            self.assign_new_pocket(old_tool)
+        return pocket
+
+    def add_tool(self, tool, pocket=None):
+        if tool not in self.tools:
+            self.tools.append(tool)
+        self.assign_new_pocket(tool, pocket)
 
     def get_tools(self):
         return self.tools

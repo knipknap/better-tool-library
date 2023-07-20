@@ -14,10 +14,16 @@ class FuncValidator(QtGui.QValidator):
         return QtGui.QValidator.Acceptable, string, pos
 
 class ToolProperties(QtGui.QWidget):
-    def __init__ (self, tool, parent=None):
+    def __init__ (self, tool, pocket=None, pocket_changed_cb=None, parent=None):
         super(ToolProperties, self).__init__(parent)
         self.layout = QtGui.QVBoxLayout(self)
         self.layout.setAlignment(QtCore.Qt.AlignHCenter)
+
+        self.pocket = pocket
+        if pocket_changed_cb:
+             self.pocket_changed_cb = partial(pocket_changed_cb, tool)
+        else:
+             self.pocket_changed_cb = lambda x: None
 
         self.nameWidget = QtGui.QLineEdit(tool.get_label())
         self.nameWidget.setPlaceholderText("Tool name")
@@ -70,9 +76,6 @@ class ToolProperties(QtGui.QWidget):
 
         return widget
 
-    def _on_pocket_value_changed(self, value):
-        self.tool.pocket = value
-
     def _add_property_from_widget(self, widget, name, value):
         row = self.grid.rowCount()
         label = QtGui.QLabel(name)
@@ -104,16 +107,17 @@ class ToolProperties(QtGui.QWidget):
             self.grid.itemAt(i).widget().setParent(None)
 
         # Add tool location properties.
-        row = self.grid.rowCount()
-        label = QtGui.QLabel("<h4>Tool location</h4>")
-        self.grid.addWidget(label, row, 0, columnSpan=2)
-        spinner = QtGui.QSpinBox()
-        spinner.setValue(self.tool.pocket or 0)
-        spinner.valueChanged.connect(self._on_pocket_value_changed)
-        self._add_property_from_widget(spinner, 'Pocket', self.tool.pocket)
+        if self.pocket is not None:
+            row = self.grid.rowCount()
+            label = QtGui.QLabel("<h4>Tool location</h4>")
+            self.grid.addWidget(label, row, 0, columnSpan=2)
+            spinner = QtGui.QSpinBox()
+            spinner.setValue(self.pocket or 0)
+            spinner.valueChanged.connect(self.pocket_changed_cb)
+            self._add_property_from_widget(spinner, 'Pocket', self.pocket)
+            self._makespacing(6)
 
         # Add custom properties under a separate title.
-        self._makespacing(6)
         row = self.grid.rowCount()
         label = QtGui.QLabel("<h4>Tool-specific properties</h4>")
         self.grid.addWidget(label, row, 0, columnSpan=2)

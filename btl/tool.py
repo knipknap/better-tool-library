@@ -8,7 +8,6 @@ class Tool(object):
     def __init__(self, label, shape, id=None):
         self.id = id or str(uuid.uuid1())
         self.label = label
-        self.pocket = None
         self.shape = Shape(shape) if isinstance(shape, str) else shape
 
     def __str__(self):
@@ -33,7 +32,6 @@ class Tool(object):
 
         shape = self.shape.get_label()
         shape_name = self.shape.name
-        print('{}  Shape  = {} ({})'.format(indent, shape, shape_name))
-        print('{}  Pocket = {}'.format(indent, self.pocket))
+        print('{}  Shape = {} ({})'.format(indent, shape, shape_name))
 
         self.shape.dump(indent=2, summarize=summarize)

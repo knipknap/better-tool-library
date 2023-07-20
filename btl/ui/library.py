@@ -111,6 +111,10 @@ class LibraryUI():
     def on_delete_library_clicked(self):
         print("Delete library") #TODO
 
+    def on_pocket_changed(self, tool, pocket):
+        library = self.get_selected_library()
+        library.assign_new_pocket(tool, pocket)
+
     def on_create_tool_clicked(self):
         selector = ShapeSelector(self.tooldb, self.serializer)
         selector.show()
@@ -120,12 +124,14 @@ class LibraryUI():
 
         label = shape.get_label()
         tool = Tool('New {}'.format(label), shape)
-        editor = ToolEditor(tool)
+        library = self.get_selected_library()
+        pocket = library.get_next_pocket()
+        editor = ToolEditor(tool, pocket, self.on_pocket_changed)
         if not editor.show():
             return
 
-        library = self.get_selected_library()
         self.tooldb.add_tool(tool, library)
+        library.assign_new_pocket(tool, editor.pocket)
         self.tooldb.serialize(self.serializer)
         self.load()
 
@@ -135,7 +141,12 @@ class LibraryUI():
             return
 
         tool = items[0].data(QtCore.Qt.UserRole)
-        editor = ToolEditor(tool)
+        library = self.get_selected_library()
+        if library:
+            pocket = library.get_pocket_from_tool(tool)
+            editor = ToolEditor(tool, pocket, self.on_pocket_changed)
+        else:
+            editor = ToolEditor(tool)
         if not editor.show():
             return
 

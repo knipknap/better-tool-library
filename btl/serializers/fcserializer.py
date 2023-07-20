@@ -108,22 +108,11 @@ class FCSerializer():
         attrs = {}
         attrs["version"] = library.API_VERSION
 
-        # The convoluted "next_tool_id" is required due to ill-defined data structures in
-        # FreeCAD tool library: Tool IDs are not unique across libraries. See also the
-        # docstring for Library.fc_tool_ids.
         tools = []
-        next_tool_id = 1
-        if library.fc_tool_ids:
-            next_tool_id = max(int(i or 0) for i in library.fc_tool_ids.values())+1
-        for n, tool in enumerate(library.get_tools()):
-            fc_tool_id = library.fc_tool_ids.get(tool.id)
-            if not fc_tool_id:
-                fc_tool_id = next_tool_id
-                next_tool_id += 1
-
+        for pocket, tool in library.pockets.items():
             tool_filename = self._tool_filename_from_name(tool.id)
             tool_ref = {
-                'nr': fc_tool_id,
+                'nr': pocket,
                 'path': os.path.basename(tool_filename),
             }
             tools.append(tool_ref)
@@ -143,7 +132,7 @@ class FCSerializer():
             attrs = json.load(fp)
 
         for tool_obj in attrs['tools']:
-            nr = tool_obj['nr']
+            pocket = tool_obj['nr']
             path = tool_obj['path']
             name = self._name_from_filename(path)
             try:
@@ -151,9 +140,8 @@ class FCSerializer():
             except OSError as e:
                 sys.stderr.write('WARN: skipping {}: {}\n'.format(path, e))
             else:
-                library.add_tool(tool)
-                library.fc_tool_ids[tool.id] = int(nr)
-                tool.pocket = int(nr)
+                pocket = int(pocket) if pocket else library.get_next_pocket()
+                library.add_tool(tool, pocket)
 
         return library
 
