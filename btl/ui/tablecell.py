@@ -14,9 +14,9 @@ class TwoLineTableCell(QtGui.QWidget):
 
         self.vbox = QtGui.QVBoxLayout()
         self.label_upper = QtGui.QLabel()
-        self.label_upper.setStyleSheet("margin-top: 10px")
+        self.label_upper.setStyleSheet("margin-top: 8px")
         self.label_lower = QtGui.QLabel()
-        self.label_lower.setStyleSheet("margin-bottom: 10px")
+        self.label_lower.setStyleSheet("margin-bottom: 8px")
         self.vbox.addWidget(self.label_upper)
         self.vbox.addWidget(self.label_lower)
 

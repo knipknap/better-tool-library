@@ -15,21 +15,25 @@ class ShapeSelector():
         self.shape = None
         self.form = load_ui(ui_path)
 
-        self.flow = FlowLayout(self.form.shapeGrid, orientation=QtGui.Qt.Horizontal)
-        self.flow.widthChanged.connect(lambda x: self.form.shapeGrid.setMinimumWidth(x))
-
         self.form.buttonBox.clicked.connect(self.form.close)
         self.form.pushButtonImport.clicked.connect(self.on_import_clicked)
 
         self.update_shapes()
 
-    def update_shapes(self):
-        for shape in self.tooldb.shapes.values():
+    def _add_shapes(self, toolbox, shapes):
+        flow = FlowLayout(toolbox, orientation=QtGui.Qt.Horizontal)
+        flow.widthChanged.connect(lambda x: toolbox.setMinimumWidth(x))
+
+        for shape in shapes:
             button = ShapeButton(shape)
-            self.flow.addWidget(button)
+            flow.addWidget(button)
             cb = partial(self.on_shape_button_clicked, shape)
             button.clicked.connect(cb)
 
+    def update_shapes(self):
+        self._add_shapes(self.form.standardTools, self.tooldb.get_builtin_shapes())
+        self._add_shapes(self.form.customTools, self.tooldb.get_custom_shapes())
+        self.form.toolBox.setCurrentIndex(0)
 
     def on_shape_button_clicked(self, shape):
         self.shape = shape
@@ -47,7 +51,7 @@ class ShapeSelector():
             return
 
         print("selected shape:", filename)
-         # TODO
+        # TODO
 
     def show(self):
         return self.form.exec()

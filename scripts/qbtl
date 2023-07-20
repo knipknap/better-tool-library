@@ -24,6 +24,7 @@ parser.add_argument('-f', '--format',
 parser.add_argument('name',
                     help='the DB name. In case of a file based DB, this is the path to the DB')
 tool_db = ToolDB()
+tool_db.load_builtin_shapes()
 
 args = parser.parse_args()
 

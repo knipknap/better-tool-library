@@ -96,6 +96,7 @@ lsparser.add_argument('objects',
 
 # "show" command arguments
 lsparser = subparsers.add_parser('show', help='list objects with details')
+lsparser.add_argument('-b', '--builtin', action='store_true', help='also show built-in shapes')
 lsparser.add_argument('-s', '--summarize', action='store_true', help='summarize tool parameters')
 lsparser.add_argument('objects',
                       help='which DB object to work with',
@@ -137,6 +138,7 @@ args = parser.parse_args()
 serializer_cls = serializers.serializers[args.format]
 serializer = serializer_cls(args.name)
 db = ToolDB()
+db.load_builtin_shapes()
 db.deserialize(serializer)
 
 if args.command == 'ls':
@@ -149,7 +151,7 @@ if args.command == 'ls':
 
 elif args.command == 'show':
     if 'all' in args.objects:
-        db.dump(summarize=args.summarize)
+        db.dump(summarize=args.summarize, builtin=args.builtin)
     if 'libraries' in args.objects:
         for library in db.get_libraries():
             library.dump(summarize=args.summarize)

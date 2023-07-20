@@ -58,6 +58,7 @@ class LibraryUI():
 
         # Update the tool list.
         listwidget = self.form.listWidgetTools
+        listwidget.setStyleSheet("margin: 1px")
         listwidget.clear()
         for tool in library.tools:
             cell = TwoLineTableCell()
@@ -104,7 +105,6 @@ class LibraryUI():
         if not editor.show():
             return
 
-        print("Saving")
         library = self.get_selected_library()
         self.tooldb.add_tool(tool, library)
         self.tooldb.serialize(self.serializer)

@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import os
 import uuid as UUID
+from itertools import chain
+from .shape import Shape
 
 class ToolDB(object):
     def __init__(self):
         self.libraries = dict() # maps library ID to Library
         self.tools = dict()  # maps tool ID to Tool
         self.shapes = dict()  # maps shape name to Shape
+        self.builtin_shapes = dict()  # maps shape name to Shape
 
     def add_library(self, library):
         self.libraries[library.id] = library
@@ -22,6 +25,23 @@ class ToolDB(object):
 
     def add_shape(self, shape):
         self.shapes[shape.name] = shape
+
+    def load_builtin_shapes(self):
+        for name in Shape.builtin:
+            shape = Shape(name)
+            self.builtin_shapes[shape.name] = shape
+
+    def get_shapes(self, builtin=True):
+        if builtin:
+            return chain(self.builtin_shapes.values(),
+                         self.shapes.values())
+        return self.shapes.values()
+
+    def get_builtin_shapes(self):
+        return self.builtin_shapes.values()
+
+    def get_custom_shapes(self):
+        return self.shapes.values()
 
     def get_tool_by_id(self, id):
         return self.tools[id]
@@ -79,7 +99,14 @@ class ToolDB(object):
         self.deserialize_shapes(serializer)
         self.deserialize_tools(serializer)
 
-    def dump(self, unused_tools=True, summarize=False):
+    def dump(self, unused_tools=True, summarize=False, builtin=False):
+        if builtin:
+             print("-----------------")
+             print(" Built-in shapes")
+             print("-----------------")
+             for shape in self.builtin_shapes.values():
+                 shape.dump(summarize=summarize)
+
         print("--------------")
         print(" Custom shapes")
         print("--------------")
