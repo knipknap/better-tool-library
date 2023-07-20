@@ -112,7 +112,23 @@ class LibraryUI():
         print("Create library") #TODO
 
     def on_delete_library_clicked(self):
-        print("Delete library") #TODO
+        library = self.get_selected_library()
+        msg = f'Are you sure you want to delete library <b>{library.label}</b>?' \
+            + ' This action cannot be reversed.'
+
+        msgBox = QtGui.QMessageBox()
+        msgBox.setWindowTitle('Confirm library deletion')
+        msgBox.setText(msg)
+        msgBox.addButton(QtGui.QMessageBox.Cancel)
+        msgBox.addButton('Delete', QtGui.QMessageBox.AcceptRole)
+        response = msgBox.exec()
+        if response != QtGui.QMessageBox.AcceptRole:
+            return
+
+        self.tooldb.remove_library(library)
+        self.form.comboBoxLibrary.setCurrentIndex(0)
+        self.tooldb.serialize(self.serializer)
+        self.load()
 
     def on_create_tool_clicked(self):
         selector = ShapeSelector(self.tooldb, self.serializer)
