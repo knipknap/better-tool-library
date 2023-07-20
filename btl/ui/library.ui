@@ -102,7 +102,7 @@
          </property>
          <property name="sizeHint" stdset="0">
           <size>
-           <width>6</width>
+           <width>12</width>
            <height>20</height>
           </size>
          </property>
@@ -118,23 +118,6 @@
            <property name="icon">
             <iconset>
              <normaloff>../../resources/icons/plus.svg</normaloff>../../resources/icons/plus.svg</iconset>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButtonEditTool">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Edit Tool</string>
-           </property>
-           <property name="icon">
-            <iconset>
-             <normaloff>../../resources/icons/tool-edit.svg</normaloff>../../resources/icons/tool-edit.svg</iconset>
            </property>
           </widget>
          </item>

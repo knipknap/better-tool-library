@@ -27,7 +27,6 @@ class LibraryUI():
         self.form.toolButtonAddLibrary.clicked.connect(self.on_create_library_clicked)
         self.form.toolButtonRemoveLibrary.clicked.connect(self.on_delete_library_clicked)
         self.form.pushButtonCreateTool.clicked.connect(self.on_create_tool_clicked)
-        self.form.pushButtonEditTool.clicked.connect(self.on_edit_tool_clicked)
         self.form.pushButtonDeleteTool.clicked.connect(self.on_delete_tool_clicked)
         self.form.listWidgetTools.setSelectionMode(
             QtGui.QAbstractItemView.SelectionMode.ExtendedSelection)
