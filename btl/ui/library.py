@@ -72,11 +72,15 @@ class LibraryUI():
         listwidget = self.form.listWidgetTools
         listwidget.setStyleSheet("margin: 1px")
         listwidget.clear()
-        for tool in tools:
+        for tool in sorted(tools, key=lambda x: x.label, reverse=True):
             cell = TwoLineTableCell()
             cell.set_upper_text(tool.label)
             cell.set_lower_text(tool.shape.get_param_summary())
             cell.set_icon_from_svg(tool.shape.get_svg())
+
+            if library:
+                pocket = library.get_pocket_from_tool(tool)
+                cell.set_label(str(pocket))
 
             widget_item = QtGui.QListWidgetItem(listwidget)
             widget_item.setSizeHint(cell.sizeHint())

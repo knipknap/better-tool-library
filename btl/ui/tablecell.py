@@ -8,6 +8,7 @@ def isub(text, old, repl_pattern):
 class TwoLineTableCell(QtGui.QWidget):
     def __init__ (self, parent=None):
         super(TwoLineTableCell, self).__init__(parent)
+        self.right_text = ''
         self.upper_text = ''
         self.lower_text = ''
         self.search_highlight = ''
@@ -24,6 +25,11 @@ class TwoLineTableCell(QtGui.QWidget):
         self.icon_widget = QtGui.QLabel()
         self.hbox.addWidget(self.icon_widget, 0)
         self.hbox.addLayout(self.vbox, 1)
+        self.label_right = QtGui.QLabel()
+        self.label_right.setMinimumWidth(40)
+        self.label_right.setTextFormat(QtCore.Qt.RichText)
+        self.label_right.setAlignment(QtCore.Qt.AlignCenter)
+        self.hbox.addWidget(self.label_right, 0)
         self.setLayout(self.hbox)
 
     def _highlight(self, text):
@@ -33,11 +39,18 @@ class TwoLineTableCell(QtGui.QWidget):
         return isub(text, self.search_highlight.split(' '), highlight_fmt)
 
     def _update(self):
+        text = self._highlight(self.right_text)
+        self.label_right.setText("Pocket\n<h3>{}</h3>".format(text))
+
         text = self._highlight(self.upper_text)
         self.label_upper.setText('<big><b>'+text+'</b></big>')
 
         text = self._highlight(self.lower_text)
         self.label_lower.setText(text)
+
+    def set_label(self, text):
+        self.right_text = text
+        self._update()
 
     def set_upper_text(self, text):
         self.upper_text = text
@@ -64,8 +77,9 @@ class TwoLineTableCell(QtGui.QWidget):
 
     def contains_text(self, text):
         for term in text.split(' '):
-            if term not in self.label_upper.text() \
-                and term not in self.label_lower.text():
+            if term not in self.upper_text \
+                and term not in self.lower_text \
+                and term not in self.right_text:
                 return False
         return True
 
