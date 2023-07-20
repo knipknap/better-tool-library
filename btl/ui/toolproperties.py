@@ -23,6 +23,7 @@ class ToolProperties(QtGui.QWidget):
         self.nameWidget.setPlaceholderText("Tool name")
         self.layout.addWidget(self.nameWidget)
         self.nameWidget.setFocus()
+        self.nameWidget.textChanged.connect(tool.set_label)
 
         widget = ShapeWidget(tool.shape)
         self.layout.addWidget(widget)

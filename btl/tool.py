@@ -14,6 +14,9 @@ class Tool(object):
     def __str__(self):
         return '{} "{}" "{}"'.format(self.id, self.label, self.shape.name)
 
+    def set_label(self, label):
+        self.label = label
+
     def get_label(self):
         return self.label
 
