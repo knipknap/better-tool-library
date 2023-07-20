@@ -21,6 +21,9 @@ class EnumBase(Base):
     def validate(self, value):
         return value in self.choices
 
+class BoolBase(Base):
+    type = bool
+
 class IntBase(Base):
     type = int
 
@@ -30,6 +33,10 @@ class FloatBase(Base):
 class DistanceBase(FloatBase):
     unit = 'mm'
     fmt = '{}mm'
+
+class AngleBase(FloatBase):
+    unit = '°'
+    fmt = '{}°'
 
 #################
 # Specific types

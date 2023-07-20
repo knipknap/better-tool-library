@@ -47,6 +47,10 @@ class ToolProperties(QtGui.QWidget):
             widget = QtGui.QLineEdit(param.format(value))
             widget.setValidator(validator)
             widget.textChanged.connect(partial(shape.set_param, param))
+        elif issubclass(param.type, bool):
+            widget = QtGui.QCheckBox()
+            widget.setCheckedState(bool(value))
+            widget.stateChanged.connect(partial(shape.set_param, param))
         elif issubclass(param.type, int):
             widget = QtGui.QSpinBox()
             widget.setValue(int(value))

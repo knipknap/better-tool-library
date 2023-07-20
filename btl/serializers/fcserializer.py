@@ -34,10 +34,13 @@ fc_property_to_param_type = {
 
 fc_property_unit_to_param_type = {
     'Length': params.DistanceBase,
+    'Angle': params.AngleBase,
 }
 
-def _type_from_prop(prop):
-    if isinstance(prop, int):
+def _type_from_prop(propname, prop):
+    if isinstance(prop, bool):
+        return params.BoolBase
+    elif isinstance(prop, int):
         return params.IntBase
     elif isinstance(prop, float):
         return params.FloatBase
@@ -50,20 +53,22 @@ def _type_from_prop(prop):
     else:
         raise NotImplementedError(
             'error: param {} with type {} is unsupported'.format(
-                 propname, prop))
+                 propname, prop.Unit.Type))
 
 def _tool_property_to_param(propname, value, prop=None):
     if propname in fc_property_to_param_type:   # Known type.
         param_type = fc_property_to_param_type[propname]
         param = param_type()
     else:  # Try to find type from prop.
-        param_type = params.Base if prop is None else _type_from_prop(prop)
+        param_type = params.Base if prop is None else _type_from_prop(propname, prop)
         param = param_type()
         param.name = propname
         param.label = re.sub(r'([A-Z])', r' \1', propname).strip()
 
     if issubclass(param_type, params.DistanceBase):
         value = parse_unit(value)
+    elif issubclass(param_type, params.BoolBase):
+        value = bool(value or False)
     elif issubclass(param_type, params.IntBase):
         value = int_or_none(value)
     elif issubclass(param_type, params.Material):
@@ -78,7 +83,7 @@ def _tool_property_to_param(propname, value, prop=None):
     return param, value
 
 def _shape_property_to_param(propname, attrs, prop):
-    param_type = _type_from_prop(prop)
+    param_type = _type_from_prop(propname, prop)
     if hasattr(prop, 'Unit'):
         value = prop.Value
     else:
