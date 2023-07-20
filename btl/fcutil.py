@@ -36,6 +36,18 @@ def type_from_prop(propname, prop):
             'error: param {} with type {} is unsupported'.format(
                  propname, prop.Unit.Type))
 
+def parse_unit(value):
+    return float(value.rstrip(' m').replace(',', '.')) if value else None
+
+def parse_angle(value):
+    return float(value.rstrip(' °').replace(',', '.')) if value else None
+
+def int_or_none(value):
+    try:
+        return int(value) or None
+    except TypeError:
+        return None
+
 def tool_property_to_param(propname, value, prop=None):
     if propname in fc_property_to_param_type:   # Known type.
         param_type = fc_property_to_param_type[propname]
@@ -48,6 +60,8 @@ def tool_property_to_param(propname, value, prop=None):
 
     if issubclass(param_type, params.DistanceBase):
         value = parse_unit(value)
+    elif issubclass(param_type, params.AngleBase):
+        value = parse_angle(value)
     elif issubclass(param_type, params.BoolBase):
         value = bool(value or False)
     elif issubclass(param_type, params.IntBase):
@@ -94,18 +108,6 @@ def shape_properties_to_shape(attrs, properties, shape):
     for propname, prop in properties:
         param, value = shape_property_to_param(propname, attrs, prop)
         shape.set_param(param, value)
-
-def parse_unit(value):
-    return float(value.rstrip(' m').replace(',', '.')) if value else None
-
-def format_unit(value):
-    return str(value).replace('.', ',') if value else None
-
-def int_or_none(value):
-    try:
-        return int(value) or None
-    except TypeError:
-        return None
 
 def load_shape_properties(filename):
     # Load the shape file using FreeCad

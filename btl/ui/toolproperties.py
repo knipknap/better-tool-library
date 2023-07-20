@@ -1,7 +1,7 @@
 from functools import partial
 from PySide import QtGui, QtSvg, QtCore
 from .shapewidget import ShapeWidget
-from ..params import EnumBase
+from ..params import EnumBase, AngleBase
 
 class FuncValidator(QtGui.QValidator):
     def __init__(self, func, parent=None):
@@ -54,16 +54,19 @@ class ToolProperties(QtGui.QWidget):
         elif issubclass(param.type, int):
             widget = QtGui.QSpinBox()
             widget.setValue(int(value or 0))
+            widget.setSuffix(' '+param.unit if param.unit else '')
             widget.valueChanged.connect(partial(shape.set_param, param))
         elif issubclass(param.type, float):
             widget = QtGui.QDoubleSpinBox()
             widget.setValue(float(value))
+            widget.setSuffix(' '+param.unit if param.unit else '')
             widget.valueChanged.connect(partial(shape.set_param, param))
         else:
             ctype = param.__class__.__name__
             ptype = param.type.__name__
             text = 'unsupported type {} ({})'.format(ctype, ptype)
             return QtGui.QLabel(text)
+
         return widget
 
     def _on_pocket_value_changed(self, value):
