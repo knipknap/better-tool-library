@@ -4,6 +4,7 @@ import glob
 import shutil
 from . import const
 from .params import known_types
+from .fcutil import load_shape_properties, shape_property_to_param
 
 builtin_shape_dir = os.path.join(const.resource_dir, 'shapes')
 builtin_shape_ext = '.fcstd'
@@ -14,7 +15,6 @@ def get_builtin_shape_file_from_name(name):
 
 def get_builtin_shape_svg_filename_from_name(name):
     return os.path.join(builtin_shape_dir, name+'.svg')
-
 
 class Shape():
     aliases = {'bullnose': 'torus',
@@ -36,6 +36,13 @@ class Shape():
         # Load the shape image. Builtin types get preferences.
         if name in Shape.builtin:
             self.filename = get_builtin_shape_file_from_name(name)
+
+            # Collect a list of custom properties from the Attribute object.
+            attrs, properties = load_shape_properties(self.filename)
+            for propname, prop in properties:
+                param, value = shape_property_to_param(propname, attrs, prop)
+                self.set_param(param, value)
+
             svg_file = get_builtin_shape_svg_filename_from_name(name)
             if os.path.isfile(svg_file):
                 self.add_svg_from_file(svg_file)
