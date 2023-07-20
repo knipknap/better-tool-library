@@ -46,6 +46,7 @@ class ToolProperties(QtGui.QWidget):
             widget = QtGui.QComboBox()
             for choice in param.choices:
                 widget.addItem(choice)
+            widget.setCurrentText(value)
             widget.currentTextChanged.connect(partial(shape.set_param, param))
         elif issubclass(param.type, str):
             widget = QtGui.QLineEdit(param.format(value))
