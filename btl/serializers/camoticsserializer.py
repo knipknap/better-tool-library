@@ -107,6 +107,11 @@ class CamoticsSerializer():
         # So nothing to be done here.
         raise NotImplemented
 
+    def serialize_tools(self, tools):
+        # In Camotics, tools cannot exist on their own outside a library.
+        # So nothing to be done here.
+        return
+
     def deserialize_tools(self):
         # In Camotics, tools cannot exist on their own outside a library.
         # So nothing to be done here.

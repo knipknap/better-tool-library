@@ -187,6 +187,17 @@ class FCSerializer():
             shape.add_svg_from_file(svg_filename)
         return shape
 
+    def serialize_tools(self, tools):
+        for tool in tools:
+            self.serialize_tool(tool)
+
+        # Flush unused tools.
+        tool_names = set(t.id for t in tools)
+        for filename in self._get_tool_filenames():
+            name = self._name_from_filename(filename)
+            if name not in tool_names:
+                os.remove(filename)
+
     def deserialize_tools(self):
         return [self.deserialize_tool(id)
                 for id in self._get_tool_ids()]

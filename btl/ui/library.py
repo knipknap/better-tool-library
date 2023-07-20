@@ -23,6 +23,8 @@ class LibraryUI():
         self.form.comboBoxLibrary.currentIndexChanged.connect(self.library_selected)
         self.form.lineEditSearch.setFocus()
         self.form.lineEditSearch.textChanged.connect(self.update_search)
+        self.form.toolButtonAddLibrary.clicked.connect(self.on_create_library_clicked)
+        self.form.toolButtonRemoveLibrary.clicked.connect(self.on_delete_library_clicked)
         self.form.toolButtonCreateTool.clicked.connect(self.on_create_tool_clicked)
         self.form.pushButtonDeleteTool.clicked.connect(self.on_delete_tool_clicked)
         self.form.listWidgetTools.setSelectionMode(
@@ -35,14 +37,18 @@ class LibraryUI():
 
         # Update the library dropdown menu.
         combo = self.form.comboBoxLibrary
+        index = combo.currentIndex()
         combo.clear()
+        combo.addItem('Unused tools')
+        combo.insertSeparator(1)
         libraries = self.tooldb.get_libraries()
         for library in libraries:
             combo.addItem(library.label, library.id)
 
         # This also triggers an update of the tool list.
+        combo.setCurrentIndex(index)
         if combo.currentIndex() == -1:
-            combo.setCurrentIndex(0)
+            combo.setCurrentIndex(2)
 
     def library_selected(self, index):
         self.update_tool_list()
@@ -56,14 +62,16 @@ class LibraryUI():
     def update_tool_list(self):
         # Find the selected library.
         library = self.get_selected_library()
-        if not library:
-            return
+        if library:
+            tools = library.tools
+        else:
+            tools = self.tooldb.get_unused_tools()
 
         # Update the tool list.
         listwidget = self.form.listWidgetTools
         listwidget.setStyleSheet("margin: 1px")
         listwidget.clear()
-        for tool in library.tools:
+        for tool in tools:
             cell = TwoLineTableCell()
             cell.set_upper_text(tool.label)
             cell.set_lower_text(tool.shape.get_param_summary())
@@ -96,6 +104,12 @@ class LibraryUI():
                 #tc.VertFeed = vfeed
                 #tc.SpindleSpeed = float(rpm)
 
+    def on_create_library_clicked(self):
+        print("Create library") #TODO
+
+    def on_delete_library_clicked(self):
+        print("Delete library") #TODO
+
     def on_create_tool_clicked(self):
         selector = ShapeSelector(self.tooldb, self.serializer)
         selector.show()
@@ -115,14 +129,23 @@ class LibraryUI():
         self.load()
 
     def on_delete_tool_clicked(self):
+        library = self.get_selected_library()
         items = self.form.listWidgetTools.selectedItems()
         if not items:
             return
+        elif len(items) == 1 and library:
+            tool = items[0].data(QtCore.Qt.UserRole)
+            msg = 'Delete tool <b>{}</b> from library <b>{}</b>?'
+            msg = msg.format(tool.get_label(), library.label)
         elif len(items) == 1:
             tool = items[0].data(QtCore.Qt.UserRole)
-            msg = 'Delete tool <b>{}</b> from library?'.format(tool.get_label())
+            msg = 'Delete unused tool <b>{}</b>?'.format(tool.get_label())
+        elif len(items) > 1 and library:
+            tool = items[0].data(QtCore.Qt.UserRole)
+            msg = 'Delete {} selected tools from library <b>{}</b>?'
+            msg = msg.format(len(items), library.label)
         else:
-            msg = 'Delete {} selected tools from the library?'.format(len(items))
+            msg = 'Delete {} unused tools from the library?'.format(len(items))
 
         msgBox = QtGui.QMessageBox()
         msgBox.setWindowTitle('Confirm tool deletion')
@@ -130,11 +153,9 @@ class LibraryUI():
         msgBox.addButton(QtGui.QMessageBox.Cancel)
         msgBox.addButton('Delete', QtGui.QMessageBox.AcceptRole)
         response = msgBox.exec()
-        if response == QtGui.QMessageBox.AcceptRole:
-            self.on_delete_tool_confirmed(items)
+        if response != QtGui.QMessageBox.AcceptRole:
+            return
 
-    def on_delete_tool_confirmed(self, items):
-        library = self.get_selected_library()
         for item in self.form.listWidgetTools.selectedItems():
             tool = item.data(QtCore.Qt.UserRole)
             self.tooldb.remove_tool(tool, library)

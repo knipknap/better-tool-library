@@ -69,6 +69,11 @@ class LinuxCNCSerializer():
         # So nothing to be done here.
         return
 
+    def serialize_tools(self, tools):
+        # In LinuxCNC, tools cannot exist on their own outside a library.
+        # So nothing to be done here.
+        return
+
     def deserialize_tools(self):
         # In LinuxCNC, tools cannot exist on their own outside a library.
         # So nothing to be done here.

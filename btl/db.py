@@ -50,6 +50,16 @@ class ToolDB(object):
     def get_tools(self):
         return list(self.tools.values())
 
+    def tool_is_used(self, tool):
+        for library in self.libraries.values():
+            if library.has_tool(tool):
+                return True
+        return False
+
+    def get_unused_tools(self):
+        return list(t for t in self.tools.values()
+                    if not self.tool_is_used(t))
+
     def add_tool(self, tool, library=None):
         self.tools[tool.id] = tool
         if library:
@@ -83,8 +93,7 @@ class ToolDB(object):
             self.add_shape(shape)
 
     def serialize_tools(self, serializer):
-        for tool in self.tools.values():
-            serializer.serialize_tool(tool)
+        serializer.serialize_tools(self.tools.values())
 
     def deserialize_tools(self, serializer):
         for tool in serializer.deserialize_tools():
@@ -117,10 +126,8 @@ class ToolDB(object):
         print("------------")
         print(" Libraries")
         print("------------")
-        used_tools = set()
         for library in self.libraries.values():
             library.dump(summarize=summarize)
-            used_tools |= set(t.id for t in library.tools)
 
         if not unused_tools:
             return
@@ -128,8 +135,7 @@ class ToolDB(object):
         print("------------")
         print("Unused tools")
         print("------------")
-        for tool_id, tool in self.tools.items():
-            if tool_id not in used_tools:
-                tool.dump(summarize=summarize)
+        for tool in self.get_unused_tools():
+            tool.dump(summarize=summarize)
         else:
             print("(none)")
