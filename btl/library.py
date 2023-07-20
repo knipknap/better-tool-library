@@ -62,6 +62,7 @@ class Library(object):
 
     def remove_tool(self, tool):
         self.tools = [t for t in self.tools if t.id != tool.id]
+        self.pockets = {k: v for (k, v) in self.pockets.items() if v != tool}
 
     def serialize(self, serializer):
         return serializer.serialize_library(self)

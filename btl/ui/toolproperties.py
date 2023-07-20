@@ -14,16 +14,12 @@ class FuncValidator(QtGui.QValidator):
         return QtGui.QValidator.Acceptable, string, pos
 
 class ToolProperties(QtGui.QWidget):
-    def __init__ (self, tool, pocket=None, pocket_changed_cb=None, parent=None):
+    pocketChanged = QtCore.Signal(int)
+
+    def __init__ (self, tool, pocket=None, parent=None):
         super(ToolProperties, self).__init__(parent)
         self.layout = QtGui.QVBoxLayout(self)
         self.layout.setAlignment(QtCore.Qt.AlignHCenter)
-
-        self.pocket = pocket
-        if pocket_changed_cb:
-             self.pocket_changed_cb = partial(pocket_changed_cb, tool)
-        else:
-             self.pocket_changed_cb = lambda x: None
 
         self.nameWidget = QtGui.QLineEdit(tool.get_label())
         self.nameWidget.setPlaceholderText("Tool name")
@@ -40,6 +36,7 @@ class ToolProperties(QtGui.QWidget):
         self.layout.addLayout(self.grid)
 
         self.tool = tool
+        self.pocket = pocket
         self._update()
 
     def _get_widget_from_param(self, param, value):
@@ -113,7 +110,7 @@ class ToolProperties(QtGui.QWidget):
             self.grid.addWidget(label, row, 0, columnSpan=2)
             spinner = QtGui.QSpinBox()
             spinner.setValue(self.pocket or 0)
-            spinner.valueChanged.connect(self.pocket_changed_cb)
+            spinner.valueChanged.connect(self.pocketChanged.emit)
             self._add_property_from_widget(spinner, 'Pocket', self.pocket)
             self._makespacing(6)
 
