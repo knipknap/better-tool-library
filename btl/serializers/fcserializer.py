@@ -169,9 +169,7 @@ class FCSerializer():
 
         # Collect a list of custom properties from the Attribute object.
         attrs, properties = load_shape_properties(filename)
-        for propname, prop in properties:
-            param, value = shape_property_to_param(propname, attrs, prop)
-            shape.set_param(param, value)
+        shape_properties_to_shape(attrs, properties, shape)
 
         # Load the shape image.
         svg_filename = self._svg_filename_from_name(name)

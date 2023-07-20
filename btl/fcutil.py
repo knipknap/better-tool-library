@@ -90,6 +90,11 @@ def shape_property_to_param(propname, attrs, prop):
 
     return param, value
 
+def shape_properties_to_shape(attrs, properties, shape):
+    for propname, prop in properties:
+        param, value = shape_property_to_param(propname, attrs, prop)
+        shape.set_param(param, value)
+
 def parse_unit(value):
     return float(value.rstrip(' m').replace(',', '.')) if value else None
 
