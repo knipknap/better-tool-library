@@ -11,7 +11,7 @@ class ShapeButton(QtGui.QToolButton):
 
         self.setFixedSize(128, 128)
         self.setBaseSize(128, 128)
-        size = QtCore.QSize(85, 96)
+        size = QtCore.QSize(71, 100)
         self.setIconSize(size)
 
         self.set_icon_from_svg(shape.get_svg())
