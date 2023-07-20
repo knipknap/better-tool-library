@@ -9,6 +9,7 @@ import os
 import sys
 import glob
 import json
+import shutil
 from .. import Library, Shape, Tool
 from ..fcutil import *
 
@@ -61,6 +62,15 @@ class FCSerializer():
 
     def _shape_name_from_filename(self, filename):
         return os.path.splitext(filename)[0]
+
+    def import_shape_from_file(self, filename):
+        filename = os.path.abspath(filename)
+        dbpath = os.path.abspath(self.path)
+        parent = os.path.commonpath([dbpath])
+        child = os.path.commonpath([dbpath, filename])
+        if parent == child:
+            return # File is already in our path
+        shutil.copy(filename, self.shape_path)
 
     def _svg_filename_from_name(self, name):
         return os.path.join(self.shape_path, name+'.svg')

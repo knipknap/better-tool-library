@@ -93,7 +93,7 @@ class LibraryUI():
                 #tc.SpindleSpeed = float(rpm)
 
     def on_create_tool_clicked(self):
-        selector = ShapeSelector(self.tooldb)
+        selector = ShapeSelector(self.tooldb, self.serializer)
         selector.show()
         shape = selector.shape
         if not shape:

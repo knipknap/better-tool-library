@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import shutil
 import uuid as UUID
 from itertools import chain
 from .shape import Shape
