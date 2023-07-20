@@ -43,7 +43,7 @@ class LinuxCNCSerializer():
     def serialize_library(self, library):
         filename = self._library_filename_from_id(library.id)
         with open(filename, 'w') as fp:
-            for tool in library.tools:
+            for tool in library.get_tools():
                 fp.write("T{} P{} D{} ;{}\n".format(
                     tool.pocket,
                     tool.pocket,

@@ -64,7 +64,7 @@ class CamoticsSerializer():
     def serialize_library(self, library):
         toollist = {}
 
-        for tool in library.tools:
+        for tool in library.get_tools():
             toolitem = tooltemplate.copy()
             toolitem["diameter"] = tool.shape.get_param('diameter') or 2
             toolitem["description"] = tool.label
@@ -88,7 +88,7 @@ class CamoticsSerializer():
             tool.diameter = float(toolitem["diameter"])
             tool.length = float(toolitem["length"])
             tool.pocket = pocket
-            library.tools.append(tool)
+            library.add_tool(tool)
 
         return library
 

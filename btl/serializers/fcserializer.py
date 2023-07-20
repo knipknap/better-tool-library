@@ -115,7 +115,7 @@ class FCSerializer():
         next_tool_id = 1
         if library.fc_tool_ids:
             next_tool_id = max(int(i or 0) for i in library.fc_tool_ids.values())+1
-        for n, tool in enumerate(library.tools):
+        for n, tool in enumerate(library.get_tools()):
             fc_tool_id = library.fc_tool_ids.get(tool.id)
             if not fc_tool_id:
                 fc_tool_id = next_tool_id
@@ -151,7 +151,7 @@ class FCSerializer():
             except OSError as e:
                 sys.stderr.write('WARN: skipping {}: {}\n'.format(path, e))
             else:
-                library.tools.append(tool)
+                library.add_tool(tool)
                 library.fc_tool_ids[tool.id] = int(nr)
                 tool.pocket = int(nr)
 

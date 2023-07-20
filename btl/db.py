@@ -63,7 +63,7 @@ class ToolDB(object):
     def add_tool(self, tool, library=None):
         self.tools[tool.id] = tool
         if library:
-           library.tools.append(tool)
+           library.add_tool(tool)
 
     def remove_tool(self, tool, library=None):
         if library:
@@ -80,7 +80,7 @@ class ToolDB(object):
         self.libraries = dict()
         for library in serializer.deserialize_libraries():
             self.libraries[library.id] = library
-            for tool in library.tools:
+            for tool in library.get_tools():
                 if tool.id not in self.tools:
                     self.tools[tool.id] = tool
 

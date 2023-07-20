@@ -19,6 +19,12 @@ class Library(object):
     def __str__(self):
         return '{} "{}"'.format(self.id, self.label)
 
+    def add_tool(self, tool):
+        self.tools.append(tool)
+
+    def get_tools(self):
+        return self.tools
+
     def has_tool(self, tool):
         for t in self.tools:
             if tool.id == t.id:

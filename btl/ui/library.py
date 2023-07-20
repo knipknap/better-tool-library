@@ -64,7 +64,7 @@ class LibraryUI():
         # Find the selected library.
         library = self.get_selected_library()
         if library:
-            tools = library.tools
+            tools = library.get_tools()
         else:
             tools = self.tooldb.get_unused_tools()
 
