@@ -24,6 +24,9 @@ class LibraryUI():
         self.form.lineEditSearch.setFocus()
         self.form.lineEditSearch.textChanged.connect(self.update_search)
         self.form.toolButtonCreateTool.clicked.connect(self.on_create_tool_clicked)
+        self.form.pushButtonDeleteTool.clicked.connect(self.on_delete_tool_clicked)
+        self.form.listWidgetTools.setSelectionMode(
+            QtGui.QAbstractItemView.SelectionMode.ExtendedSelection)
 
         self.load()
 
@@ -68,6 +71,7 @@ class LibraryUI():
 
             widget_item = QtGui.QListWidgetItem(listwidget)
             widget_item.setSizeHint(cell.sizeHint())
+            widget_item.setData(QtCore.Qt.UserRole, tool)
             listwidget.addItem(widget_item)
             listwidget.setItemWidget(widget_item, cell)
 
@@ -107,5 +111,33 @@ class LibraryUI():
 
         library = self.get_selected_library()
         self.tooldb.add_tool(tool, library)
+        self.tooldb.serialize(self.serializer)
+        self.load()
+
+    def on_delete_tool_clicked(self):
+        items = self.form.listWidgetTools.selectedItems()
+        if not items:
+            return
+        elif len(items) == 1:
+            tool = items[0].data(QtCore.Qt.UserRole)
+            msg = 'Delete tool <b>{}</b> from library?'.format(tool.get_label())
+        else:
+            msg = 'Delete {} selected tools from the library?'.format(len(items))
+
+        msgBox = QtGui.QMessageBox()
+        msgBox.setWindowTitle('Confirm tool deletion')
+        msgBox.setText(msg)
+        msgBox.addButton(QtGui.QMessageBox.Cancel)
+        msgBox.addButton('Delete', QtGui.QMessageBox.AcceptRole)
+        response = msgBox.exec()
+        if response == QtGui.QMessageBox.AcceptRole:
+            self.on_delete_tool_confirmed(items)
+
+    def on_delete_tool_confirmed(self, items):
+        library = self.get_selected_library()
+        for item in self.form.listWidgetTools.selectedItems():
+            tool = item.data(QtCore.Qt.UserRole)
+            self.tooldb.remove_tool(tool, library)
+
         self.tooldb.serialize(self.serializer)
         self.load()
