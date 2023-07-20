@@ -58,6 +58,10 @@
        <property name="text">
         <string>Import a tool...</string>
        </property>
+       <property name="icon">
+        <iconset>
+         <normaloff>../../resources/icons/import.svg</normaloff>../../resources/icons/import.svg</iconset>
+       </property>
       </widget>
      </item>
      <item>

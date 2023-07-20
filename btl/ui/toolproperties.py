@@ -53,7 +53,7 @@ class ToolProperties(QtGui.QWidget):
             widget.stateChanged.connect(partial(shape.set_param, param))
         elif issubclass(param.type, int):
             widget = QtGui.QSpinBox()
-            widget.setValue(int(value))
+            widget.setValue(int(value or 0))
             widget.valueChanged.connect(partial(shape.set_param, param))
         elif issubclass(param.type, float):
             widget = QtGui.QDoubleSpinBox()
@@ -66,26 +66,25 @@ class ToolProperties(QtGui.QWidget):
             return QtGui.QLabel(text)
         return widget
 
-    def _on_pocket_edited(self, text):
-        self.tool.pocket = text
+    def _on_pocket_value_changed(self, value):
+        self.tool.pocket = value
 
-    def _add_entry(self, name, value, validator=None):
+    def _add_property_from_widget(self, widget, name, value):
         row = self.grid.rowCount()
         label = QtGui.QLabel(name)
         self.grid.addWidget(label, row, 0)
+        self.grid.addWidget(widget, row, 1)
+        return widget
+
+    def _add_entry(self, name, value, validator=None):
         entry = QtGui.QLineEdit(value)
         if validator:
             entry.setValidator(validator)
-        self.grid.addWidget(entry, row, 1)
-        return entry
+        return self._add_property_from_widget(entry, name, value)
 
     def _add_property(self, param, value):
-        row = self.grid.rowCount()
-        label = QtGui.QLabel(param.label)
-        self.grid.addWidget(label, row, 0)
-
         widget = self._get_widget_from_param(param, value)
-        self.grid.addWidget(widget, row, 1)
+        self._add_property_from_widget(widget, param.label, value)
 
     def _makespacing(self, height):
         row = self.grid.rowCount()
@@ -104,8 +103,10 @@ class ToolProperties(QtGui.QWidget):
         row = self.grid.rowCount()
         label = QtGui.QLabel("<h4>Tool location</h4>")
         self.grid.addWidget(label, row, 0, columnSpan=2)
-        entry = self._add_entry('Pocket', self.tool.pocket)
-        entry.textChanged.connect(self._on_pocket_edited)
+        spinner = QtGui.QSpinBox()
+        spinner.setValue(self.tool.pocket or 0)
+        spinner.valueChanged.connect(self._on_pocket_value_changed)
+        self._add_property_from_widget(spinner, 'Pocket', self.tool.pocket)
 
         # Add custom properties under a separate title.
         self._makespacing(6)

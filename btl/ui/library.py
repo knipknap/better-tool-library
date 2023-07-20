@@ -3,7 +3,7 @@ import re
 import FreeCAD
 import FreeCADGui
 import Path
-from PySide import QtGui, QtCore, QtUiTools
+from PySide import QtGui, QtCore
 from ..tool import Tool
 from .util import load_ui
 from .tablecell import TwoLineTableCell
@@ -20,16 +20,17 @@ class LibraryUI():
         self.form = load_ui(ui_path)
 
         self.form.buttonBox.clicked.connect(self.form.close)
+        self.form.listWidgetTools.itemDoubleClicked.connect(self.on_edit_tool_clicked)
         self.form.comboBoxLibrary.currentIndexChanged.connect(self.library_selected)
         self.form.lineEditSearch.setFocus()
         self.form.lineEditSearch.textChanged.connect(self.update_search)
         self.form.toolButtonAddLibrary.clicked.connect(self.on_create_library_clicked)
         self.form.toolButtonRemoveLibrary.clicked.connect(self.on_delete_library_clicked)
-        self.form.toolButtonCreateTool.clicked.connect(self.on_create_tool_clicked)
+        self.form.pushButtonCreateTool.clicked.connect(self.on_create_tool_clicked)
+        self.form.pushButtonEditTool.clicked.connect(self.on_edit_tool_clicked)
         self.form.pushButtonDeleteTool.clicked.connect(self.on_delete_tool_clicked)
         self.form.listWidgetTools.setSelectionMode(
             QtGui.QAbstractItemView.SelectionMode.ExtendedSelection)
-
         self.load()
 
     def load(self):
@@ -125,6 +126,19 @@ class LibraryUI():
 
         library = self.get_selected_library()
         self.tooldb.add_tool(tool, library)
+        self.tooldb.serialize(self.serializer)
+        self.load()
+
+    def on_edit_tool_clicked(self):
+        items = self.form.listWidgetTools.selectedItems()
+        if not items:
+            return
+
+        tool = items[0].data(QtCore.Qt.UserRole)
+        editor = ToolEditor(tool)
+        if not editor.show():
+            return
+
         self.tooldb.serialize(self.serializer)
         self.load()
 

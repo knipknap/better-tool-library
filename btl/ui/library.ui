@@ -17,7 +17,7 @@
    <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="6" column="0">
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,0,1,0">
        <property name="sizeConstraint">
         <enum>QLayout::SetMinimumSize</enum>
        </property>
@@ -59,12 +59,23 @@
            <property name="text">
             <string>+</string>
            </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../../resources/icons/list-add.svg</normaloff>../../resources/icons/list-add.svg</iconset>
+           </property>
           </widget>
          </item>
          <item>
           <widget class="QToolButton" name="toolButtonRemoveLibrary">
+           <property name="toolTip">
+            <string>Delete the current library</string>
+           </property>
            <property name="text">
             <string>-</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../../resources/icons/list-remove.svg</normaloff>../../resources/icons/list-remove.svg</iconset>
            </property>
           </widget>
          </item>
@@ -76,12 +87,57 @@
            <property name="text">
             <string>Export Library</string>
            </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../../resources/icons/export.svg</normaloff>../../resources/icons/export.svg</iconset>
+           </property>
           </widget>
          </item>
         </layout>
        </item>
        <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>6</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QPushButton" name="pushButtonCreateTool">
+           <property name="text">
+            <string>Create Tool</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../../resources/icons/plus.svg</normaloff>../../resources/icons/plus.svg</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pushButtonEditTool">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Edit Tool</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../../resources/icons/tool-edit.svg</normaloff>../../resources/icons/tool-edit.svg</iconset>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QPushButton" name="pushButtonDeleteTool">
            <property name="sizePolicy">
@@ -91,17 +147,11 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Delete Selected Tools</string>
+            <string>Delete Tool</string>
            </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QToolButton" name="toolButtonCreateTool">
-           <property name="toolTip">
-            <string>Create a new tool</string>
-           </property>
-           <property name="text">
-            <string>Add a Tool</string>
+           <property name="icon">
+            <iconset>
+             <normaloff>../../resources/icons/trash.svg</normaloff>../../resources/icons/trash.svg</iconset>
            </property>
           </widget>
          </item>
@@ -114,6 +164,23 @@
          </property>
          <property name="standardButtons">
           <set>QDialogButtonBox::Close</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonAddToJob">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Add to Job</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../resources/icons/add-to-job.svg</normaloff>../../resources/icons/add-to-job.svg</iconset>
+         </property>
+         <property name="default">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
