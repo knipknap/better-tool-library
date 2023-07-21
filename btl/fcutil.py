@@ -1,6 +1,7 @@
 import re
 from . import params
 from .params import known_types
+from .util import sha256sum
 
 # Map FreeCAD shape file parameter names to our internal param representation.
 fc_property_to_param_type = {
@@ -109,10 +110,26 @@ def shape_properties_to_shape(attrs, properties, shape):
         param, value = shape_property_to_param(propname, attrs, prop)
         shape.set_param(param, value)
 
+shape_cache = {}
+
 def load_shape_properties(filename):
+    # Loading those is quite slow - well, actually it is CLOSING a FreeCAD
+    # file that is slow, see .closeDocument() below.
+    # In any case, we cache shapes as a workaround.
+    global shape_cache
+    filehash = sha256sum(filename)
+    cache = shape_cache.get(filename)
+
+    if cache:
+        cachehash, attrs, properties = cache
+        if cachehash == filehash:
+            #print("cache hit", filename)
+            return attrs, properties
+
     # Load the shape file using FreeCad
     import FreeCAD
     doc = FreeCAD.openDocument(filename, hidden=True)
+    #print(filename, doc.Name)
 
     # Find the Attribute object.
     attrs_list = doc.getObjectsByLabel('Attributes')
@@ -130,10 +147,25 @@ def load_shape_properties(filename):
             continue
         properties.append((propname, prop))
 
-    # Disabled: Somehow, .closeDocument is extremely slow; it takes
+    # Note that .closeDocument() is extremely slow; it takes
     # almost 400ms per document - much longer than opening!
-    # Luckily, these files are really small, so hopefully we can get
-    # away without it for now :-/
-    #FreeCAD.closeDocument(doc.Name)
-    del doc
+    FreeCAD.closeDocument(doc.Name)
+
+    shape_cache[filename] = filehash, attrs, properties
     return attrs, properties
+
+def add_tool_to_job(tool, pocket):
+    try:
+        from Path.Tool import Controller, Bit
+    except ImportError:
+        raise RuntimeError('Error: Could not access Path workbench, is it loaded?')
+
+    label = tool.get_label()
+    print("Create", label, tool.filename, pocket)
+
+    if not tool.filename:
+        err = 'Error: Tool "{}" ({}) has no filename.'.format(label, repr(tool.id))
+        raise ValueError(err)
+
+    toolbit = Bit.Factory.CreateFrom(tool.filename, label)
+    toolcontroller = Controller.Create("TC: {}".format(label), toolbit, pocket)
