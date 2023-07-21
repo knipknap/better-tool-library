@@ -137,5 +137,5 @@ class ToolDB(object):
         print("------------")
         for tool in self.get_unused_tools():
             tool.dump(summarize=summarize)
-        else:
+        if not self.get_unused_tools():
             print("(none)")
