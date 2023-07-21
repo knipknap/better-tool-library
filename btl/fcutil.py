@@ -112,7 +112,7 @@ def shape_properties_to_shape(attrs, properties, shape):
 def load_shape_properties(filename):
     # Load the shape file using FreeCad
     import FreeCAD
-    doc = FreeCAD.open(filename)
+    doc = FreeCAD.openDocument(filename, hidden=True)
 
     # Find the Attribute object.
     attrs_list = doc.getObjectsByLabel('Attributes')
@@ -130,4 +130,10 @@ def load_shape_properties(filename):
             continue
         properties.append((propname, prop))
 
+    # Disabled: Somehow, .closeDocument is extremely slow; it takes
+    # almost 400ms per document - much longer than opening!
+    # Luckily, these files are really small, so hopefully we can get
+    # away without it for now :-/
+    #FreeCAD.closeDocument(doc.Name)
+    del doc
     return attrs, properties
