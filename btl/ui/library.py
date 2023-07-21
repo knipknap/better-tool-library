@@ -15,13 +15,14 @@ __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "library.ui")
 
 class LibraryUI():
-    def __init__(self, tooldb, serializer):
+    def __init__(self, tooldb, serializer, standalone=False):
         self.tooldb = tooldb
         self.serializer = serializer
         self.form = load_ui(ui_path)
 
         self.form.buttonBox.clicked.connect(self.form.close)
         self.form.listWidgetTools.itemDoubleClicked.connect(self.on_edit_tool_clicked)
+        self.form.listWidgetTools.itemSelectionChanged.connect(self.update_search)
         self.form.listWidgetTools.setSelectionMode(
             QtGui.QAbstractItemView.SelectionMode.ExtendedSelection)
 
@@ -35,7 +36,21 @@ class LibraryUI():
 
         self.form.pushButtonCreateTool.clicked.connect(self.on_create_tool_clicked)
         self.form.pushButtonDeleteTool.clicked.connect(self.on_delete_tool_clicked)
+        self.form.pushButtonAddToJob.clicked.connect(self.on_add_to_job_clicked)
+
+        if standalone:
+            self.form.pushButtonAddToJob.hide()
+
         self.load()
+
+    def update_button_state(self):
+        library = self.get_selected_library()
+        tool_selected = bool(self.form.listWidgetTools.selectedItems())
+        self.form.toolButtonRemoveLibrary.setEnabled(library is not None)
+        self.form.toolButtonEditLibrary.setEnabled(library is not None)
+        self.form.toolButtonExportLibrary.setEnabled(library is not None)
+        self.form.pushButtonDeleteTool.setEnabled(tool_selected)
+        self.form.pushButtonAddToJob.setEnabled(tool_selected)
 
     def load(self):
         self.tooldb.deserialize(self.serializer)
@@ -54,9 +69,11 @@ class LibraryUI():
         combo.setCurrentIndex(index)
         if combo.currentIndex() == -1:
             combo.setCurrentIndex(2)
+        self.update_button_state()
 
     def library_selected(self, index):
         self.update_tool_list()
+        self.update_button_state()
 
     def get_selected_library(self):
         library_id = self.form.comboBoxLibrary.currentData()
@@ -100,18 +117,10 @@ class LibraryUI():
             cell = listwidget.itemWidget(item)
             cell.highlight(term)
             item.setHidden(not cell.contains_text(term))
+        self.update_button_state()
 
     def show(self):
         self.form.exec()
-
-    def add_tool_to_job(self, tool):
-        jobs = FreeCAD.ActiveDocument.findObjects("Path::FeaturePython", "Job.*")
-        for job in jobs:
-            for idx, tc in enumerate(job.Tools.Group):
-                print(tc.Label) #FIXME
-                #tc.HorizFeed = hfeed
-                #tc.VertFeed = vfeed
-                #tc.SpindleSpeed = float(rpm)
 
     def on_create_library_clicked(self):
         library = Library('New Library')
@@ -172,7 +181,8 @@ class LibraryUI():
             return
 
         self.tooldb.add_tool(tool, library)
-        library.assign_new_pocket(tool, editor.pocket)
+        if library:
+            library.assign_new_pocket(tool, editor.pocket)
         self.tooldb.serialize(self.serializer)
         self.load()
 
@@ -233,3 +243,18 @@ class LibraryUI():
 
         self.tooldb.serialize(self.serializer)
         self.load()
+
+    def on_add_to_job_clicked(self):
+        library = self.get_selected_library()
+        items = self.form.listWidgetTools.selectedItems()
+        if not items:
+            return
+
+        tools = [i.data() for i in items]
+        jobs = FreeCAD.ActiveDocument.findObjects("Path::FeaturePython", "Job.*")
+        for job in jobs:
+            for idx, tc in enumerate(job.Tools.Group):
+                print(tc.Label) #FIXME
+                #tc.HorizFeed = hfeed
+                #tc.VertFeed = vfeed
+                #tc.SpindleSpeed = float(rpm)

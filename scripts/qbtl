@@ -32,5 +32,5 @@ serializer_cls = serializers.serializers[args.format]
 serializer = serializer_cls(args.name)
 
 app = QtGui.QApplication([])
-dialog = LibraryUI(tool_db, serializer)
+dialog = LibraryUI(tool_db, serializer, standalone=True)
 dialog.show()
