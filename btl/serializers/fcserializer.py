@@ -248,7 +248,7 @@ class FCSerializer():
         # Create a tool.
         shapename = self._shape_name_from_filename(attrs['shape'])
         shape = self.deserialize_shape(shapename)
-        tool = Tool(attrs['name'], shape, id=id)
+        tool = Tool(attrs['name'], shape, id=id, filename=filename)
 
         # Get the list of parameters that are supported by the shape. This
         # is used to find the type of each parameter.

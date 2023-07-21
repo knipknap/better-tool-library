@@ -5,9 +5,10 @@ from .shape import Shape
 class Tool(object):
     API_VERSION = 1
 
-    def __init__(self, label, shape, id=None):
+    def __init__(self, label, shape, id=None, filename=None):
         self.id = id or str(uuid.uuid1())
         self.label = label
+        self.filename = filename # Keep in mind: Not every tool is file-based
         self.shape = Shape(shape) if isinstance(shape, str) else shape
 
     def __str__(self):

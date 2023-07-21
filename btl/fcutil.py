@@ -97,8 +97,6 @@ def shape_property_to_param(propname, attrs, prop):
         param.name = propname
         param.label = re.sub(r'([A-Z])', r' \1', propname).strip()
 
-    #print("_shape_property_to_param()", propname, prop, param, value)
-
     # In case of enumerations, collect all allowed values.
     if hasattr(param, 'enum'):
         param.enum = attrs.getEnumerationsOfProperty(propname)
@@ -123,13 +121,17 @@ def load_shape_properties(filename):
     if cache:
         cachehash, attrs, properties = cache
         if cachehash == filehash:
-            #print("cache hit", filename)
             return attrs, properties
 
-    # Load the shape file using FreeCad
+    # Load the shape file using FreeCad. Unfortunately this causes everything
+    # in the current document to be unselected, so we need to restore the
+    # selection later.
     import FreeCAD
+    olddoc = FreeCAD.activeDocument()
+    if FreeCAD.GuiUp:
+        import FreeCADGui
+        oldselection = FreeCADGui.Selection.getSelection()
     doc = FreeCAD.openDocument(filename, hidden=True)
-    #print(filename, doc.Name)
 
     # Find the Attribute object.
     attrs_list = doc.getObjectsByLabel('Attributes')
@@ -150,22 +152,71 @@ def load_shape_properties(filename):
     # Note that .closeDocument() is extremely slow; it takes
     # almost 400ms per document - much longer than opening!
     FreeCAD.closeDocument(doc.Name)
+    if olddoc:
+        FreeCAD.setActiveDocument(olddoc.Name)
+    if FreeCAD.GuiUp:
+        for sel in oldselection:
+            FreeCADGui.Selection.addSelection(olddoc.Name, sel.Name)
 
     shape_cache[filename] = filehash, attrs, properties
     return attrs, properties
 
-def add_tool_to_job(tool, pocket):
+def get_selected_job():
     try:
+        import FreeCADGui
+        from Path.Main.Job import ObjectJob
+    except ImportError:
+        raise RuntimeError('Error: Could not access Path workbench, is it loaded?')
+
+    for sel in FreeCADGui.Selection.getSelection():
+        while sel is not None:
+            if hasattr(sel, 'Proxy') and isinstance(sel.Proxy, ObjectJob):
+                return sel
+            sel = sel.getParentGroup()
+
+    return None
+
+def get_active_job():
+    try:
+        from PathScripts import PathUtilsGui
+    except ImportError:
+        raise RuntimeError('Error: Could not access Path workbench, is it loaded?')
+
+    # Currently, Job objects have no active/inactive state, so we "simulate"
+    # this behavior: If there's only one job, return that one.
+    # Otherwise, find the job by searching the object tree, beginning at the
+    # current selection.
+    jobs = PathUtilsGui.PathUtils.GetJobs()
+    if not jobs:
+        return None
+    elif len(jobs) == 1:
+        return jobs[0]
+    return get_selected_job()
+
+def add_tool_to_job(job, tool, pocket):
+    try:
+        import FreeCAD
+        import FreeCADGui
         from Path.Tool import Controller, Bit
     except ImportError:
         raise RuntimeError('Error: Could not access Path workbench, is it loaded?')
 
     label = tool.get_label()
-    print("Create", label, tool.filename, pocket)
-
     if not tool.filename:
         err = 'Error: Tool "{}" ({}) has no filename.'.format(label, repr(tool.id))
         raise ValueError(err)
 
-    toolbit = Bit.Factory.CreateFrom(tool.filename, label)
-    toolcontroller = Controller.Create("TC: {}".format(label), toolbit, pocket)
+    doc = FreeCAD.activeDocument()
+    doc.openTransaction("Add tool {}".format(label))
+    try:
+        toolbit = Bit.Factory.CreateFrom(tool.filename, label)
+        toolbit.ViewObject.Visibility = False
+        toolcontroller = Controller.Create("TC: {}".format(label), toolbit, pocket)
+        job.Proxy.addToolController(toolcontroller)
+    except Exception:
+        doc.abortTransaction()
+        raise
+    else:
+        doc.commitTransaction()
+
+    FreeCADGui.Selection.addSelection(doc.Name, toolcontroller.Name)

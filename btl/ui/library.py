@@ -5,6 +5,7 @@ import FreeCADGui
 import Path
 from PySide import QtGui, QtCore
 from .. import Library, Tool
+from ..fcutil import add_tool_to_job, get_active_job
 from .util import load_ui
 from .tablecell import TwoLineTableCell
 from .shapeselector import ShapeSelector
@@ -18,6 +19,7 @@ class LibraryUI():
     def __init__(self, tooldb, serializer, standalone=False):
         self.tooldb = tooldb
         self.serializer = serializer
+        self.standalone = standalone
         self.form = load_ui(ui_path)
 
         self.form.buttonBox.clicked.connect(self.form.close)
@@ -43,14 +45,22 @@ class LibraryUI():
 
         self.load()
 
+        item = self.form.listWidgetTools.item(0)
+        if item:
+            self.form.listWidgetTools.setCurrentItem(item)
+
     def update_button_state(self):
+        # Avoid calling get_active_job() in standalone mode - it doesn't support that
+        has_job = self.standalone or bool(get_active_job())
         library = self.get_selected_library()
         tool_selected = bool(self.form.listWidgetTools.selectedItems())
         self.form.toolButtonRemoveLibrary.setEnabled(library is not None)
         self.form.toolButtonEditLibrary.setEnabled(library is not None)
         self.form.toolButtonExportLibrary.setEnabled(library is not None)
         self.form.pushButtonDeleteTool.setEnabled(tool_selected)
-        self.form.pushButtonAddToJob.setEnabled(tool_selected)
+        self.form.pushButtonAddToJob.setEnabled(tool_selected and has_job)
+        tt = '' if has_job else 'No job is selected in main window'
+        self.form.pushButtonAddToJob.setToolTip(tt)
 
     def load(self):
         self.tooldb.deserialize(self.serializer)
@@ -250,11 +260,12 @@ class LibraryUI():
         if not items:
             return
 
-        tools = [i.data() for i in items]
-        jobs = FreeCAD.ActiveDocument.findObjects("Path::FeaturePython", "Job.*")
-        for job in jobs:
-            for idx, tc in enumerate(job.Tools.Group):
-                print(tc.Label) #FIXME
-                #tc.HorizFeed = hfeed
-                #tc.VertFeed = vfeed
-                #tc.SpindleSpeed = float(rpm)
+        job = get_active_job()
+        if not job:
+            return
+
+        for item in items:
+            tool = item.data(QtCore.Qt.UserRole)
+            pocket = library.get_pocket_from_tool(tool)
+            assert pocket is not None
+            add_tool_to_job(job, tool, pocket)
