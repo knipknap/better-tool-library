@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1231</width>
-    <height>873</height>
+    <width>930</width>
+    <height>683</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -76,6 +76,20 @@
            <property name="icon">
             <iconset>
              <normaloff>../../resources/icons/list-remove.svg</normaloff>../../resources/icons/list-remove.svg</iconset>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="toolButtonEditLibrary">
+           <property name="toolTip">
+            <string>Edit library properties</string>
+           </property>
+           <property name="text">
+            <string>Edit Library</string>
+           </property>
+           <property name="icon">
+            <iconset>
+             <normaloff>../../resources/icons/edit.svg</normaloff>../../resources/icons/edit.svg</iconset>
            </property>
           </widget>
          </item>

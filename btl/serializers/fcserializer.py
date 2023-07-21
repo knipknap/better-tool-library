@@ -107,6 +107,7 @@ class FCSerializer():
     def serialize_library(self, library):
         attrs = {}
         attrs["version"] = library.API_VERSION
+        attrs["label"] = library.label
 
         tools = []
         for pocket, tool in library.pockets.items():
@@ -125,12 +126,12 @@ class FCSerializer():
         return attrs
 
     def deserialize_library(self, id):
-        library = Library(id, id=id)
         filename = self._library_filename_from_name(id)
-
         with open(filename, "r") as fp:
             attrs = json.load(fp)
 
+        label = attrs.get('label', id)
+        library = Library(label, id=id)
         for tool_obj in attrs['tools']:
             pocket = tool_obj['nr']
             path = tool_obj['path']

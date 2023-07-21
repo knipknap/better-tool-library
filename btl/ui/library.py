@@ -4,11 +4,12 @@ import FreeCAD
 import FreeCADGui
 import Path
 from PySide import QtGui, QtCore
-from ..tool import Tool
+from .. import Library, Tool
 from .util import load_ui
 from .tablecell import TwoLineTableCell
 from .shapeselector import ShapeSelector
 from .tooleditor import ToolEditor
+from .libraryproperties import LibraryProperties
 
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "library.ui")
@@ -21,15 +22,19 @@ class LibraryUI():
 
         self.form.buttonBox.clicked.connect(self.form.close)
         self.form.listWidgetTools.itemDoubleClicked.connect(self.on_edit_tool_clicked)
-        self.form.comboBoxLibrary.currentIndexChanged.connect(self.library_selected)
-        self.form.lineEditSearch.setFocus()
-        self.form.lineEditSearch.textChanged.connect(self.update_search)
-        self.form.toolButtonAddLibrary.clicked.connect(self.on_create_library_clicked)
-        self.form.toolButtonRemoveLibrary.clicked.connect(self.on_delete_library_clicked)
-        self.form.pushButtonCreateTool.clicked.connect(self.on_create_tool_clicked)
-        self.form.pushButtonDeleteTool.clicked.connect(self.on_delete_tool_clicked)
         self.form.listWidgetTools.setSelectionMode(
             QtGui.QAbstractItemView.SelectionMode.ExtendedSelection)
+
+        self.form.lineEditSearch.setFocus()
+        self.form.lineEditSearch.textChanged.connect(self.update_search)
+
+        self.form.comboBoxLibrary.currentIndexChanged.connect(self.library_selected)
+        self.form.toolButtonAddLibrary.clicked.connect(self.on_create_library_clicked)
+        self.form.toolButtonRemoveLibrary.clicked.connect(self.on_delete_library_clicked)
+        self.form.toolButtonEditLibrary.clicked.connect(self.on_edit_library_clicked)
+
+        self.form.pushButtonCreateTool.clicked.connect(self.on_create_tool_clicked)
+        self.form.pushButtonDeleteTool.clicked.connect(self.on_delete_tool_clicked)
         self.load()
 
     def load(self):
@@ -109,13 +114,34 @@ class LibraryUI():
                 #tc.SpindleSpeed = float(rpm)
 
     def on_create_library_clicked(self):
-        print("Create library") #TODO
+        library = Library('New Library')
+        dialog = LibraryProperties(library, new=True)
+        if dialog.exec() != QtGui.QDialog.Accepted:
+            return
+
+        self.tooldb.add_library(library)
+        self.tooldb.serialize(self.serializer)
+        self.load()
+
+    def on_edit_library_clicked(self):
+        library = self.get_selected_library()
+        if not library:
+            return
+
+        dialog = LibraryProperties(library)
+        if dialog.exec() != QtGui.QDialog.Accepted:
+            return
+
+        self.tooldb.serialize(self.serializer)
+        self.load()
 
     def on_delete_library_clicked(self):
         library = self.get_selected_library()
+        if not library:
+            return
+
         msg = f'Are you sure you want to delete library <b>{library.label}</b>?' \
             + ' This action cannot be reversed.'
-
         msgBox = QtGui.QMessageBox()
         msgBox.setWindowTitle('Confirm library deletion')
         msgBox.setText(msg)
