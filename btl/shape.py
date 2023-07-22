@@ -124,7 +124,7 @@ class Shape():
         # If the icon is out of date, try to recreate. Again, keep in
         # mind that this may fail, in which case this time we can use
         # the out-of-date one.
-        if not file_is_newer(self.filename, icon_file):
+        if self.icon_type != 'svg' and not file_is_newer(self.filename, icon_file):
             print("icon out of date, trying to create", icon_file)
             if self.create_icon():
                 print("icon created for", self.filename)
