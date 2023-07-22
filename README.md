@@ -7,7 +7,7 @@ It also provides a standalone tool if you want to use your library outside of Fr
 ## Feature Comparison
 
 | Feature                                    | Better Tool Library   | FreeCAD internal library  |
-| ------------------------------------------ | --------------------- | ------------------------- |
+| :--                                        |        :--:           |          :--:             |
 | Modern UI                                  | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Provides a shape browser                   | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Tool search                                | ![X](media/check.svg) | ![-](media/no.svg)        |
