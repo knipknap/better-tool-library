@@ -108,28 +108,24 @@ class Shape():
         return filename
 
     def load_or_create_icon(self):
-        # Find existing icons.
+        # Try SVG first.
         shape_fn = self.filename
         icon_file = get_icon_filename_from_shape_filename(shape_fn, 'svg')
-        if not os.path.isfile(icon_file):
-            icon_file = get_icon_filename_from_shape_filename(shape_fn, 'png')
+        if os.path.isfile(icon_file):
+            return self.add_icon_from_file(icon_file)
 
-        # None found? Then try to create one.
-        # Note that this may fail, e.g. when the FreeCAD UI is not up,
-        # in which case we give up here.
-        if not os.path.isfile(icon_file):
-            print("no icon found, trying to create for", self.filename)
-            return self.create_icon()
+        # Try PNG next. But make sure it's not out of date.
+        icon_file = get_icon_filename_from_shape_filename(shape_fn, 'png')
+        if os.path.isfile(icon_file) and file_is_newer(self.filename, icon_file):
+            return self.add_icon_from_file(icon_file)
 
-        # If the icon is out of date, try to recreate. Again, keep in
-        # mind that this may fail, in which case this time we can use
-        # the out-of-date one.
-        if self.icon_type != 'svg' and not file_is_newer(self.filename, icon_file):
-            print("icon out of date, trying to create", icon_file)
-            if self.create_icon():
-                print("icon created for", self.filename)
-                return
-        self.add_icon_from_file(icon_file)
+        # Next option: Try to re-generate the PNG.
+        if self.create_icon():
+            return
+
+        # Last option: return the out-of date PNG.
+        if os.path.isfile(icon_file):
+            return self.add_icon_from_file(icon_file)
 
     def write_icon_to_file(self, filename=None):
         if self.icon is None:
