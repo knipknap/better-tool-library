@@ -29,6 +29,11 @@ It also provides a standalone tool if you want to use your library outside of Fr
 - Click "+"
 - Enter the following Repository URL: `https://github.com/knipknap/better-tool-library.git`
 - Enter the branch name `main`
+- Click confirm
+- Open the Addon Manager via *Tools -> Addon manager*
+- Search for *Better Tool Library*
+- Click it
+- Click *Install*
 
 ## Screenshots
 
