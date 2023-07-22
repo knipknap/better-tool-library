@@ -161,11 +161,12 @@ class FCSerializer():
     def deserialize_shape(self, name):
         filename = self._shape_filename_from_name(name)
         if name in Shape.reserved:
-            print(dedent('''
-                 Warning: Skipping loading of "{}" because "{}" is a
-                 reserved name used by a builtin shape. To remove this warning,
-                 delete or rename the file
-            ''').format(filename, name).replace("\n", " ").strip())
+            if name in self._get_shape_names():
+                print(dedent('''
+                     Warning: Skipping loading of "{}" because "{}" is a
+                     reserved name used by a builtin shape. To remove this warning,
+                     delete or rename the file
+                ''').format(filename, name).replace("\n", " ").strip())
             name = Shape.aliases.get(name, name)
             return builtin_shapes[name]
 
