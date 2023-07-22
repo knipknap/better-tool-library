@@ -1,3 +1,4 @@
+import os
 import hashlib
 
 def sha256sum(filename):
@@ -8,3 +9,6 @@ def sha256sum(filename):
         while n := f.readinto(mv):
             h.update(mv[:n])
     return h.hexdigest()
+
+def file_is_newer(reference, file):
+    return os.path.getmtime(reference) < os.path.getmtime(file)

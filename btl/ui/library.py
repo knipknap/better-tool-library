@@ -107,7 +107,7 @@ class LibraryUI():
             cell = TwoLineTableCell()
             cell.set_upper_text(tool.label)
             cell.set_lower_text(tool.shape.get_param_summary())
-            cell.set_icon_from_svg(tool.shape.get_svg())
+            cell.set_icon_from_shape(tool.shape)
 
             if library:
                 pocket = library.get_pocket_from_tool(tool)

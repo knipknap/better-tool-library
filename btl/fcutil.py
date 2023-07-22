@@ -1,3 +1,4 @@
+import os
 import re
 from . import params
 from .params import known_types
@@ -220,3 +221,42 @@ def add_tool_to_job(job, tool, pocket):
         doc.commitTransaction()
 
     FreeCADGui.Selection.addSelection(doc.Name, toolcontroller.Name)
+
+# Find the body with the given label in the document
+def _find_body_from_label(doc, label):
+    for obj in doc.Objects:
+        if obj.Label == label and obj.isDerivedFrom("Part::Feature"):
+            return obj
+    return None
+
+def _get_first_body(doc):
+    for obj in doc.Objects:
+        if obj.isDerivedFrom("PartDesign::Body"):
+            return obj
+    return None
+
+def create_thumbnail(filename, w=200, h=200):
+    import FreeCAD
+    if not FreeCAD.GuiUp:
+        return None
+
+    try:
+        import FreeCADGui
+        #import importSVG
+    except ImportError:
+        raise RuntimeError('Error: Could not load UI - is it up?')
+
+    doc = FreeCAD.openDocument(filename)
+    view = FreeCADGui.activeDocument().ActiveView
+    out_filename = os.path.splitext(filename)[0]+'.png'
+    if not view:
+        print("No view active, cannot make thumbnail for {}".format(filename))
+        return
+
+    view.viewFront()
+    view.fitAll()
+    view.setAxisCross(False)
+    view.saveImage(out_filename, w, h, 'Transparent')
+
+    FreeCAD.closeDocument(doc.Name)
+    return out_filename

@@ -1,5 +1,6 @@
 import re
 from PySide import QtGui, QtSvg, QtCore
+from .util import qpixmap_from_svg, qpixmap_from_png
 
 def isub(text, old, repl_pattern):
     pattern = '|'.join(re.escape(o) for o in old)
@@ -67,14 +68,19 @@ class TwoLineTableCell(QtGui.QWidget):
         self.icon_widget.setPixmap(pixmap)
         self.hbox.insertWidget(0, self.icon_widget, 0)
 
-    def set_icon_from_svg(self, svg):
-        ba = QtCore.QByteArray(svg)
-        svg_widget = QtSvg.QSvgWidget()
-        svg_widget.setFixedSize(50, 60)
-        svg_widget.load(ba)
-        self.hbox.removeWidget(self.icon_widget)
-        self.icon_widget = svg_widget
-        self.hbox.insertWidget(0, svg_widget, 0)
+    def set_icon_from_shape(self, shape):
+        icon_type, icon_bytes = shape.get_icon()
+        if not icon_type:
+            return
+        icon_ba = QtCore.QByteArray(icon_bytes)
+        icon_size = QtCore.QSize(50, 60)
+
+        if icon_type == 'svg':
+            icon = qpixmap_from_svg(icon_ba, icon_size)
+        elif icon_type == 'png':
+            icon = qpixmap_from_png(icon_ba, icon_size)
+
+        self.set_icon(icon)
 
     def contains_text(self, text):
         for term in text.split(' '):

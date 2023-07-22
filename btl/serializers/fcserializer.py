@@ -72,9 +72,6 @@ class FCSerializer():
             return # File is already in our path
         shutil.copy(filename, self.shape_path)
 
-    def _svg_filename_from_name(self, name):
-        return os.path.join(self.shape_path, name+'.svg')
-
     def _remove_library_by_id(self, id):
         filename = self._library_filename_from_name(id)
         os.remove(filename)
@@ -156,8 +153,8 @@ class FCSerializer():
         filename = self._shape_filename_from_name(shape.name)
         shape.write_to_file(filename)
 
-        svg_filename = self._svg_filename_from_name(shape.name)
-        shape.write_svg_to_file(svg_filename)
+        if shape.icon:
+            shape.write_icon_to_file()
 
     def deserialize_shape(self, name):
         if name in Shape.reserved:
@@ -170,10 +167,8 @@ class FCSerializer():
         attrs, properties = load_shape_properties(filename)
         shape_properties_to_shape(attrs, properties, shape)
 
-        # Load the shape image.
-        svg_filename = self._svg_filename_from_name(name)
-        if os.path.isfile(svg_filename):
-            shape.add_svg_from_file(svg_filename)
+        # Load the shape icon.
+        shape.load_or_create_icon()
         return shape
 
     def serialize_tools(self, tools):
