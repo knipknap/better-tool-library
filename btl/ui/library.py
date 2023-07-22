@@ -191,7 +191,7 @@ class LibraryUI():
         item = self.get_tool_list_item(tool)
         listwidget = self.form.listWidgetTools
         listwidget.setCurrentItem(item)
-        listwidget.scrollToItem(item, QtGui.QAbstractItemView.PositionAtCenter)
+        listwidget.scrollToItem(item, QtGui.QAbstractItemView.EnsureVisible)
 
     def on_create_tool_clicked(self):
         selector = ShapeSelector(self.tooldb, self.serializer)
