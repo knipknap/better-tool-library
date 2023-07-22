@@ -26,11 +26,9 @@ parser.add_argument('-f', '--format',
                     default='freecad')
 parser.add_argument('name',
                     help='the DB name. In case of a file based DB, this is the path to the DB')
-tool_db = ToolDB()
-tool_db.load_builtin_shapes()
-
 args = parser.parse_args()
 
+tool_db = ToolDB()
 serializer_cls = serializers.serializers[args.format]
 serializer = serializer_cls(args.name)
 

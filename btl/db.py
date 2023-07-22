@@ -3,14 +3,14 @@ import os
 import shutil
 import uuid as UUID
 from itertools import chain
-from .shape import Shape
+from .shape import Shape, builtin_shapes
+
 
 class ToolDB(object):
     def __init__(self):
         self.libraries = dict() # maps library ID to Library
         self.tools = dict()  # maps tool ID to Tool
         self.shapes = dict()  # maps shape name to Shape
-        self.builtin_shapes = dict()  # maps shape name to Shape
 
     def add_library(self, library):
         self.libraries[library.id] = library
@@ -25,24 +25,27 @@ class ToolDB(object):
         self.libraries.pop(library.id, None)
 
     def add_shape(self, shape):
+        if shape.name in Shape.reserved:
+            return
         self.shapes[shape.name] = shape
-
-    def load_builtin_shapes(self):
-        for name in Shape.builtin:
-            shape = Shape(name)
-            self.builtin_shapes[shape.name] = shape
 
     def get_shapes(self, builtin=True):
         if builtin:
-            return chain(self.builtin_shapes.values(),
+            return chain(builtin_shapes.values(),
                          self.shapes.values())
         return self.shapes.values()
 
     def get_builtin_shapes(self):
-        return self.builtin_shapes.values()
+        return builtin_shapes.values()
 
     def get_custom_shapes(self):
         return self.shapes.values()
+
+    def get_shape_by_name(self, name):
+        shape = builtin_shapes.get(name)
+        if shape:
+            return shape
+        return self.shapes.get(name)
 
     def get_tool_by_id(self, id):
         return self.tools[id]
@@ -114,7 +117,7 @@ class ToolDB(object):
              print("-----------------")
              print(" Built-in shapes")
              print("-----------------")
-             for shape in self.builtin_shapes.values():
+             for shape in builtin_shapes.values():
                  shape.dump(summarize=summarize)
 
         print("--------------")

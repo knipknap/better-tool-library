@@ -141,7 +141,6 @@ args = parser.parse_args()
 serializer_cls = serializers.serializers[args.format]
 serializer = serializer_cls(args.name)
 db = ToolDB()
-db.load_builtin_shapes()
 db.deserialize(serializer)
 
 if args.command == 'ls':

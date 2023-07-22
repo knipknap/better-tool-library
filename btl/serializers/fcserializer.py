@@ -3,14 +3,16 @@
 # - Numbers are represented according to the precision settings of the user interface
 # - Numbers are represented as strings in the JSON
 # - Numbers are represented with units in the JSON
-# - Tool IDs are not unique across libraries
-# Here I do my best to represent all these behaviors.
+# - Type interpretations are hardcoded in FreeCAD.
+# Here I do my best to represent/hide these behaviors.
 import os
 import sys
 import glob
 import json
 import shutil
+from textwrap import dedent
 from .. import Library, Shape, Tool
+from ..shape import builtin_shapes
 from ..fcutil import *
 
 TOOL_DIR = 'Bit'
@@ -157,10 +159,19 @@ class FCSerializer():
             shape.write_icon_to_file()
 
     def deserialize_shape(self, name):
-        if name in Shape.reserved:
-            return Shape(name)
-
         filename = self._shape_filename_from_name(name)
+        if name in Shape.reserved:
+            print(dedent('''
+                 Warning: Skipping loading of "{}" because "{}" is a
+                 reserved name used by a builtin shape. To remove this warning,
+                 delete or rename the file
+            ''').format(filename, name).replace("\n", " ").strip())
+            name = Shape.aliases.get(name, name)
+            return builtin_shapes[name]
+
+        #if name in Shape.reserved:
+        #    return Shape(name)
+
         shape = Shape(name, filename)
 
         # Collect a list of custom properties from the Attribute object.

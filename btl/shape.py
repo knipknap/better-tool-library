@@ -49,12 +49,11 @@ class Shape():
         if not self.filename or not os.path.isfile(self.filename):
             raise OSError('shape "{}" not found: {}'.format(name, self.filename))
 
-    def from_file(self, filename):
-        name = os.path.splitext(os.path.filename(filename))[0]
-        return Shape(name, filename)
-
     def __str__(self):
         return self.name
+
+    def __eq__(self, other):
+        return self.name == other.name
 
     def set_param(self, param, value):
         self.params[param.name] = param, value
@@ -159,3 +158,5 @@ class Shape():
         print('{}  Parameters:'.format(indent))
         for param, value in self.get_params():
             print('{}    {: <20} = {}'.format(indent, param.label, value))
+
+builtin_shapes = {n: Shape(n) for n in Shape.builtin}
