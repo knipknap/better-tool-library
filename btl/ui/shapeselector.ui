@@ -31,7 +31,7 @@
          </rect>
         </property>
         <attribute name="label">
-         <string>Standard tools</string>
+         <string>Standard Tools</string>
         </attribute>
        </widget>
        <widget class="QWidget" name="customTools">
