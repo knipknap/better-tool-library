@@ -19,8 +19,8 @@ It also provides a standalone tool if you want to use your library outside of Fr
 | Read BTL files                             | ![X](media/check.svg) | ![X](media/check.svg)     |
 | Write BTL files                            | ![X](media/check.svg) |  Deletes BTL extra data!  |
 | Import from Camotics                       | ![X](media/check.svg) | ![-](media/no.svg)        |
-| Export to Camotics                         | ![X](media/check.svg) | ![X](media/no.svg)        |
-| Export to LinuxCNC                         | ![X](media/check.svg) | ![X](media/no.svg)        |
+| Export to Camotics                         | ![X](media/check.svg) | ![X](media/check.svg)     |
+| Export to LinuxCNC                         | ![X](media/check.svg) | ![X](media/check.svg)     |
 
 ## Installation via the FreeCAD addon manager
 
