@@ -175,6 +175,21 @@ class LibraryUI():
         self.tooldb.serialize(self.serializer)
         self.load()
 
+    def get_tool_list_item(self, tool):
+        listwidget = self.form.listWidgetTools
+        for row in range(listwidget.count()):
+            item = listwidget.item(row)
+            current_tool = item.data(QtCore.Qt.UserRole)
+            if current_tool == tool:
+                return item
+        return None
+
+    def select_tool(self, tool):
+        item = self.get_tool_list_item(tool)
+        listwidget = self.form.listWidgetTools
+        listwidget.setCurrentItem(item)
+        listwidget.scrollToItem(item, QtGui.QAbstractItemView.PositionAtCenter)
+
     def on_create_tool_clicked(self):
         selector = ShapeSelector(self.tooldb, self.serializer)
         selector.show()
@@ -195,6 +210,7 @@ class LibraryUI():
             library.assign_new_pocket(tool, editor.pocket)
         self.tooldb.serialize(self.serializer)
         self.load()
+        self.select_tool(tool)
 
     def on_edit_tool_clicked(self):
         items = self.form.listWidgetTools.selectedItems()
@@ -212,12 +228,14 @@ class LibraryUI():
         if not editor.show():
             # Reload the original values.
             self.load()
+            self.select_tool(tool)
             return
 
         if library:
             library.assign_new_pocket(tool, editor.pocket)
         self.tooldb.serialize(self.serializer)
         self.load()
+        self.select_tool(tool)
 
     def on_delete_tool_clicked(self):
         library = self.get_selected_library()

@@ -14,6 +14,12 @@ class Tool(object):
     def __str__(self):
         return '{} "{}" "{}"'.format(self.id, self.label, self.shape.name)
 
+    def __eq__(self, other):
+        return self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
+
     def set_label(self, label):
         self.label = label
 
