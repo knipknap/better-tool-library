@@ -47,6 +47,7 @@ class TwoLineTableCell(QtGui.QWidget):
 
         text = self._highlight(self.lower_text)
         self.label_lower.setText(text)
+        self.label_lower.setText('<font color="#444">'+text+'</font>')
 
     def set_label(self, text):
         self.right_text = text
