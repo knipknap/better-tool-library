@@ -127,8 +127,9 @@ class LibraryUI():
         for i in range(listwidget.count()):
             item = listwidget.item(i)
             cell = listwidget.itemWidget(item)
-            cell.highlight(term)
-            item.setHidden(not cell.contains_text(term))
+            if cell:
+                cell.highlight(term)
+                item.setHidden(not cell.contains_text(term))
         self.update_button_state()
 
     def show(self):
