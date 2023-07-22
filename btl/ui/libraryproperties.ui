@@ -75,7 +75,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../resources/icons/add-library.svg</normaloff>../../resources/icons/add-library.svg</iconset>
+         <normaloff>../resources/icons/add-library.svg</normaloff>../resources/icons/add-library.svg</iconset>
        </property>
       </widget>
      </item>

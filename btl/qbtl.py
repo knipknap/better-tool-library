@@ -4,8 +4,11 @@ import sys
 import argparse
 from PySide import QtGui
 
-freecad_path = '/usr/lib/freecad/lib/' #FIXME
-sys.path.append(freecad_path)
+try:
+    import FreeCAD
+except ImportError:
+    sys.stderr.write('error: FreeCAD not found. Make sure to include it in your PYTHONPATH')
+    sys.exit(1)
 
 from btl import ToolDB, serializers
 from btl.const import resource_dir

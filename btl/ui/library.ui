@@ -61,7 +61,7 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../../resources/icons/list-add.svg</normaloff>../../resources/icons/list-add.svg</iconset>
+             <normaloff>../resources/icons/list-add.svg</normaloff>../resources/icons/list-add.svg</iconset>
            </property>
           </widget>
          </item>
@@ -75,7 +75,7 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../../resources/icons/list-remove.svg</normaloff>../../resources/icons/list-remove.svg</iconset>
+             <normaloff>../resources/icons/list-remove.svg</normaloff>../resources/icons/list-remove.svg</iconset>
            </property>
           </widget>
          </item>
@@ -89,7 +89,7 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../../resources/icons/edit.svg</normaloff>../../resources/icons/edit.svg</iconset>
+             <normaloff>../resources/icons/edit.svg</normaloff>../resources/icons/edit.svg</iconset>
            </property>
           </widget>
          </item>
@@ -103,7 +103,7 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../../resources/icons/export.svg</normaloff>../../resources/icons/export.svg</iconset>
+             <normaloff>../resources/icons/export.svg</normaloff>../resources/icons/export.svg</iconset>
            </property>
           </widget>
          </item>
@@ -131,7 +131,7 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../../resources/icons/plus.svg</normaloff>../../resources/icons/plus.svg</iconset>
+             <normaloff>../resources/icons/plus.svg</normaloff>../resources/icons/plus.svg</iconset>
            </property>
           </widget>
          </item>
@@ -148,7 +148,7 @@
            </property>
            <property name="icon">
             <iconset>
-             <normaloff>../../resources/icons/trash.svg</normaloff>../../resources/icons/trash.svg</iconset>
+             <normaloff>../resources/icons/trash.svg</normaloff>../resources/icons/trash.svg</iconset>
            </property>
           </widget>
          </item>
@@ -174,7 +174,7 @@
          </property>
          <property name="icon">
           <iconset>
-           <normaloff>../../resources/icons/add-to-job.svg</normaloff>../../resources/icons/add-to-job.svg</iconset>
+           <normaloff>../resources/icons/add-to-job.svg</normaloff>../resources/icons/add-to-job.svg</iconset>
          </property>
          <property name="default">
           <bool>true</bool>

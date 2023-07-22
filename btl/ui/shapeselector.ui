@@ -60,7 +60,7 @@
        </property>
        <property name="icon">
         <iconset>
-         <normaloff>../../resources/icons/import.svg</normaloff>../../resources/icons/import.svg</iconset>
+         <normaloff>../resources/icons/import.svg</normaloff>../resources/icons/import.svg</iconset>
        </property>
       </widget>
      </item>

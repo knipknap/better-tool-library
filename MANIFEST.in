@@ -1,0 +1,2 @@
+recursive-include btl/resources *
+recursive-include btl/ui *.ui

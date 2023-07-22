@@ -1,12 +1,15 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 import os
 import sys
 import argparse
 from btl import ToolDB, Tool, Library, serializers
 from btl.shape import Shape
 
-freecad_path = '/usr/lib/freecad/lib/' #FIXME
-sys.path.append(freecad_path)
+try:
+    import FreeCAD
+except ImportError:
+    sys.stderr.write('error: FreeCAD not found. Make sure to include it in your PYTHONPATH')
+    sys.exit(1)
 
 def select_library(libraries):
     # No need to choose if there's just one.
