@@ -119,6 +119,8 @@ class LibraryUI():
             listwidget.addItem(widget_item)
             listwidget.setItemWidget(widget_item, cell)
 
+        self.update_search()
+
     def update_search(self):
         listwidget = self.form.listWidgetTools
         term = self.form.lineEditSearch.text()
