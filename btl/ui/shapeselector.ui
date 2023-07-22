@@ -44,7 +44,7 @@
          </rect>
         </property>
         <attribute name="label">
-         <string>Custom tools</string>
+         <string>My Tools</string>
         </attribute>
        </widget>
       </widget>
