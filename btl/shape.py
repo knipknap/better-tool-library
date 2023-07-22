@@ -159,4 +159,11 @@ class Shape():
         for param, value in self.get_params():
             print('{}    {: <20} = {}'.format(indent, param.label, value))
 
-builtin_shapes = {n: Shape(n) for n in Shape.builtin}
+class DictProxy(dict):
+    def __getitem__(self, key):
+        if len(self) == 0:
+            for shape in Shape.builtin:
+                self[shape] = Shape(shape)
+        return super().__getitem__(key)
+
+builtin_shapes = DictProxy()
