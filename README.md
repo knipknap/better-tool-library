@@ -35,6 +35,12 @@ It also provides a standalone tool if you want to use your library outside of Fr
 - Click it
 - Click *Install*
 
+To run it, just open the Path workbench and there should be a new icon at the end of the Toolbar:
+
+![Toolbar](media/toolbar.png)
+
+Alternatively, it is in menu *Path -> Path Addons -> Better Tool Library*.
+
 ## Screenshots
 
 ![Library Editor](media/library.png)
