@@ -27,13 +27,13 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="1.0064871"
-     inkscape:cx="429.21564"
-     inkscape:cy="550.42931"
-     inkscape:window-width="3840"
-     inkscape:window-height="2005"
-     inkscape:window-x="1920"
-     inkscape:window-y="27"
-     inkscape:window-maximized="1"
+     inkscape:cx="288.62764"
+     inkscape:cy="553.40997"
+     inkscape:window-width="2297"
+     inkscape:window-height="1597"
+     inkscape:window-x="3361"
+     inkscape:window-y="114"
+     inkscape:window-maximized="0"
      inkscape:current-layer="svg8" /><defs
      id="defs2"><linearGradient
        inkscape:collect="always"
@@ -399,7 +399,7 @@
      d="M 45.268144,262.98652 H 168.9652"
      style="fill:none;stroke:#000000;stroke-width:0.7461;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker3948-9);marker-end:url(#marker4328-2)" /><text
      transform="scale(0.97096033,1.0299082)"
-     id="text5680"
+     id="shaft_diameter"
      y="40.168922"
      x="98.726952"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:35.0253px;line-height:1.25;font-family:'URW Bookman L';-inkscape-font-specification:'URW Bookman L, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.28362"
@@ -409,7 +409,7 @@
        x="98.726952"
        id="tspan5678">S</tspan></text><text
      transform="scale(0.97096033,1.0299082)"
-     id="text5692"
+     id="diameter"
      y="283.73383"
      x="96.607918"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:35.0253px;line-height:1.25;font-family:'URW Bookman L';-inkscape-font-specification:'URW Bookman L, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.28362"
@@ -419,7 +419,7 @@
        x="96.607918"
        id="tspan5690">D</tspan></text><text
      transform="scale(0.97096033,1.0299082)"
-     id="text5692-8"
+     id="cap_diameter"
      y="246.87277"
      x="57.598186"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:35.0253px;line-height:1.25;font-family:'URW Bookman L';-inkscape-font-specification:'URW Bookman L, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.28362"
@@ -447,7 +447,7 @@
      d="M 185.76891,233.43708 V 215.88705"
      style="fill:none;stroke:#000000;stroke-width:0.739941;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend)" /><text
      transform="scale(0.97096033,1.0299082)"
-     id="text5692-9"
+     id="blade_thickness"
      y="175.90097"
      x="180.99182"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:35.0252px;line-height:1.25;font-family:'URW Bookman L';-inkscape-font-specification:'URW Bookman L, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.28362"
@@ -468,7 +468,7 @@
      d="M 34.427058,240.8454 V 223.29537"
      style="fill:none;stroke:#000000;stroke-width:0.739941;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Lend)" /><text
      transform="scale(0.97096033,1.0299082)"
-     id="text6387"
+     id="cap_height"
      y="252.97104"
      x="16.948652"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:35.0252px;line-height:1.25;font-family:'URW Bookman L';-inkscape-font-specification:'URW Bookman L, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.28362"
@@ -494,7 +494,7 @@
      d="M 18.552057,213.9386 V 159.99608"
      style="fill:none;stroke:#000000;stroke-width:1.29725;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker4186)" /><text
      transform="scale(0.97096033,1.0299082)"
-     id="text8606"
+     id="length"
      y="152.2662"
      x="4.9588037"
      style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:35.0252px;line-height:1.25;font-family:'URW Bookman L';-inkscape-font-specification:'URW Bookman L, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.28362"

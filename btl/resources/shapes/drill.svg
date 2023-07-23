@@ -28,7 +28,7 @@
      id="namedview45"
      showgrid="false"
      inkscape:zoom="0.7349537"
-     inkscape:cx="417.71339"
+     inkscape:cx="217.70079"
      inkscape:cy="551.05512"
      inkscape:window-x="2960"
      inkscape:window-y="263"
@@ -184,7 +184,7 @@
        d="m 124.3418,27 h 30"
        style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#marker8589)" />
     <text
-       id="text8767"
+       id="length"
        y="153.99063"
        x="169.65027"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:34.925px;line-height:1.25;font-family:'URW Bookman L';-inkscape-font-specification:'URW Bookman L, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
@@ -194,7 +194,7 @@
          x="169.65027"
          id="tspan8765">H</tspan></text>
     <text
-       id="text8771"
+       id="diameter"
        y="33.728676"
        x="154.29016"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:34.925px;line-height:1.25;font-family:'URW Bookman L';-inkscape-font-specification:'URW Bookman L, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
@@ -204,7 +204,7 @@
          x="154.29016"
          id="tspan8769">D</tspan></text>
     <text
-       id="text8785"
+       id="tip_angle"
        y="217.77318"
        x="56.409134"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:34.925px;line-height:1.25;font-family:'URW Bookman L';-inkscape-font-specification:'URW Bookman L, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.264583"
