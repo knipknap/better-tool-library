@@ -26,33 +26,14 @@ def on_workbench_activated(workbench):
     if workbench != 'PathWorkbench':
         return
 
-    # Find the main path menu
+    # Create a toolbar.
     mw = FreeCADGui.getMainWindow()
-    pathMenu = mw.findChild(QtGui.QMenu, "&Path")
-
-    # Find the Path Addons submenu
-    submenus = [a.menu() for a in pathMenu.actions() if a.text() == "Path Addons"]
-    if not submenus:
-        print("Better tool library error: Path Addons menu item not found!")
-        return
-    addon_menu = submenus[0]
-
-    # Create an action in this menu.
-    action = QtGui.QAction(addon_menu)
-    action.setText("Better Tool Library")
-    action.setIcon(QtGui.QPixmap(ICON_FILE))
-    #action.setStatusTip("Open the tool library manager")
-    action.triggered.connect(on_library_open_clicked)
-    addon_menu.addAction(action)
-
-    # Also create a toolbar.
-    toolbar = QtGui.QToolBar(mw) #"ToolLibrary")
+    toolbar = QtGui.QToolBar(mw)
     mw.addToolBar(toolbar)
 
     # Add the library editor button.
     tool_button = QtGui.QToolButton(mw)
     tool_button.setIcon(QtGui.QPixmap(ICON_FILE))
-    #tool_button.setCheckable(True)
     tool_button.clicked.connect(on_library_open_clicked)
     toolbar.addWidget(tool_button)
 

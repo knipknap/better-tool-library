@@ -41,8 +41,6 @@ toolbar:
 
 ![Toolbar](media/toolbar.png)
 
-Alternatively, it is in menu *Path -> Path Addons -> Better Tool Library*.
-
 ## Screenshots
 
 ![Library Editor](media/library.png)
