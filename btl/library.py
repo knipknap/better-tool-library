@@ -33,6 +33,8 @@ class Library(object):
         # If no specific pocket was requested, assign a new one.
         if pocket is None:
             pocket = self.get_next_pocket()
+        elif self.pockets.get(pocket) == tool:
+            return
 
         # Otherwise, add the tool. Since the requested pocket may already
         # be in use, we need to account for that. In this case, we will

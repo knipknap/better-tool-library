@@ -15,6 +15,8 @@ class Tool(object):
         return '{} "{}" "{}"'.format(self.id, self.label, self.shape.name)
 
     def __eq__(self, other):
+        if other is None:
+            return False
         return self.id == other.id
 
     def __hash__(self):
