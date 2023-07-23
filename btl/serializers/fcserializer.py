@@ -32,6 +32,7 @@ class FCSerializer():
         self.lib_path = os.path.join(path, LIBRARY_DIR)
         self.shape_path = os.path.join(path, SHAPE_DIR)
         self._init_tool_dir()
+        self.warn_for_builtin_shapes()
 
     def _init_tool_dir(self):
         if os.path.exists(self.path) and not os.path.isdir(self.path):
@@ -50,6 +51,23 @@ class FCSerializer():
 
     def _get_shape_filenames(self):
         return sorted(glob.glob(os.path.join(self.shape_path, '*'+SHAPE_EXT)))
+
+    def warn_for_builtin_shapes(self):
+        # Check if the library contains any names that are reserved.
+        shape_names = self._get_shape_names()
+        reserved_shape_names = [n for n in shape_names if n in Shape.reserved]
+        if not reserved_shape_names:
+            return
+
+        # Generate a warning for those.
+        shape_files = [os.path.basename(self._shape_filename_from_name(n))
+                       for n in reserved_shape_names]
+        shape_files = ', '.join(shape_files)
+        print(dedent('''
+            Warning: Skipping loading of the followin files, because they have
+            reserved names used by a builtin shape: {}
+            --> To remove this warning, delete or rename the files
+        ''').format(shape_files).replace("\n", " ").strip())
 
     def _name_from_filename(self, path):
         return os.path.basename(os.path.splitext(path)[0])
@@ -162,12 +180,6 @@ class FCSerializer():
     def deserialize_shape(self, name):
         filename = self._shape_filename_from_name(name)
         if name in Shape.reserved:
-            if name in self._get_shape_names():
-                print(dedent('''
-                     Warning: Skipping loading of "{}" because "{}" is a
-                     reserved name used by a builtin shape. To remove this warning,
-                     delete or rename the file
-                ''').format(filename, name).replace("\n", " ").strip())
             name = Shape.aliases.get(name, name)
             return copy.deepcopy(builtin_shapes[name])
 
