@@ -41,7 +41,8 @@ class TwoLineTableCell(QtGui.QWidget):
 
     def _update(self):
         text = self._highlight(self.right_text)
-        self.label_right.setText("Pocket\n<h3>{}</h3>".format(text))
+        text = "Pocket\n<h3>{}</h3>".format(text) if text else ''
+        self.label_right.setText(text)
 
         text = self._highlight(self.upper_text)
         self.label_upper.setText('<big><b>'+text+'</b></big>')
