@@ -264,7 +264,7 @@ class FCSerializer():
         # Walk through the supported properties, and copy them from the tool
         # to the internal representation.
         for propname, prop in properties:
-            value = attrs['parameter'].pop(propname)
+            value = attrs['parameter'].pop(propname, None)
             param, value = tool_property_to_param(propname, value, prop)
             shape.set_param(param, value)
 

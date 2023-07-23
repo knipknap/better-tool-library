@@ -63,7 +63,7 @@ class ToolProperties(QtGui.QWidget):
             widget.valueChanged.connect(partial(shape.set_param, param))
         elif issubclass(param.type, float):
             widget = QtGui.QDoubleSpinBox()
-            widget.setValue(float(value))
+            widget.setValue(float(value or 0))
             widget.setSuffix(' '+param.unit if param.unit else '')
             widget.valueChanged.connect(partial(shape.set_param, param))
         else:
