@@ -228,7 +228,9 @@ class FCSerializer():
             param, dvalue = shape_property_to_param(propname, shape_attrs, prop)
             value = tool.shape.get_param(param, dvalue)
 
-            if isinstance(prop, int):
+            if isinstance(prop, bool):
+                value = 1 if value else 0
+            elif isinstance(prop, int):
                 value = str(value or 0)
             elif isinstance(prop, (float, str)):
                 if value is None:

@@ -5,7 +5,7 @@
     "Diameter": "6,00 mm",
     "Length": "50,00 mm",
     "ShaftDiameter": "4,00 mm",
-    "SpindlePower": "True"
+    "SpindlePower": 0
   },
   "shape": "probe.fcstd",
   "version": 1
