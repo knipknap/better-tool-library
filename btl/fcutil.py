@@ -38,8 +38,28 @@ def type_from_prop(propname, prop):
             'error: param {} with type {} is unsupported'.format(
                  propname, prop.Unit.Type))
 
-def parse_unit(value):
-    return float(value.rstrip(' m').replace(',', '.')) if value else None
+def parse_distance(distance):
+    if not distance:
+        return None
+    try:
+        value, unit = distance.split(' ')
+    except ValueError:
+        value = distance
+        unit = 'mm'
+
+    value = value.replace(',', '.')
+    try:
+        value = float(value)
+    except ValueError:
+        return None
+
+    if unit == "\u00b5m" or unit == "um": # micrometers
+        return value*.001
+    elif unit == "mm": # millimeters
+        return value*1
+    elif unit == "m": # meters
+        return value*1000
+    raise NotImplemented('unsupported value in file: "{}"'.format(value))
 
 def parse_angle(value):
     return float(value.rstrip(' °').replace(',', '.')) if value else None
@@ -61,7 +81,7 @@ def tool_property_to_param(propname, value, prop=None):
         param.label = re.sub(r'([A-Z])', r' \1', propname).strip()
 
     if issubclass(param_type, params.DistanceBase):
-        value = parse_unit(value)
+        value = parse_distance(value)
     elif issubclass(param_type, params.AngleBase):
         value = parse_angle(value)
     elif issubclass(param_type, params.BoolBase):
