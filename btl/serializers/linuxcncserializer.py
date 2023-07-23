@@ -40,16 +40,17 @@ class LinuxCNCSerializer():
     def deserialize_libraries(self):
         return [] # Not implemented
 
-    def serialize_library(self, library):
-        filename = self._library_filename_from_id(library.id)
-        with open(filename, 'w') as fp:
+    def serialize_library(self, library, filename=None):
+        if not filename:
+            filename = self._library_filename_from_id(library.id)
+        with open(filename, 'wb') as fp:
             for pocket, tool in sorted(library.pockets.items()):
                 fp.write("T{} P{} D{} ;{}\n".format(
                     pocket,
                     pocket,
                     tool.shape.get_param('diameter'),
                     tool.label
-                ))
+                ).encode("ascii","ignore"))
 
     def deserialize_library(self, id):
         raise NotImplemented()
