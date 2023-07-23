@@ -31,12 +31,17 @@ class Tool(object):
     def serialize(self, serializer):
         return serializer.serialize_tool(self)
 
+    @classmethod
+    def deserialize(cls, serializer, id):
+        return serializer.deserialize_tool(id)
+
     def dump(self, indent=0, summarize=False):
         indent = ' '*indent
-        print('{}Tool "{}" ({})'.format(
+        print('{}Tool "{}" ({}) (instance {})'.format(
             indent,
             self.label,
-            self.id
+            self.id,
+            id(self)
         ))
 
         shape = self.shape.get_label()

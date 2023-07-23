@@ -69,8 +69,12 @@ class Library(object):
     def serialize(self, serializer):
         return serializer.serialize_library(self)
 
+    @classmethod
+    def deserialize(cls, serializer, id):
+        return serializer.deserialize_library(id)
+
     def dump(self, summarize=False):
-        title = 'Library "{}" ({})'.format(self.label, self.id)
+        title = 'Library "{}" ({}) (instance {})'.format(self.label, self.id, id(self))
         print("-"*len(title))
         print(title)
         print("-"*len(title))

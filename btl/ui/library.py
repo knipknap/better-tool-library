@@ -234,8 +234,10 @@ class LibraryUI():
             self.select_tool(tool)
             return
 
+        self.tooldb.add_tool(tool)
         if library:
             library.assign_new_pocket(tool, editor.pocket)
+
         self.tooldb.serialize(self.serializer)
         self.load()
         self.select_tool(tool)

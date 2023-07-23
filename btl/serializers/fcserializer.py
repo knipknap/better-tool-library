@@ -135,7 +135,6 @@ class FCSerializer():
                 'path': os.path.basename(tool_filename),
             }
             tools.append(tool_ref)
-            self.serialize_tool(tool)
         attrs["tools"] = tools
 
         filename = self._library_filename_from_name(library.id)
