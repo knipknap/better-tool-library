@@ -84,10 +84,10 @@ class TwoLineTableCell(QtGui.QWidget):
         self.set_icon(icon)
 
     def contains_text(self, text):
-        for term in text.split(' '):
-            if term not in self.upper_text \
-                and term not in self.lower_text \
-                and term not in self.right_text:
+        for term in text.lower().split(' '):
+            if term not in self.upper_text.lower() \
+                and term not in self.lower_text.lower() \
+                and term not in self.right_text.lower():
                 return False
         return True
 
