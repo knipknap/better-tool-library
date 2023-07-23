@@ -75,22 +75,24 @@ class ToolProperties(QtGui.QWidget):
 
         return widget
 
-    def _add_property_from_widget(self, widget, name, value):
+    def _add_property_from_widget(self, widget, name, value, abbreviation=None):
+        if abbreviation:
+            name = '{} ({})'.format(name, abbreviation)
         row = self.grid.rowCount()
         label = QtGui.QLabel(name)
         self.grid.addWidget(label, row, 0)
         self.grid.addWidget(widget, row, 1)
         return widget
 
-    def _add_entry(self, name, value, validator=None):
+    def _add_entry(self, name, value, validator=None, abbreviation=None):
         entry = QtGui.QLineEdit(value)
         if validator:
             entry.setValidator(validator)
-        return self._add_property_from_widget(entry, name, value)
+        return self._add_property_from_widget(entry, name, value, abbreviation)
 
-    def _add_property(self, param, value):
+    def _add_property(self, param, value, abbreviation=None):
         widget = self._get_widget_from_param(param, value)
-        self._add_property_from_widget(widget, param.label, value)
+        self._add_property_from_widget(widget, param.label, value, abbreviation)
 
     def _makespacing(self, height):
         row = self.grid.rowCount()
@@ -125,7 +127,8 @@ class ToolProperties(QtGui.QWidget):
 
         # Add entry fields per property.
         for param, value in self.tool.shape.get_well_known_params():
-            self._add_property(param, value)
+            abbr = self.tool.shape.get_abbr(param)
+            self._add_property(param, value, abbr)
 
         # Add remaining properties under a separate title.
         row = self.grid.rowCount()
@@ -137,4 +140,5 @@ class ToolProperties(QtGui.QWidget):
         params = sorted(self.tool.shape.get_non_well_known_params(),
                         key=lambda x: x[0].name)
         for param, value in params:
-            self._add_property(param, value)
+            abbr = self.tool.shape.get_abbr(param)
+            self._add_property(param, value, abbr)

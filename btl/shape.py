@@ -3,7 +3,7 @@ import sys
 import glob
 import shutil
 from . import const
-from .util import file_is_newer
+from .util import file_is_newer, get_abbreviations_from_svg
 from .params import known_types
 from .fcutil import load_shape_properties, \
                     shape_property_to_param, \
@@ -36,7 +36,8 @@ class Shape():
         self.filename = freecad_filename
         self.icon = None # Shape SVG or PNG as a binary string
         self.icon_type = None # Shape PNG as a binary string
-        self.params = {}
+        self.abbr = {} # map param name to an abbreviation, if found in SVG
+        self.params = {} # map param name to a tuple (param, value)
 
         # Load the shape files. Builtin types get preference, so they
         # overwrite any values already defined above.
@@ -110,7 +111,13 @@ class Shape():
     def add_icon_from_file(self, filename):
         with open(filename, 'rb') as fp:
             self.icon = fp.read()
+            if filename.endswith('svg'):
+                self.abbr = get_abbreviations_from_svg(self.icon)
         self.icon_type = os.path.splitext(filename)[1].lstrip('.')
+
+    def get_abbr(self, param):
+        normalized = param.label.lower().replace(' ', '_')
+        return self.abbr.get(normalized)
 
     def create_icon(self):
         filename = create_thumbnail(self.filename)

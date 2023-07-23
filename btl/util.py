@@ -1,5 +1,6 @@
 import os
 import hashlib
+import xml.etree.ElementTree as ET
 
 def sha256sum(filename):
     h = hashlib.sha256()
@@ -12,3 +13,29 @@ def sha256sum(filename):
 
 def file_is_newer(reference, file):
     return os.path.getmtime(reference) < os.path.getmtime(file)
+
+ns = {'s': 'http://www.w3.org/2000/svg'}
+
+def get_abbreviations_from_svg(svg):
+    try:
+        tree = ET.fromstring(svg)
+    except ET.ParseError:
+        return {}
+
+    result = {}
+    for text_elem in tree.findall('.//s:text', ns):
+        id = text_elem.attrib.get('id', ns)
+        span_elem = text_elem.find('.//s:tspan', ns)
+        if id is None or span_elem is None:
+            continue
+        abbr = span_elem.text
+        result[id.lower()] = abbr
+
+    return result
+
+if __name__ == '__main__':
+    import sys
+    filename = sys.argv[1]
+    with open(filename) as fp:
+        svg = fp.read()
+    print(get_abbreviations_from_svg(svg))
