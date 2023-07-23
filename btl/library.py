@@ -66,8 +66,8 @@ class Library(object):
         self.tools = [t for t in self.tools if t.id != tool.id]
         self.pockets = {k: v for (k, v) in self.pockets.items() if v != tool}
 
-    def serialize(self, serializer):
-        return serializer.serialize_library(self)
+    def serialize(self, serializer, filename=None):
+        return serializer.serialize_library(self, filename=filename)
 
     @classmethod
     def deserialize(cls, serializer, id):

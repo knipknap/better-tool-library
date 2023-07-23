@@ -2,9 +2,10 @@ import os
 import re
 import FreeCAD
 import FreeCADGui
-import Path
+from pathlib import Path
 from PySide import QtGui, QtCore
 from .. import Library, Tool
+from ..serializers import serializers, FCSerializer, LinuxCNCSerializer
 from ..fcutil import add_tool_to_job, get_active_job
 from .util import load_ui
 from .tablecell import TwoLineTableCell
@@ -35,6 +36,7 @@ class LibraryUI():
         self.form.toolButtonAddLibrary.clicked.connect(self.on_create_library_clicked)
         self.form.toolButtonRemoveLibrary.clicked.connect(self.on_delete_library_clicked)
         self.form.toolButtonEditLibrary.clicked.connect(self.on_edit_library_clicked)
+        self.form.toolButtonExportLibrary.clicked.connect(self.on_export_library_clicked)
 
         self.form.pushButtonCreateTool.clicked.connect(self.on_create_tool_clicked)
         self.form.pushButtonDeleteTool.clicked.connect(self.on_delete_tool_clicked)
@@ -177,6 +179,34 @@ class LibraryUI():
         self.form.comboBoxLibrary.setCurrentIndex(0)
         self.tooldb.serialize(self.serializer)
         self.load()
+
+    def _get_pattern_for_serializer(self, serializer):
+        return '{} (*{})'.format(serializer.NAME, serializer.LIBRARY_EXT)
+
+    def on_export_library_clicked(self):
+        library = self.get_selected_library()
+        if not library:
+            return
+
+        filters = {self._get_pattern_for_serializer(s): s
+                   for s in serializers.values() if s != FCSerializer}
+        selection = self._get_pattern_for_serializer(LinuxCNCSerializer)
+
+        filename = QtGui.QFileDialog.getSaveFileName(
+            self.form,
+            "Export the tool library {}".format(library.label),
+            dir=str(Path.home()),
+            filter=';;'.join(sorted(filters)),
+            selectedFilter=selection)
+        if not filename:
+            return
+
+        filename, format = filename
+        dirname = os.path.dirname(filename)
+        serializer = filters[format](dirname)
+
+        print("Selected", filename, serializer)
+        library.serialize(serializer, filename)
 
     def get_tool_list_item(self, tool):
         listwidget = self.form.listWidgetTools

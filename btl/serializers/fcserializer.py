@@ -123,7 +123,7 @@ class FCSerializer():
         return [self.deserialize_library(id)
                 for id in self._get_library_ids()]
 
-    def serialize_library(self, library):
+    def serialize_library(self, library, filename=None):
         attrs = {}
         attrs["version"] = library.API_VERSION
         attrs["label"] = library.label
@@ -138,7 +138,8 @@ class FCSerializer():
             tools.append(tool_ref)
         attrs["tools"] = tools
 
-        filename = self._library_filename_from_name(library.id)
+        if not filename:
+            filename = self._library_filename_from_name(library.id)
         with open(filename, "w") as fp:
             json.dump(attrs, fp, sort_keys=True, indent=2)
         return attrs
