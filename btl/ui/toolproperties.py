@@ -108,11 +108,8 @@ class ToolProperties(QtGui.QWidget):
         if self.pocket is not None:
             row = self.grid.rowCount()
             label = QtGui.QLabel("<h4>Tool location</h4>")
-            try:
-                self.grid.addWidget(label, row, 0, columnSpan=2)
-            except AttributeError:
-                # PyQt version does not support columnSpan
-                self.grid.addWidget(label, row, 0)
+            # Note: Some PyQt versions do not support columnSpan
+            self.grid.addWidget(label, row, 0)
             spinner = QtGui.QSpinBox()
             spinner.setValue(self.pocket or 0)
             spinner.valueChanged.connect(self.pocketChanged.emit)
@@ -122,11 +119,8 @@ class ToolProperties(QtGui.QWidget):
         # Add custom properties under a separate title.
         row = self.grid.rowCount()
         label = QtGui.QLabel("<h4>Tool-specific properties</h4>")
-        try:
-            self.grid.addWidget(label, row, 0, columnSpan=2)
-        except AttributeError:
-            # PyQt version does not support columnSpan
-            self.grid.addWidget(label, row, 0)
+        # Note: Some PyQt versions do not support columnSpan
+        self.grid.addWidget(label, row, 0)
 
         # Add entry fields per property.
         for param, value in self.tool.shape.get_params():
