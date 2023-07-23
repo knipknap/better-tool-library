@@ -259,8 +259,12 @@ class FCSerializer():
 
     def deserialize_tool(self, id):
         filename = self._tool_filename_from_name(id)
-        with open(filename, "r") as fp:
-            attrs = json.load(fp)
+        try:
+            with open(filename, "r") as fp:
+                attrs = json.load(fp)
+        except json.decoder.JSONDecodeError:
+            sys.stderr.write('Error: skipping invalid json file {}\n'.format(filename))
+            return
 
         # Create a tool.
         shapename = self._shape_name_from_filename(attrs['shape'])

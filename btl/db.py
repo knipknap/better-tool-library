@@ -93,14 +93,16 @@ class ToolDB(object):
 
     def deserialize_shapes(self, serializer):
         for shape in serializer.deserialize_shapes():
-            self.add_shape(shape)
+            if shape:
+                self.add_shape(shape)
 
     def serialize_tools(self, serializer):
         serializer.serialize_tools(self.tools.values())
 
     def deserialize_tools(self, serializer):
         for tool in serializer.deserialize_tools():
-            self.add_tool(tool)
+            if tool:
+                self.add_tool(tool)
 
     def serialize(self, serializer):
         self.serialize_libraries(serializer)
