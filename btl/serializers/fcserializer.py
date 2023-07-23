@@ -10,6 +10,7 @@ import sys
 import glob
 import json
 import shutil
+import copy
 from textwrap import dedent
 from .. import Library, Shape, Tool
 from ..shape import builtin_shapes
@@ -168,10 +169,7 @@ class FCSerializer():
                      delete or rename the file
                 ''').format(filename, name).replace("\n", " ").strip())
             name = Shape.aliases.get(name, name)
-            return builtin_shapes[name]
-
-        #if name in Shape.reserved:
-        #    return Shape(name)
+            return copy.deepcopy(builtin_shapes[name])
 
         shape = Shape(name, filename)
 
@@ -266,11 +264,11 @@ class FCSerializer():
         for propname, prop in properties:
             value = attrs['parameter'].pop(propname, None)
             param, value = tool_property_to_param(propname, value, prop)
-            shape.set_param(param, value)
+            tool.shape.set_param(param, value)
 
         # Extract remaining parameters as strings.
         for name, value in attrs['parameter'].items():
             param, value = tool_property_to_param(name, value)
-            shape.set_param(param, value)
+            tool.shape.set_param(param, value)
 
         return tool
