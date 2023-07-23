@@ -19,9 +19,10 @@ tooltemplate = {
     "description": "",
 }
 
-LIBRARY_EXT='.ctbl'
-
 class CamoticsSerializer():
+    NAME = 'Camotics'
+    LIBRARY_EXT='.ctbl'
+
     def __init__(self, path, *args, **kwargs):
         self.path = path
         self._init_tool_dir()
@@ -34,13 +35,13 @@ class CamoticsSerializer():
         os.makedirs(self.path, exist_ok=True)
 
     def _library_filename_from_id(self, id):
-        return os.path.join(self.path, id+LIBRARY_EXT)
+        return os.path.join(self.path, id+self.LIBRARY_EXT)
 
     def _library_filename_from_library(self, library):
         return self._library_filename_from_id(library.id)
 
     def _get_library_ids(self):
-        files = glob.glob(os.path.join(self.path, '*'+LIBRARY_EXT))
+        files = glob.glob(os.path.join(self.path, '*'+self.LIBRARY_EXT))
         return sorted(os.path.basename(os.path.splitext(f)[0])
                       for f in files if os.path.isfile(f))
 
@@ -61,7 +62,7 @@ class CamoticsSerializer():
         return [self.deserialize_library(id)
                 for id in self._get_library_ids()]
 
-    def serialize_library(self, library):
+    def serialize_library(self, library, filename=None):
         toollist = {}
 
         for pocket, tool in library.pockets.items():
@@ -72,8 +73,9 @@ class CamoticsSerializer():
             toolitem["shape"] = SHAPEMAP.get(tool.shape.name, "Cylindrical")
             toollist[pocket] = toolitem
 
-        lib_filename = self._library_filename_from_library(library)
-        with open(lib_filename, 'w') as fp:
+        if not filename:
+            filename = self._library_filename_from_library(library)
+        with open(filename, 'w') as fp:
             fp.write(json.dumps(toollist, indent=2))
 
     def deserialize_library(self, id):

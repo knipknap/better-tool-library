@@ -2,9 +2,10 @@ import os
 import glob
 from .. import Library, Tool
 
-LIBRARY_EXT='.tbl'
-
 class LinuxCNCSerializer():
+    NAME = 'LinuxCNC'
+    LIBRARY_EXT='.tbl'
+
     def __init__(self, path, *args, **kwargs):
         self.path = path
         self._init_tool_dir()
@@ -17,10 +18,10 @@ class LinuxCNCSerializer():
         os.makedirs(self.path, exist_ok=True)
 
     def _library_filename_from_id(self, id):
-        return os.path.join(self.path, id+LIBRARY_EXT)
+        return os.path.join(self.path, id+self.LIBRARY_EXT)
 
     def _get_library_ids(self):
-        files = glob.glob(os.path.join(self.path, '*'+LIBRARY_EXT))
+        files = glob.glob(os.path.join(self.path, '*'+self.LIBRARY_EXT))
         return sorted(os.path.basename(os.path.splitext(f)[0])
                       for f in files if os.path.isfile(f))
 

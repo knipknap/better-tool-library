@@ -21,11 +21,12 @@ LIBRARY_DIR = 'Library'
 SHAPE_DIR = 'Shape'
 BUILTIN_SHAPE_DIR = 'resources/shapes'
 
-TOOL_EXT = '.fctb'
-LIBRARY_EXT = '.fctl'
-SHAPE_EXT = '.fcstd'
-
 class FCSerializer():
+    NAME = 'FreeCAD'
+    TOOL_EXT = '.fctb'
+    LIBRARY_EXT = '.fctl'
+    SHAPE_EXT = '.fcstd'
+
     def __init__(self, path):
         self.path = path
         self.tool_path = os.path.join(path, TOOL_DIR)
@@ -44,13 +45,13 @@ class FCSerializer():
             os.makedirs(subdir, exist_ok=True)
 
     def _get_library_filenames(self):
-        return sorted(glob.glob(os.path.join(self.lib_path, '*'+LIBRARY_EXT)))
+        return sorted(glob.glob(os.path.join(self.lib_path, '*'+self.LIBRARY_EXT)))
 
     def _library_filename_from_name(self, name):
-        return os.path.join(self.lib_path, name+LIBRARY_EXT)
+        return os.path.join(self.lib_path, name+self.LIBRARY_EXT)
 
     def _get_shape_filenames(self):
-        return sorted(glob.glob(os.path.join(self.shape_path, '*'+SHAPE_EXT)))
+        return sorted(glob.glob(os.path.join(self.shape_path, '*'+self.SHAPE_EXT)))
 
     def warn_for_builtin_shapes(self):
         # Check if the library contains any names that are reserved.
@@ -73,13 +74,13 @@ class FCSerializer():
         return os.path.basename(os.path.splitext(path)[0])
 
     def _get_tool_filenames(self):
-        return sorted(glob.glob(os.path.join(self.tool_path, '*'+TOOL_EXT)))
+        return sorted(glob.glob(os.path.join(self.tool_path, '*'+self.TOOL_EXT)))
 
     def _tool_filename_from_name(self, name):
-        return os.path.join(self.tool_path, name+TOOL_EXT)
+        return os.path.join(self.tool_path, name+self.TOOL_EXT)
 
     def _shape_filename_from_name(self, name):
-        return os.path.join(self.shape_path, name+SHAPE_EXT)
+        return os.path.join(self.shape_path, name+self.SHAPE_EXT)
 
     def _shape_name_from_filename(self, filename):
         return os.path.splitext(filename)[0]
@@ -212,7 +213,7 @@ class FCSerializer():
         attrs = {}
         attrs["version"] = tool.API_VERSION
         attrs["name"] = tool.label
-        attrs["shape"] = tool.shape.name+SHAPE_EXT
+        attrs["shape"] = tool.shape.name+self.SHAPE_EXT
         attrs["attribute"] = {}
         attrs["parameter"] = {}
 
