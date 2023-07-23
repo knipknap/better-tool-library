@@ -117,12 +117,24 @@ class ToolProperties(QtGui.QWidget):
             self._add_property_from_widget(spinner, 'Pocket', self.pocket)
             self._makespacing(6)
 
-        # Add custom properties under a separate title.
+        # Add well-known properties under a separate title.
+        row = self.grid.rowCount()
+        label = QtGui.QLabel("<h4>Well-known properties</h4>")
+        # Note: Some PyQt versions do not support columnSpan
+        self.grid.addWidget(label, row, 0)
+
+        # Add entry fields per property.
+        for param, value in self.tool.shape.get_well_known_params():
+            self._add_property(param, value)
+
+        # Add remaining properties under a separate title.
         row = self.grid.rowCount()
         label = QtGui.QLabel("<h4>Tool-specific properties</h4>")
         # Note: Some PyQt versions do not support columnSpan
         self.grid.addWidget(label, row, 0)
 
         # Add entry fields per property.
-        for param, value in self.tool.shape.get_params():
+        params = sorted(self.tool.shape.get_non_well_known_params(),
+                        key=lambda x: x[0].name)
+        for param, value in params:
             self._add_property(param, value)

@@ -76,6 +76,17 @@ class Shape():
                 summary += ' ' + param.format(value)
         return summary.strip()
 
+    def get_well_known_params(self):
+        for param_type in known_types:
+            if param_type.name in self.params:
+                yield self.params[param_type.name]
+
+    def get_non_well_known_params(self):
+        known = {t.name for t in known_types}
+        for param, value in self.params.values():
+            if param.name not in known:
+                yield param, value
+
     def is_builtin(self):
         return self.name in Shape.builtin
 
