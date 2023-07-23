@@ -1,0 +1,19 @@
+{
+  "attribute": {},
+  "name": "New Dovetail",
+  "parameter": {
+    "Chipload": "0,00 mm",
+    "Crest": "0,10 mm",
+    "CuttingAngle": "45,00 \u00b0",
+    "Diameter": "20,50 mm",
+    "DovetailHeight": "5,00 mm",
+    "Flutes": "0",
+    "Length": "63,00 mm",
+    "Material": "HSS",
+    "NeckDiameter": "7,00 mm",
+    "NeckLength": "12,50 mm",
+    "ShankDiameter": "12,00 mm"
+  },
+  "shape": "dovetail.fcstd",
+  "version": 1
+}

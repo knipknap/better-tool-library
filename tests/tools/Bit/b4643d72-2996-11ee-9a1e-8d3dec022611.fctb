@@ -1,0 +1,14 @@
+{
+  "attribute": {},
+  "name": "New Drill",
+  "parameter": {
+    "Chipload": "0,00 mm",
+    "Diameter": "3,00 mm",
+    "Flutes": "0",
+    "Length": "50,00 mm",
+    "Material": "HSS",
+    "TipAngle": "119,00 \u00b0"
+  },
+  "shape": "drill.fcstd",
+  "version": 1
+}

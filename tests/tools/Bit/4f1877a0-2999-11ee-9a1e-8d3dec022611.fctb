@@ -1,0 +1,17 @@
+{
+  "attribute": {},
+  "name": "New Torus",
+  "parameter": {
+    "Chipload": "0,00 mm",
+    "CuttingEdgeHeight": "30,00 mm",
+    "Diameter": "5,00 mm",
+    "Flutes": "0",
+    "Length": "50,00 mm",
+    "Material": "HSS",
+    "ShankDiameter": "3,00 mm",
+    "SpindleDirection": "Forward",
+    "TorusRadius": "1,00 mm"
+  },
+  "shape": "torus.fcstd",
+  "version": 1
+}
