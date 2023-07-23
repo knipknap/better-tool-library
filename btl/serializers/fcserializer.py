@@ -64,7 +64,7 @@ class FCSerializer():
                        for n in reserved_shape_names]
         shape_files = ', '.join(shape_files)
         print(dedent('''
-            Warning: Skipping loading of the followin files, because they have
+            Warning: Skipping loading of the following files, because they have
             reserved names used by a builtin shape: {}
             --> To remove this warning, delete or rename the files
         ''').format(shape_files).replace("\n", " ").strip())
