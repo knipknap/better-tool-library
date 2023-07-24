@@ -20,6 +20,7 @@ It also provides a standalone tool if you want to use your library outside of Fr
 | Tool dimension sketch for built-in tools   | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Can be used standalone outside of FreeCAD  | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Provides built-in common shapes            | ![X](media/check.svg) | ![-](media/no.svg)        |
+| Store tool notes and additional info       | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Auto-generates tool icons                  | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Can be used with no document open          | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Provides CLI tool for import/export        | ![X](media/check.svg) | ![-](media/no.svg)        |
