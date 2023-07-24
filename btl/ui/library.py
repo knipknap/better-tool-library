@@ -12,6 +12,7 @@ from .tablecell import TwoLineTableCell
 from .shapeselector import ShapeSelector
 from .tooleditor import ToolEditor
 from .libraryproperties import LibraryProperties
+from .movetool import MoveToolDialog
 
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "library.ui")
@@ -28,6 +29,8 @@ class LibraryUI():
         self.form.listWidgetTools.itemSelectionChanged.connect(self.update_search)
         self.form.listWidgetTools.setSelectionMode(
             QtGui.QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.form.listWidgetTools.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.form.listWidgetTools.customContextMenuRequested.connect(self.on_right_click)
 
         self.form.lineEditSearch.setFocus()
         self.form.lineEditSearch.textChanged.connect(self.update_search)
@@ -50,6 +53,36 @@ class LibraryUI():
         item = self.form.listWidgetTools.item(0)
         if item:
             self.form.listWidgetTools.setCurrentItem(item)
+
+    def on_right_click(self, pos):
+        menu = QtGui.QMenu(self.form.listWidgetTools)
+        action = QtGui.QAction("Move to library...", self.form.listWidgetTools)
+        action.triggered.connect(self.on_move_tool_clicked)
+        menu.addAction(action)
+        menu.exec_(self.form.listWidgetTools.mapToGlobal(pos))
+
+    def get_selected_tools(self):
+        return [i.data(QtCore.Qt.UserRole)
+                for i in self.form.listWidgetTools.selectedItems()]
+
+    def on_move_tool_clicked(self):
+        tools = self.get_selected_tools()
+        if not tools:
+            return
+
+        dialog = MoveToolDialog(self.tooldb, tools, parent=self.form)
+        if dialog.exec() != QtGui.QDialog.Accepted:
+            return
+        if not dialog.library:
+            return
+
+        library = self.get_selected_library()
+        for tool in tools:
+            self.tooldb.add_tool(tool, dialog.library)
+            library.remove_tool(tool)
+
+        self.tooldb.serialize(self.serializer)
+        self.load()
 
     def update_button_state(self):
         # Avoid calling get_active_job() in standalone mode - it doesn't support that
