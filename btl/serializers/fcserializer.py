@@ -215,7 +215,7 @@ class FCSerializer():
         attrs["version"] = tool.API_VERSION
         attrs["name"] = tool.label
         attrs["shape"] = tool.shape.name+self.SHAPE_EXT
-        attrs["attribute"] = {}
+        attrs["attribute"] = {k: v for k, v in tool.attrs.items() if v}
         attrs["parameter"] = {}
 
         # Get the list of parameters that are supported by the shape. This
@@ -273,6 +273,7 @@ class FCSerializer():
         shapename = self._shape_name_from_filename(attrs['shape'])
         shape = self.deserialize_shape(shapename)
         tool = Tool(attrs['name'], shape, id=id, filename=filename)
+        tool.attrs.update(attrs.get("attribute", {}))
 
         # Get the list of parameters that are supported by the shape. This
         # is used to find the type of each parameter.

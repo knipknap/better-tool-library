@@ -1,6 +1,5 @@
 from functools import partial
 from PySide import QtGui, QtSvg, QtCore
-from .shapewidget import ShapeWidget
 from ..params import EnumBase, AngleBase
 
 class FuncValidator(QtGui.QValidator):
@@ -20,15 +19,6 @@ class ToolProperties(QtGui.QWidget):
         super(ToolProperties, self).__init__(parent)
         self.layout = QtGui.QVBoxLayout(self)
         self.layout.setAlignment(QtCore.Qt.AlignHCenter)
-
-        self.nameWidget = QtGui.QLineEdit(tool.get_label())
-        self.nameWidget.setPlaceholderText("Tool name")
-        self.layout.addWidget(self.nameWidget)
-        self.nameWidget.setFocus()
-        self.nameWidget.textChanged.connect(tool.set_label)
-
-        widget = ShapeWidget(tool.shape)
-        self.layout.addWidget(widget)
 
         self.grid = QtGui.QGridLayout()
         self.grid.setColumnStretch(0, 0)
@@ -103,8 +93,6 @@ class ToolProperties(QtGui.QWidget):
         self.grid.addWidget(label, row, 0)
 
     def _update(self):
-        self.nameWidget.setText(self.tool.get_label())
-
         # Remove the current child widgets
         for i in reversed(range(self.grid.count())):
             self.grid.itemAt(i).widget().setParent(None)

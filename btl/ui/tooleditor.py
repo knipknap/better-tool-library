@@ -2,6 +2,7 @@ import os
 from PySide import QtGui, QtCore
 from ..const import icon_dir
 from .util import load_ui
+from .shapewidget import ShapeWidget
 from .toolproperties import ToolProperties
 
 __dir__ = os.path.dirname(__file__)
@@ -16,9 +17,34 @@ class ToolEditor(QtGui.QWidget):
         self.tool = tool
         self.pocket = pocket
 
+        nameWidget = QtGui.QLineEdit(tool.get_label())
+        nameWidget.setPlaceholderText("Tool name")
+        self.form.vBox.insertWidget(0, nameWidget)
+        nameWidget.setFocus()
+        nameWidget.textChanged.connect(tool.set_label)
+
+        widget = ShapeWidget(tool.shape)
+        self.form.vBox.insertWidget(1, widget)
+
         props = ToolProperties(tool, pocket, parent=self.form)
         props.pocketChanged.connect(self._on_pocket_changed)
-        self.form.vBox.addWidget(props)
+        tool_tab = self.form.tabWidget.insertTab(0, props, "Tool")
+        self.form.tabWidget.setCurrentIndex(tool_tab)
+
+        self.form.lineEditCoating.setText(tool.get_coating())
+        self.form.lineEditCoating.textChanged.connect(tool.set_coating)
+        self.form.lineEditHardness.setText(tool.get_hardness())
+        self.form.lineEditHardness.textChanged.connect(tool.set_hardness)
+        self.form.lineEditMaterials.setText(tool.get_materials())
+        self.form.lineEditMaterials.textChanged.connect(tool.set_materials)
+        self.form.lineEditSupplier.setText(tool.get_supplier())
+        self.form.lineEditSupplier.textChanged.connect(tool.set_supplier)
+
+        self.form.plainTextEditNotes.setPlainText(tool.get_notes())
+        self.form.plainTextEditNotes.textChanged.connect(self._on_notes_changed)
+
+    def _on_notes_changed(self):
+        self.tool.set_notes(self.form.plainTextEditNotes.toPlainText())
 
     def _on_pocket_changed(self, value):
         self.pocket = value

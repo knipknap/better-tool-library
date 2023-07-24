@@ -1,5 +1,10 @@
 {
-  "attribute": {},
+  "attribute": {
+    "btl-coating": "co",
+    "btl-hardness": "ha",
+    "btl-materials": "ma",
+    "btl-supplier": "su"
+  },
   "name": "2,5mm dual flute ball nose",
   "parameter": {
     "Chipload": "0,00 mm",
