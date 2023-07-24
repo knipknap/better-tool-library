@@ -34,6 +34,14 @@ It also provides a standalone tool if you want to use your library outside of Fr
 | Export to Camotics                         | ![X](media/check.svg) | ![X](media/check.svg)     |
 | Export to LinuxCNC                         | ![X](media/check.svg) | ![X](media/check.svg)     |
 
+
+## Screenshots
+
+![Library Editor](media/library.png)
+![Shape Browser](media/shape-browser.png)
+![Tool Editor](media/tool-editor.png)
+
+
 ## Installation via the FreeCAD addon manager
 
 - Open FreeCAD
@@ -52,13 +60,8 @@ toolbar:
 
 ![Toolbar](media/toolbar.png)
 
-## Screenshots
 
-![Library Editor](media/library.png)
-![Shape Browser](media/shape-browser.png)
-![Tool Editor](media/tool-editor.png)
-
-## Standalone mode
+## Installation in standalone mode
 
 To use via standalone, you will have to install BTL via setuptools.
 
@@ -72,12 +75,13 @@ Alternative installation for the development version:
 git clone https://github.com/knipknap/better-tool-library.git
 ```
 
-To run this, you need to point `qbtl` to your FreeCAD directories:
+To run the UI, you need to point `qbtl` to your FreeCAD directories:
 
 ```
 export PYTHONPATH=/usr/share/freecad/Ext/:/usr/lib/freecad/lib/
 qbtl path/to/your/toollibrary/
 ```
+
 
 ## CLI tool
 
