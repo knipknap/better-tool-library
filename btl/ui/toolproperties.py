@@ -77,7 +77,9 @@ class ToolProperties(QtGui.QWidget):
 
     def _add_property_from_widget(self, widget, name, value, abbreviation=None):
         if abbreviation:
-            name = '{} ({})'.format(name, abbreviation)
+            name = '{} ({}):'.format(name, abbreviation)
+        else:
+            name += ':'
         row = self.grid.rowCount()
         label = QtGui.QLabel(name)
         self.grid.addWidget(label, row, 0)
@@ -129,6 +131,7 @@ class ToolProperties(QtGui.QWidget):
         for param, value in self.tool.shape.get_well_known_params():
             abbr = self.tool.shape.get_abbr(param)
             self._add_property(param, value, abbr)
+        self._makespacing(6)
 
         # Add remaining properties under a separate title.
         row = self.grid.rowCount()
@@ -142,3 +145,4 @@ class ToolProperties(QtGui.QWidget):
         for param, value in params:
             abbr = self.tool.shape.get_abbr(param)
             self._add_property(param, value, abbr)
+        self._makespacing(6)
