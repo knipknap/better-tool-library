@@ -106,7 +106,7 @@ class LibraryUI():
         combo.clear()
         combo.addItem('Unused tools')
         combo.insertSeparator(1)
-        libraries = self.tooldb.get_libraries()
+        libraries = sorted(self.tooldb.get_libraries(), key=lambda l: l.label)
         for library in libraries:
             combo.addItem(library.label, library.id)
 
