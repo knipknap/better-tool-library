@@ -63,8 +63,13 @@ toolbar:
 To use via standalone, you will have to install BTL via setuptools.
 
 ```
+pip install btl
+```
+
+Alternative installation for the development version:
+
+```
 git clone https://github.com/knipknap/better-tool-library.git
-pip install . 
 ```
 
 To run this, you need to point `qbtl` to your FreeCAD directories:
