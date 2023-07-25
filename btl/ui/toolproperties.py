@@ -53,6 +53,7 @@ class ToolProperties(QtGui.QWidget):
         elif issubclass(param.type, float):
             widget = QtGui.QDoubleSpinBox()
             widget.setDecimals(3)
+            widget.setStepType(QtGui.QAbstractSpinBox.AdaptiveDecimalStepType)
             widget.setValue(float(value or 0))
             widget.setSuffix(' '+param.unit if param.unit else '')
             widget.valueChanged.connect(partial(shape.set_param, param))
