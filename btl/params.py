@@ -1,8 +1,5 @@
 import re
 
-#############
-# Param types
-#############
 class Param(object):
     name = None
     label = None
