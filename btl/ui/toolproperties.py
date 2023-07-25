@@ -137,7 +137,7 @@ class ToolAttributes(PropertyWidget):
         self.tool = tool
 
         row = self.grid.rowCount()
-        label = QtGui.QLabel("<h4>Tool attributes</h4>")
+        label = QtGui.QLabel("<h4>Unknown tool attributes</h4>")
         self.grid.addWidget(label, row, 0)
 
         # Add entry fields per property.

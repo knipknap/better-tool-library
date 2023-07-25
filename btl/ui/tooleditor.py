@@ -32,7 +32,7 @@ class ToolEditor(QtGui.QWidget):
         self.form.tabWidget.setCurrentIndex(tool_tab)
 
         attrs = ToolAttributes(tool, parent=self.form)
-        attr_tab = self.form.tabWidget.addTab(attrs, "Unknown attributes")
+        attr_tab = self.form.tabWidget.addTab(attrs, "Attributes")
 
         self.form.tabWidget.setCurrentIndex(tool_tab)
         self.form.lineEditCoating.setText(tool.get_coating())
