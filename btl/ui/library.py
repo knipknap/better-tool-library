@@ -225,7 +225,7 @@ class LibraryUI():
                    for s in serializers.values() if s != FCSerializer}
         selection = self._get_pattern_for_serializer(LinuxCNCSerializer)
 
-        filename = QtGui.QFileDialog.getSaveFileName(
+        filename, format = QtGui.QFileDialog.getSaveFileName(
             self.form,
             "Export the tool library {}".format(library.label),
             dir=str(Path.home()),
@@ -234,7 +234,6 @@ class LibraryUI():
         if not filename:
             return
 
-        filename, format = filename
         dirname = os.path.dirname(filename)
         serializer = filters[format](dirname)
 
