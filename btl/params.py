@@ -9,7 +9,7 @@ class Param(object):
     choices = None
 
     def __init__(self, name=None, unit=None):
-        label = re.sub(r'([A-Z])', r' \1', name or '').strip()
+        label = re.sub(r'([A-Z])', r' \1', name or '').strip().capitalize()
         self.name = self.name if name is None else name
         self.label = self.label if name is None else label
         self.unit = self.unit if unit is None else unit
@@ -24,9 +24,6 @@ class Param(object):
         if self.choices is not None and value not in self.choices:
             return False
         return True
-
-    def validate(self, value):
-        return value in self.choices
 
 class BoolParam(Param):
     type = bool

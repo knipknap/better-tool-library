@@ -3,7 +3,7 @@ from PySide import QtGui, QtCore
 from ..const import icon_dir
 from .util import load_ui
 from .shapewidget import ShapeWidget
-from .toolproperties import ToolProperties
+from .toolproperties import ToolProperties, ToolAttributes
 
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "tooleditor.ui")
@@ -31,6 +31,10 @@ class ToolEditor(QtGui.QWidget):
         tool_tab = self.form.tabWidget.insertTab(0, props, "Tool")
         self.form.tabWidget.setCurrentIndex(tool_tab)
 
+        attrs = ToolAttributes(tool, parent=self.form)
+        attr_tab = self.form.tabWidget.addTab(attrs, "Unknown attributes")
+
+        self.form.tabWidget.setCurrentIndex(tool_tab)
         self.form.lineEditCoating.setText(tool.get_coating())
         self.form.lineEditCoating.textChanged.connect(tool.set_coating)
         self.form.lineEditHardness.setText(tool.get_hardness())

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import uuid
 from .shape import Shape
+from .params import Param
 
 class Tool(object):
     API_VERSION = 1
@@ -25,6 +26,19 @@ class Tool(object):
 
     def __hash__(self):
         return hash(self.id)
+
+    def set_attrib(self, name, value):
+        self.attrs[name] = value
+
+    def get_non_btl_attribs(self):
+        return {k:v for k, v in self.attrs.items() if not k.startswith('btl-')}
+
+    def get_attrib(self, name, default=None):
+        return self.attrs[name]
+
+    def get_attrib_as_param(self, name, default=None):
+        value = self.attrs[name]
+        return Param(name), value
 
     def set_label(self, label):
         self.label = label
