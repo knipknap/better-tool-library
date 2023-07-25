@@ -1,87 +1,49 @@
+import re
 
 #############
-# Base types
+# Param types
 #############
-class Base(object):
+class Param(object):
     name = None
     label = None
     unit = ''
     fmt = '{}'
     type = str
+    choices = None
+
+    def __init__(self, name=None, unit=None):
+        label = re.sub(r'([A-Z])', r' \1', name or '').strip()
+        self.name = self.name if name is None else name
+        self.label = self.label if name is None else label
+        self.unit = self.unit if unit is None else unit
 
     def format(self, value):
-        return self.fmt.format(value)
+        unit = ' '+self.unit if self.unit else ''
+        return self.fmt.format(value)+unit
 
     def validate(self, value):
-        return isinstance(value, self.type)
-
-class EnumBase(Base):
-    choices = []
+        if not isinstance(value, self.type):
+            return False
+        if self.choices is not None and value not in self.choices:
+            return False
+        return True
 
     def validate(self, value):
         return value in self.choices
 
-class BoolBase(Base):
+class BoolParam(Param):
     type = bool
 
-class IntBase(Base):
+class IntParam(Param):
     type = int
 
-class FloatBase(Base):
+class FloatParam(Param):
     type = float
 
-class DistanceBase(FloatBase):
+class DistanceParam(FloatParam):
     unit = 'mm'
-    fmt = '{}mm'
+    fmt = '{}'
 
-class AngleBase(FloatBase):
+class AngleParam(FloatParam):
     unit = '°'
-    fmt = '{}°'
-
-#################
-# Specific types
-#################
-class Diameter(DistanceBase):
-    name = 'diameter'
-    label = 'Diameter'
-    fmt = 'D{}mm'
-
-class Shaft(DistanceBase):
-    name = 'shaft'
-    label = 'Shaft Diameter'
-    fmt = 'Shaft {}mm'
-
-class Length(DistanceBase):
-    name = 'length'
-    label = 'Length'
-    fmt = 'L{}mm'
-
-class Flutes(IntBase):
-    name = 'flutes'
-    label = 'Flutes'
-    fmt = '{}-flute'
-
-class Pocket(IntBase):
-    name = 'pocket'
-    label = 'Pocket'
-
-class Material(EnumBase):
-    name = 'material'
-    label = 'Material'
-    choices = 'HSS', 'Carbide'
-
-class SpindleDirection(EnumBase):
-    name = 'spindledirection'
-    label = 'Spindle Direction'
-    choices = 'Forward', 'Reverse', 'None'
-
-# The parameters need to be ordered by importance; this order is
-# used to prioritize which paramaters to show when there is limited
-# space.
-# E.g. when generating Tool.get_param_summary() creates a summary
-# description of the tool, it shows the important parameters first.
-known_types = [Diameter(),
-               Shaft(),
-               Length(),
-               Flutes(),
-               Material()]
+    fmt = '{}'

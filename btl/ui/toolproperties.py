@@ -1,6 +1,5 @@
 from functools import partial
 from PySide import QtGui, QtSvg, QtCore
-from ..params import EnumBase, AngleBase
 
 class FuncValidator(QtGui.QValidator):
     def __init__(self, func, parent=None):
@@ -32,7 +31,7 @@ class ToolProperties(QtGui.QWidget):
     def _get_widget_from_param(self, param, value):
         validator = FuncValidator(param.validate)
         shape = self.tool.shape
-        if isinstance(param, EnumBase):
+        if param.choices is not None:
             widget = QtGui.QComboBox()
             for choice in param.choices:
                 widget.addItem(choice)

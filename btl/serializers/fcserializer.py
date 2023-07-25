@@ -187,8 +187,8 @@ class FCSerializer():
         shape = Shape(name, filename)
 
         # Collect a list of custom properties from the Attribute object.
-        attrs, properties = load_shape_properties(filename)
-        shape_properties_to_shape(attrs, properties, shape)
+        properties = load_shape_properties(filename)
+        shape_properties_to_shape(properties, shape)
 
         # Load the shape icon.
         shape.load_or_create_icon()
@@ -220,36 +220,28 @@ class FCSerializer():
 
         # Get the list of parameters that are supported by the shape. This
         # is used to find the type of each parameter.
-        shape_attrs, properties = load_shape_properties(tool.shape.filename)
+        properties = load_shape_properties(tool.shape.filename)
 
         # Walk through the supported properties, and copy them from the internal
         # model to the tool file representation.
-        for propname, prop in properties:
-            param, dvalue = shape_property_to_param(propname, shape_attrs, prop)
-            value = tool.shape.get_param(param, dvalue)
+        for propname, prop, enums in properties:
+            btlparam = tool.shape.get_param_type(propname)
+            btlvalue = tool.shape.get_param(propname)
 
             if isinstance(prop, bool):
-                value = 1 if value else 0
+                value = 1 if btlvalue else 0
             elif isinstance(prop, int):
-                value = str(value or 0)
+                value = str(btlvalue or 0)
             elif isinstance(prop, (float, str)):
-                if value is None:
+                if btlvalue is None:
                     continue
+                value = btlvalue
             else:
-                try:
-                    prop.Value = value
-                except TypeError:
-                    continue
-                value = prop.UserString
-
-                # this hack is used because FreeCAD writes these parameters using comma
-                # separator when run in the UI, but not when running it here. I couldn't
+                # FIXME: this hack is used because FreeCAD writes these parameters using comma
+                # separator when run in the UI, but not when running it here. I couldn't yet
                 # figure out where this (likely locale dependend) setting is made.
-                try:
-                    float(prop.Value)
-                    value = value.replace('.', ',')
-                except ValueError:
-                    pass
+                value = str(btlvalue).replace('.', ',')
+                value = value+' '+btlparam.unit
 
             attrs["parameter"][propname] = value
 
@@ -277,18 +269,13 @@ class FCSerializer():
 
         # Get the list of parameters that are supported by the shape. This
         # is used to find the type of each parameter.
-        shape_attrs, properties = load_shape_properties(tool.shape.filename)
+        properties = load_shape_properties(tool.shape.filename)
 
         # Walk through the supported properties, and copy them from the tool
         # to the internal representation.
-        for propname, prop in properties:
+        for propname, prop, enums in properties:
             value = attrs['parameter'].pop(propname, None)
-            param, value = tool_property_to_param(propname, value, prop)
-            tool.shape.set_param(param, value)
-
-        # Extract remaining parameters as strings.
-        for name, value in attrs['parameter'].items():
-            param, value = tool_property_to_param(name, value)
+            param, value = tool_property_to_param(propname, prop, enums, value)
             tool.shape.set_param(param, value)
 
         return tool

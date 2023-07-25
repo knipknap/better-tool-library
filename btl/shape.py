@@ -4,7 +4,6 @@ import glob
 import shutil
 from . import const
 from .util import file_is_newer, get_abbreviations_from_svg
-from .params import known_types
 from .fcutil import load_shape_properties, \
                     shape_property_to_param, \
                     shape_properties_to_shape, \
@@ -27,7 +26,14 @@ class Shape():
                'v-bit': 'chamfer'}
     builtin = [os.path.splitext(os.path.basename(f))[0]
                for f in glob.glob(os.path.join(builtin_shape_pattern))]
-    well_known = tuple(t.name for t in known_types)
+    well_known = (
+        'Diameter',
+        'ShaftDiameter',
+        'ShankDiameter',
+        'Flutes',
+        'Length',
+        'Material',
+    )
     reserved = set(aliases)|set(builtin)
 
     def __init__(self, name, freecad_filename=None):
@@ -43,8 +49,8 @@ class Shape():
         # overwrite any values already defined above.
         if name in Shape.builtin:
             self.filename = get_builtin_shape_file_from_name(name)
-            attrs, properties = load_shape_properties(self.filename)
-            shape_properties_to_shape(attrs, properties, self)
+            properties = load_shape_properties(self.filename)
+            shape_properties_to_shape(properties, self)
             self.load_or_create_icon()
 
         if not self.filename or not os.path.isfile(self.filename):
@@ -66,26 +72,43 @@ class Shape():
             return default
         return self.params[param][1]
 
+    def get_param_type(self, param, default=None):
+        if not isinstance(param, str):
+            param = param.name
+        if param not in self.params:
+            return default
+        return self.params[param][0]
+
     def get_params(self):
         return [(v[0], v[1]) for (k, v) in sorted(self.params.items())]
 
     def get_param_summary(self):
         summary = self.get_label()
-        for param in known_types:
-            value = self.get_param(param)
-            if value:
-                summary += ' ' + param.format(value)
+
+        for name in self.well_known:
+            value = self.get_param(name)
+            if not value:
+                continue
+            param = self.get_param_type(name)
+            abbr = self.get_abbr(param)
+
+            if abbr:
+                summary += ' '+abbr+param.format(value)
+            elif hasattr(param, 'choices'):
+                summary += ' '+param.format(value)
+            else:
+                summary += ' {} {}'.format(param.label, param.format(value))
+
         return summary.strip()
 
     def get_well_known_params(self):
-        for param_type in known_types:
-            if param_type.name in self.params:
-                yield self.params[param_type.name]
+        for name in self.well_known:
+            if name in self.params:
+                yield self.params[name]
 
     def get_non_well_known_params(self):
-        known = {t.name for t in known_types}
         for param, value in self.params.values():
-            if param.name not in known:
+            if param.name not in self.well_known:
                 yield param, value
 
     def is_builtin(self):
