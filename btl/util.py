@@ -25,8 +25,15 @@ def get_abbreviations_from_svg(svg):
     result = {}
     for text_elem in tree.findall('.//s:text', ns):
         id = text_elem.attrib.get('id', ns)
+        if id is None:
+            continue
+
+        abbr = text_elem.text
+        if abbr is not None:
+            result[id.lower()] = abbr
+
         span_elem = text_elem.find('.//s:tspan', ns)
-        if id is None or span_elem is None:
+        if span_elem is None:
             continue
         abbr = span_elem.text
         result[id.lower()] = abbr
