@@ -59,6 +59,17 @@ def parse_distance(distance):
         return value*1
     elif unit == "m": # meters
         return value*1000
+    elif unit == "in" or unit == '"': # inch
+        return value*25.4
+    elif unit == "thou": # thousands of an inch
+        return value*0.0254
+    elif unit == "'": # feet
+        return value*304.8
+    elif unit == "yd": # yards
+        return value*914.4
+    elif unit == "mi": # yards
+        return value*1609344.0
+
     raise NotImplementedError('unsupported value in file: "{}"'.format(value))
 
 def parse_angle(value):
