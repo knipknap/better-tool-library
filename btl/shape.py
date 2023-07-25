@@ -94,7 +94,7 @@ class Shape():
 
             if abbr:
                 summary += ' '+abbr+param.format(value)
-            elif hasattr(param, 'choices'):
+            elif param.choices is not None:
                 summary += ' '+param.format(value)
             else:
                 summary += ' {} {}'.format(param.label, param.format(value))
