@@ -54,7 +54,7 @@ class LinuxCNCSerializer():
                 ).encode("ascii","ignore"))
 
     def deserialize_library(self, id):
-        raise NotImplemented()
+        raise NotImplemented
 
     def deserialize_shapes(self):
         # In LinuxCNC, shapes cannot exist on their own outside a library.

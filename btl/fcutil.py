@@ -59,7 +59,7 @@ def parse_distance(distance):
         return value*1
     elif unit == "m": # meters
         return value*1000
-    raise NotImplemented('unsupported value in file: "{}"'.format(value))
+    raise NotImplementedError('unsupported value in file: "{}"'.format(value))
 
 def parse_angle(value):
     return float(value.rstrip(' °').replace(',', '.')) if value else None
@@ -109,7 +109,7 @@ def shape_property_to_param(propname, attrs, prop):
     # Default can be overwritten by more specific known types.
     param_type = fc_property_to_param_type.get(propname, param_type)
     if not param_type:
-        raise NotImplemented(
+        raise NotImplementedError(
             'bug: param {} with type {} not supported'.format(
                  propname, prop))
 
