@@ -8,6 +8,19 @@ from .library import LibraryUI
 ICON_FILE = os.path.join(icon_dir, 'tool-library.svg')
 prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Path")
 
+
+parentWbName = 'Path'
+parentWbFullName = parentWbName + 'Workbench'
+addonTitle = 'Better Tool Library'
+# print('addonTitle', addonTitle)
+
+addon_menuName = parentWbName + ' ' + 'Addons'
+addon_menuObjName = parentWbName + '_' + 'Addons'
+existingMenu = 'Path Dressup'       # existing wb menu name to insert this addon menu ABOVE
+iconFileName = 'tool-library.svg'
+statusText = 'Better Tool Library.'
+
+
 def on_library_open_clicked():
     # Ensure that a library dir is defined in the preferences.
     lib_dir = prefs.GetString("LastPathToolLibrary", "~/.btl/Library")
@@ -30,6 +43,37 @@ def on_workbench_activated(workbench):
     mw = FreeCADGui.getMainWindow()
     toolbar = QtGui.QToolBar(mw)
     mw.addToolBar(toolbar)
+
+    # ===========================================================
+    mw = FreeCADGui.getMainWindow()
+    addon_menu = None
+
+    # Find the Workbench menu
+    wb_menu = mw.findChild(QtGui.QMenu, "&" + parentWbName)
+
+    for menu in wb_menu.actions():
+        if menu.text() == addon_menuName:
+            # Already exists, save it.
+            addon_menu = menu.menu()
+            break
+    if addon_menu is None:
+        # create a new addon menu
+        addon_menu = QtGui.QMenu(addon_menuName)
+        addon_menu.setObjectName(addon_menuObjName)
+        existing_menu_entry = mw.findChild(QtGui.QMenu, existingMenu)
+        wb_menu.insertMenu(existing_menu_entry.menuAction(), addon_menu)
+
+    action = QtGui.QAction(addon_menu)
+    action.setText(addonTitle)
+    # action.setIcon(QtGui.QPixmap(getIcon(ICON_FILE)))
+    action.setStatusTip(statusText)
+
+    action.triggered.connect(on_library_open_clicked)
+    addon_menu.addAction(action)
+    # ===========================================================
+
+
+
 
     # Add the library editor button.
     tool_button = QtGui.QToolButton(mw)
