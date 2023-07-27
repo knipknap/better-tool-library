@@ -42,9 +42,13 @@ It also provides a standalone tool if you want to use your library outside of Fr
 ![Tool Editor](media/tool-editor.png)
 
 
-## Installation via the FreeCAD addon manager
+## Installation
+
+### Prerequisites
 
 Better Tool Library (BTL) is compatible with FreeCAD 0.19 and 0.21.
+
+### Installation via the FreeCAD addon manager
 
 - Open FreeCAD
 - Go to *Edit -> Preferences -> Addon Manager*
@@ -63,7 +67,7 @@ toolbar:
 ![Toolbar](media/toolbar.png)
 
 
-## Installation in standalone mode
+### Installation in standalone mode
 
 To use via standalone, you will have to install BTL via setuptools.
 
@@ -128,3 +132,7 @@ btl fctooldir/ export -f linuxcnc linuxcnc.tbl
 ```
 btl -f camotics camtest/ export -f freecad fctooldir/
 ```
+
+## Links
+
+[FreeCAD discussions](https://forum.freecad.org/viewtopic.php?t=79854)
