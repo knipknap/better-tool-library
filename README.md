@@ -135,4 +135,5 @@ btl -f camotics camtest/ export -f freecad fctooldir/
 
 ## Links
 
+[License](LICENSE)
 [FreeCAD discussions](https://forum.freecad.org/viewtopic.php?t=79854)
