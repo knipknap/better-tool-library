@@ -1,9 +1,8 @@
 # The format that FreeCAD uses for these tool library files is unfortunately a mess:
-# - Numbers are locale-dependend, e.g. decimal separator (ugh)
 # - Numbers are represented according to the precision settings of the user interface
 # - Numbers are represented as strings in the JSON
-# - Numbers are represented with units in the JSON
-# - Type interpretations are hardcoded in FreeCAD.
+# - Numbers are represented with units in the JSON in a single attribute instead of separately
+# - Type interpretations are hardcoded in FreeCAD
 # Here I do my best to represent/hide these behaviors.
 import os
 import sys
@@ -222,7 +221,7 @@ class FCSerializer():
             else:
                 # FIXME: this hack is used because FreeCAD writes these parameters using comma
                 # separator when run in the UI, but not when running it here. I couldn't yet
-                # figure out where this (likely locale dependend) setting is made.
+                # figure out where this (likely locale dependent) setting is made.
                 value = str(btlvalue).replace('.', ',')
                 value = value+' '+btlparam.unit
 

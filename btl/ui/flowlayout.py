@@ -104,7 +104,7 @@ class FlowLayout(QLayout):
         # Get initial coordinates of the drawing region (should be 0, 0)
         x = rect.x()
         y = rect.y()
-        # Initalize column width and line height
+        # Initialize column width and line height
         columnWidth = 0
         lineHeight = 0
 
