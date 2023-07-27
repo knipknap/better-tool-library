@@ -136,77 +136,81 @@ removetoolparser.add_argument('tool', help='the tool id, or "all"')
 removelibraryparser = removesubparsers.add_parser('library', help='remove the library')
 removelibraryparser.add_argument('library', help='the library id, or "all"')
 
-args = parser.parse_args()
+def run():
+    args = parser.parse_args()
 
-serializer_cls = serializers.serializers[args.format]
-serializer = serializer_cls(args.name)
-db = ToolDB()
-db.deserialize(serializer)
+    serializer_cls = serializers.serializers[args.format]
+    serializer = serializer_cls(args.name)
+    db = ToolDB()
+    db.deserialize(serializer)
 
-if args.command == 'ls':
-    if 'all' in args.objects or 'libraries' in args.objects:
-        for lib in db.libraries.values():
-            print(lib)
-    if 'all' in args.objects or 'tools' in args.objects:
-        for tool in db.tools.values():
-           print(tool)
+    if args.command == 'ls':
+        if 'all' in args.objects or 'libraries' in args.objects:
+            for lib in db.libraries.values():
+                print(lib)
+        if 'all' in args.objects or 'tools' in args.objects:
+            for tool in db.tools.values():
+               print(tool)
 
-elif args.command == 'show':
-    if 'all' in args.objects:
-        db.dump(summarize=args.summarize, builtin=args.builtin)
-    if 'libraries' in args.objects:
-        for library in db.get_libraries():
-            library.dump(summarize=args.summarize)
-    if 'tools' in args.objects:
-        for tool in db.get_tools():
-            tool.dump(summarize=args.summarize)
+    elif args.command == 'show':
+        if 'all' in args.objects:
+            db.dump(summarize=args.summarize, builtin=args.builtin)
+        if 'libraries' in args.objects:
+            for library in db.get_libraries():
+                library.dump(summarize=args.summarize)
+        if 'tools' in args.objects:
+            for tool in db.get_tools():
+                tool.dump(summarize=args.summarize)
 
-elif args.command == 'export':
-    print("Exporting as {}".format(args.output_format))
-    output_serializer_cls = serializers.serializers[args.output_format]
-    output_serializer = output_serializer_cls(args.output)
-    db.serialize(output_serializer)
+    elif args.command == 'export':
+        print("Exporting as {}".format(args.output_format))
+        output_serializer_cls = serializers.serializers[args.output_format]
+        output_serializer = output_serializer_cls(args.output)
+        db.serialize(output_serializer)
 
-elif args.command == 'create':
-    if args.object == 'tool':
-        library = select_library(db.get_libraries())
-        print('Tool will be added to library "{}".'.format(library.label))
+    elif args.command == 'create':
+        if args.object == 'tool':
+            library = select_library(db.get_libraries())
+            print('Tool will be added to library "{}".'.format(library.label))
 
-        tool = create_tool(args.shape)
-        db.add_tool(tool, library=library)
-        library.serialize(serializer)
-        print("Tool id is {}.".format(tool.id))
-    elif args.object == 'library':
-        tool = Library()
-        parser.error('sorry, not yet implemented') #TODO
+            tool = create_tool(args.shape)
+            db.add_tool(tool, library=library)
+            library.serialize(serializer)
+            print("Tool id is {}.".format(tool.id))
+        elif args.object == 'library':
+            tool = Library()
+            parser.error('sorry, not yet implemented') #TODO
+        else:
+            parser.error('requested unsupported object: {}'.format(args.object))
+            db.serialize(serializer)
+
+    elif args.command == 'remove':
+        if args.object == 'tool':
+            try:
+                tool = db.get_tool_by_id(args.tool)
+            except KeyError:
+                removetoolparser.error('Tool with ID {} not found.'.format(args.tool))
+            try:
+                libraries = get_libraries(db, args.library)
+            except KeyError:
+                removetoolparser.error('Library with ID {} not found.'.format(args.library))
+            for library in libraries:
+                print('Removing tool {} from library "{}".'.format(tool.id, library.label))
+                library.remove_tool(tool)
+            if args.library == 'all':
+                print('Removing tool from DB.')
+                db.remove_tool(tool)
+            elif args.object == 'library':
+                for library in get_libraries(db, args.library):
+                    print('Removing library "{}".'.format(library.label))
+                    db.remove_library(library)
+        else:
+            parser.error('requested unsupported object: {}'.format(args.object))
+            db.dump()
+            db.serialize(serializer)
+
     else:
-        parser.error('requested unsupported object: {}'.format(args.object))
-    db.serialize(serializer)
+        print("no command given, nothing to do")
 
-elif args.command == 'remove':
-    if args.object == 'tool':
-        try:
-            tool = db.get_tool_by_id(args.tool)
-        except KeyError:
-            removetoolparser.error('Tool with ID {} not found.'.format(args.tool))
-        try:
-            libraries = get_libraries(db, args.library)
-        except KeyError:
-            removetoolparser.error('Library with ID {} not found.'.format(args.library))
-        for library in libraries:
-            print('Removing tool {} from library "{}".'.format(tool.id, library.label))
-            library.remove_tool(tool)
-        if args.library == 'all':
-            print('Removing tool from DB.')
-            db.remove_tool(tool)
-    elif args.object == 'library':
-        for library in get_libraries(db, args.library):
-            print('Removing library "{}".'.format(library.label))
-            db.remove_library(library)
-    else:
-        parser.error('requested unsupported object: {}'.format(args.object))
-    db.dump()
-    db.serialize(serializer)
-
-else:
-    print("no command given, nothing to do")
+if __name__ == '__main__':
+    run()

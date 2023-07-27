@@ -26,12 +26,17 @@ parser.add_argument('-f', '--format',
                     default='freecad')
 parser.add_argument('name',
                     help='the DB name. In case of a file based DB, this is the path to the DB')
-args = parser.parse_args()
 
-tool_db = ToolDB()
-serializer_cls = serializers.serializers[args.format]
-serializer = serializer_cls(args.name)
+def run():
+    args = parser.parse_args()
 
-app = QtGui.QApplication([])
-dialog = LibraryUI(tool_db, serializer, standalone=True)
-dialog.show()
+    tool_db = ToolDB()
+    serializer_cls = serializers.serializers[args.format]
+    serializer = serializer_cls(args.name)
+
+    app = QtGui.QApplication([])
+    dialog = LibraryUI(tool_db, serializer, standalone=True)
+    dialog.show()
+
+if __name__ == '__main__':
+    run()
