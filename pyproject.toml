@@ -1,6 +1,6 @@
 [project]
 name = "btl"
-version = "0.9.2"
+version = "0.9.3"
 authors = [
   { name="Samuel", email="knipknap@gmail.com" },
 ]
@@ -30,5 +30,5 @@ include-package-data = true
 find = {}
 
 [project.scripts]
-btl = "btl.cli"
-qbtl = "btl.qbtl"
+btl = "btl.cli:run"
+qbtl = "btl.qbtl:run"

@@ -2,7 +2,7 @@
 <package format="1">
   <name>Better Tool Library</name>
   <description>A FreeCAD Path Addon to manage your tool library.</description>
-  <version>0.9.2</version>
+  <version>0.9.3</version>
   <maintainer email="knipknap@gmail.com">Samuel Abels</maintainer>
   <license file="LICENSE">MIT</license>
   <url type="repository" branch="main">https://github.com/knipknap/better-tool-library.git</url>
