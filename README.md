@@ -51,11 +51,6 @@ Better Tool Library (BTL) is compatible with FreeCAD 0.19 and 0.21.
 ### Installation via the FreeCAD addon manager
 
 - Open FreeCAD
-- Go to *Edit -> Preferences -> Addon Manager*
-- Click "+"
-- Enter the following Repository URL: `https://github.com/knipknap/better-tool-library`
-- Enter the branch name `main`
-- Click confirm
 - Open the Addon Manager via *Tools -> Addon manager*
 - Search for *Better Tool Library*
 - Click it
