@@ -124,6 +124,7 @@ createtoolparser = createsubparsers.add_parser('tool', help='create a new tool')
 createtoolparser.add_argument('shape', help='the type of tool. may be built-in shape, or a filename')
 
 createlibraryparser = createsubparsers.add_parser('library', help='create a new library')
+createlibraryparser.add_argument('name', help='the name of the library')
 
 # "remove" command arguments
 removeparser = subparsers.add_parser('remove', help='remove tools or libraries')
@@ -178,8 +179,8 @@ def run():
             library.serialize(serializer)
             print("Tool id is {}.".format(tool.id))
         elif args.object == 'library':
-            tool = Library()
-            parser.error('sorry, not yet implemented') #TODO
+            library = Library(createlibraryparser.name)
+            library.serialize(serializer)
         else:
             parser.error('requested unsupported object: {}'.format(args.object))
             db.serialize(serializer)
