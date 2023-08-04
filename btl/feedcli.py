@@ -1,6 +1,7 @@
 import sys
 from copy import deepcopy
-from feeds import FeedCalc, Machine, HSSEndmill, CarbideEndmill
+from btl.toolmaterial import HSS, Carbide
+from feeds import FeedCalc, Machine, Endmill
 from feeds.const import Operation
 from feeds import material
 
@@ -14,17 +15,20 @@ def run(operation):
                       max_rpm=22000,
                       peak_torque_rpm=5020,
                       max_feed=5000)
-    endmill = CarbideEndmill(diameter=4,
-                             shank_diameter=6,
-                             stickout=15,
-                             cutting_edge=10,
-                             #corner_radius=1,
-                             flutes=4)
+    endmill = Endmill(Carbide,
+                      diameter=4,
+                      shank_diameter=6,
+                      stickout=15,
+                      cutting_edge=10,
+                      #corner_radius=1,
+                      flutes=4)
+    mat = material.Aluminium6061
+    mat.dump()
 
-    fc = FeedCalc(machine, endmill, material.Aluminium6061, operation=operation)
+    fc = FeedCalc(machine, endmill, mat, operation=operation)
     #fc.doc.min = 8
     fc.update()
-    print(f"Running {operation.name} operation on {fc.material.name} using a {endmill.name} tool")
+    print(f"Running {operation.name} operation on {fc.material.name} using a {endmill.tool_material.name} tool")
 
     results = []
     for i in range(100):

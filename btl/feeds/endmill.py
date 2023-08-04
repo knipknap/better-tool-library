@@ -2,14 +2,14 @@ import math
 import cairo
 import matplotlib.pyplot as plt
 import numpy as np
+from btl.toolmaterial import HSS
 from . import material
 from .const import Operation
 from .util import cantilever_deflect_endload, cantilever_deflect_uniload
 
-class AbstractEndmill(object):
-    elasticity = 1 # Modulus of elasticity (N/mm²)
-
+class Endmill(object):
     def __init__(self,
+                 tool_material,   # ToolMaterial
                  diameter,        # mm
                  shank_diameter,  # mm
                  stickout,        # mm
@@ -25,6 +25,7 @@ class AbstractEndmill(object):
         self.cutting_edge = cutting_edge
         self.flutes = flutes
         self.chipload = chipload
+        self.tool_material = tool_material or HSS
 
         # The following general shapes are supported:
         # - Rectangular
@@ -56,29 +57,20 @@ class AbstractEndmill(object):
         self.surface, self.ctx = self._create_pixmap()
         self.width_list, self.overlap = self._create_width_and_overlap_array()
 
-    def get_speeds_for_material(self, thematerial):
-        """
-        This method is to be overwritten in subclasses and should return a dict
-        mapping the operation to a tuple (min, max).
-        """
-        raise NotImplemented
+    def get_chipload_for_material(self, thematerial):
+        if self.chipload:
+            return self.chipload
+        return self.diameter/thematerial.get_chipload_divisor(self.tool_material)
 
     def get_speed_for_material(self, thematerial, operation=Operation.MILLING):
         """
         Returns the min_speed and max_speed in m/min.
         """
-        speeds = self.get_speeds_for_material(thematerial)
+        speeds = thematerial.get_speeds(self.tool_material)
         min_speed, max_speed = speeds.get(operation, (None, None))
         if not min_speed or not max_speed:
             return None, None
         return min_speed, max_speed
-
-    def get_chipload_for_material(self, thematerial):
-        """
-        This method is to be overwritten in subclasses and should return a float
-        containing the chipload.
-        """
-        raise NotImplemented
 
     def get_inertia(self):
         """
@@ -113,7 +105,7 @@ class AbstractEndmill(object):
         solid_inertia, fluted_inertia = self.get_inertia()
 
         # Point load at the end of the shank,
-        elasticity = self.elasticity*1000
+        elasticity = self.tool_material.elasticity*1000
         deflectionShank = cantilever_deflect_endload(force, shank_l, elasticity, solid_inertia)
         # Point load at the end of the fluted section that isn't currently cutting.
         deflectionNonCutting = cantilever_deflect_endload(force, non_cutting, elasticity, fluted_inertia)
@@ -134,7 +126,7 @@ class AbstractEndmill(object):
         solid_inertia, fluted_inertia = self.get_inertia()
         return cantilever_deflect_endload(force,
                                           self.stickout,
-                                          self.elasticity*1000,
+                                          self.tool_material.elasticity*1000,
                                           min(solid_inertia, fluted_inertia))
 
     def get_bend_limit(self, doc):
@@ -147,7 +139,7 @@ class AbstractEndmill(object):
         # Returns force in N
         """
         # TODO: Estimate Yield for the fluted portion of the end mill separately
-        yield_strength = self.yield_strength
+        yield_strength = self.tool_material.yield_strength
         shank_l = self.stickout - self.cutting_edge
         non_cutting = self.cutting_edge - doc
         solid_inertia, fluted_inertia = self.get_inertia()
@@ -160,7 +152,7 @@ class AbstractEndmill(object):
         # http://www.engineeringtoolbox.com/torsion-shafts-d_947.html
         """
         # TODO: Estimate Shear for the fluted portion of the end mill separately
-        shear_strength = self.shear_strength
+        shear_strength = self.tool_material.shear_strength
         solid_inertia, fluted_inertia = self.get_inertia()
         return min((shear_strength*solid_inertia) / (self.shank_d/2),
                    (shear_strength*fluted_inertia) / (self.diameter/2))
@@ -362,31 +354,3 @@ class AbstractEndmill(object):
         lowY = int(math.floor(lowY * scale))
 
         return self.overlap[lowX][lowY]
-
-class HSSEndmill(AbstractEndmill):
-    name = "HSS"
-    elasticity = 0.186158 # mm⁴
-    yield_strength = 1000 # MPa. https://material-properties.org/high-speed-steel-density-strength-hardness-melting-point/
-    shear_strength = 1200 # MPa
-
-    def get_speeds_for_material(self, thematerial):
-        return thematerial.hss_speeds
-
-    def get_chipload_for_material(self, thematerial):
-        if self.chipload:
-            return self.chipload
-        return self.diameter/thematerial.hss_chipload_divisor
-
-class CarbideEndmill(AbstractEndmill):
-    name = "Carbide"
-    elasticity = 0.517107 # mm⁴
-    yield_strength = 330 # MPa  https://material-properties.org/tungsten-carbide-properties-application-price/
-    shear_strength = 370 # MPa
-
-    def get_speeds_for_material(self, thematerial):
-        return thematerial.carbide_speeds
-
-    def get_chipload_for_material(self, thematerial):
-        if self.chipload:
-            return self.chipload
-        return self.diameter/thematerial.carbide_chipload_divisor
