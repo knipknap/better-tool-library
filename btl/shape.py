@@ -32,6 +32,7 @@ class Shape():
         'ShankDiameter',
         'Flutes',
         'Length',
+        'CuttingEdgeHeight',
         'Material',
     )
     reserved = set(aliases)|set(builtin)
