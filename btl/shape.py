@@ -3,6 +3,8 @@ import sys
 import glob
 import shutil
 from . import const
+from .params import Param
+from .toolmaterial import ToolMaterial, HSS, Carbide
 from .util import file_is_newer, get_abbreviations_from_svg
 from .fcutil import load_shape_properties, \
                     shape_property_to_param, \
@@ -125,6 +127,53 @@ class Shape():
         if filename == self.filename:
             return
         shutil.copy(self.filename, filename)
+
+    def get_shank_diameter(self):
+        item = self.params.get('ShankDiameter')
+        return item[1] if item else None
+
+    def get_diameter(self):
+        item = self.params.get('Diameter')
+        return item[1] if item else None
+
+    def get_cutting_edge(self):
+        item = self.params.get('CuttingEdgeHeight')
+        return item[1] if item else None
+
+    def get_flutes(self):
+        item = self.params.get('Flutes')
+        return item[1] if item else None
+
+    def get_chipload(self):
+        item = self.params.get('Chipload')
+        return item[1] if item else None
+
+    def get_corner_radius(self):
+        if self.name == 'ballend':
+            return self.get_diameter()/2
+        item = self.params.get('TorusRadius')
+        return item[1] if item else 0
+
+    def get_cutting_edge_angle(self):
+        item = self.params.get('CuttingEdgeAngle')
+        return item[1] if item else 0
+
+    def get_tip_diameter(self):
+        item = self.params.get('TipDiameter')
+        return item[1] if item else 0
+
+    def set_material(self, tool_material):
+        assert issubclass(tool_material, ToolMaterial)
+        param = Param('Material')
+        self.set_param(param, tool_material.name)
+
+    def get_material(self):
+        material = self.get_param('Material')
+        if material.lower() == 'hss':
+            return HSS
+        elif material.lower() == 'carbide':
+            return Carbide
+        return None
 
     def get_icon(self):
         return self.icon_type, self.icon

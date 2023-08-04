@@ -136,8 +136,8 @@ class FeedCalc(object):
             chipload *= SLOTTING_CHIP_MULTIPLIER
         self.chipload = Param(4, 0.0001, chipload, const.mmToInch, 'mm')
 
-        self.woc = Param(3, 0.01, endmill.diameter, const.mmToInch, 'mm') # Width of cut (radial engagement)
-        self.doc = Param(3, 0.01, endmill.cutting_edge, const.mmToInch, 'mm') # Depth of cut (axial engagement)
+        self.woc = Param(3, 0.01, endmill.shape.get_diameter(), const.mmToInch, 'mm') # Width of cut (radial engagement)
+        self.doc = Param(3, 0.01, endmill.shape.get_cutting_edge(), const.mmToInch, 'mm') # Depth of cut (axial engagement)
 
         # Working attributes calculated. These also serve as "constraints" to
         # check whether the proposed attributes from Simplex may cause issues.
@@ -233,13 +233,14 @@ class FeedCalc(object):
         #  (0,0) is centerline of tool, at the spindle nose.
         #  +X is to the right
         #  +Y is down (away from spindle)
+        pixmap = self.endmill.get_pixmap()
         if self.operation == Operation.DRILLING:
-            overlap = math.pi * math.pow(self.endmill.diameter/2, 2)
-            effective_diameter = self.endmill.diameter
+            overlap = math.pi * math.pow(self.endmill.shape.get_diameter()/2, 2)
+            effective_diameter = self.endmill.shape.get_diameter()
         else:
-            self.woc.v = self.endmill.diameter if self.operation == Operation.SLOTTING else self.woc.v
-            overlap = self.endmill.get_overlap_from_woc(self.doc.v, self.woc.v)
-            effective_diameter = self.endmill.get_effective_diameter_from_doc(self.doc.v)
+            self.woc.v = self.endmill.shape.get_diameter() if self.operation == Operation.SLOTTING else self.woc.v
+            overlap = pixmap.get_overlap_from_woc(self.doc.v, self.woc.v)
+            effective_diameter = pixmap.get_effective_diameter_from_doc(self.doc.v)
 
         # When slotting/drilling, WOC is fixed.
         if self.operation == Operation.SLOTTING or self.operation == Operation.DRILLING:
@@ -259,8 +260,8 @@ class FeedCalc(object):
                 get_hsm_factors(self.doc.v,
                                 max(0.00001, self.woc.v),
                                 effective_diameter,
-                                self.endmill.corner_radius,
-                                self.endmill.lead_angle)
+                                self.endmill.shape.get_corner_radius(),
+                                self.endmill.shape.get_cutting_edge_angle()/2)
 
             # Adjust chipload up to max multiplier based on how thin the chips are
             speed_range = self.endmill.get_speed_for_material(self.material, Operation.MILLING)
@@ -283,7 +284,7 @@ class FeedCalc(object):
         # selected DOC, WOC, SPEED, and CHIPLOAD:
         self.rpm.v = self.speed.v*1000 / (effective_diameter*math.pi)
         self.adjusted_chipload.v = self.chipload.v*self.feed_factor.v
-        self.feed.v = self.adjusted_chipload.v*self.endmill.flutes*self.rpm.v
+        self.feed.v = self.adjusted_chipload.v*self.endmill.shape.get_flutes()*self.rpm.v
         self.mrr.v = self.feed.v*overlap/1000
 
         # Note: Power calculation can probably be improved:

@@ -2,30 +2,20 @@ import math
 import cairo
 import matplotlib.pyplot as plt
 import numpy as np
-from btl.toolmaterial import HSS
-from . import material
-from .const import Operation
-from .util import cantilever_deflect_endload, cantilever_deflect_uniload
 
-class Endmill(object):
+class ToolPixmap(object):
     def __init__(self,
-                 tool_material,   # ToolMaterial
                  diameter,        # mm
                  shank_diameter,  # mm
                  stickout,        # mm
                  cutting_edge,    # mm
                  corner_radius=0, # mm
                  lead_angle=0,    # degrees (0-90)
-                 flutes=1,        # quantity
-                 tip_w=0,         # mm
-                 chipload=None):  # mm. taken from material table if not provided
+                 tip_w=0):        # mm
         self.diameter = diameter
         self.shank_d = shank_diameter
         self.stickout = stickout
         self.cutting_edge = cutting_edge
-        self.flutes = flutes
-        self.chipload = chipload
-        self.tool_material = tool_material or HSS
 
         # The following general shapes are supported:
         # - Rectangular
@@ -57,116 +47,6 @@ class Endmill(object):
         self.surface, self.ctx = self._create_pixmap()
         self.width_list, self.overlap = self._create_width_and_overlap_array()
 
-    def get_chipload_for_material(self, thematerial):
-        if self.chipload:
-            return self.chipload
-        return self.diameter/thematerial.get_chipload_divisor(self.tool_material)
-
-    def get_speed_for_material(self, thematerial, operation=Operation.MILLING):
-        """
-        Returns the min_speed and max_speed in m/min.
-        """
-        speeds = thematerial.get_speeds(self.tool_material)
-        min_speed, max_speed = speeds.get(operation, (None, None))
-        if not min_speed or not max_speed:
-            return None, None
-        return min_speed, max_speed
-
-    def get_inertia(self):
-        """
-        Returns a tuple (solid_inertia, fluted_inertia) (mm⁴)
-        """
-        # Moment of inertia equation for a SOLID round beam (shank partion of the end mill)
-        # https://en.wikipedia.org/wiki/List_of_area_moments_of_inertia
-        solid_inertia = (math.pi/4) * (self.shank_d/2)**4
-
-        # Estimated equivalent of the fluted portion = 80% of the fluted diameter
-        # "Determination of the Equivalent Diameter of an End Mill Based on its Compliance", L. Kops, D.T. Vo
-        fluted_inertia = (math.pi * ((self.diameter*0.8) / 2)**4) / 4
-
-        return solid_inertia, fluted_inertia
-
-    def get_deflection(self, doc, force):
-        """
-        Assuming a non-plunging/drilling operation, this function returns the deflection
-        resulting from the engagement with the given force.
-
-        Returns a single factor, the deflection.
-
-        doc: mm
-        force: N
-        returns: mm
-        """
-        # "Metal Cutting Theory and Practice", By David A. Stephenson, John S. Agapiou, p362
-        # "Structural modeling of end mills for form error and stability analysis", E.B. Kivanc, E. Budak
-        shank_l = self.stickout-self.cutting_edge  # Length of the shank portion
-        non_cutting = self.cutting_edge-doc # Length of the non-cutting flute portion
-    
-        solid_inertia, fluted_inertia = self.get_inertia()
-
-        # Point load at the end of the shank,
-        elasticity = self.tool_material.elasticity*1000
-        deflectionShank = cantilever_deflect_endload(force, shank_l, elasticity, solid_inertia)
-        # Point load at the end of the fluted section that isn't currently cutting.
-        deflectionNonCutting = cantilever_deflect_endload(force, non_cutting, elasticity, fluted_inertia)
-        # Uniform load along fluted section in cut,
-        deflectionCutting = cantilever_deflect_uniload(force, doc, elasticity, fluted_inertia)
-    
-        # NOTE: We ignore the contribution from the angle of deflection, which should be negligible for cutting purposes.
-        return deflectionShank+deflectionNonCutting+deflectionCutting
-
-    def get_max_deflection(self, force):
-        """
-        Returns the theoretical maximum deflection, were all forces acting
-        on the tip of the endmill.
-
-        force: N
-        returns: mm
-        """
-        solid_inertia, fluted_inertia = self.get_inertia()
-        return cantilever_deflect_endload(force,
-                                          self.stickout,
-                                          self.tool_material.elasticity*1000,
-                                          min(solid_inertia, fluted_inertia))
-
-    def get_bend_limit(self, doc):
-        """
-        # Returns the maximum force to permanently bend the end mill at the given depth of cut.
-        #
-        # Yield is the STRESS at which the material deforms permanently
-        # stress = F * L * Radius / I
-        # F = (I * stress) / (r * l)
-        # Returns force in N
-        """
-        # TODO: Estimate Yield for the fluted portion of the end mill separately
-        yield_strength = self.tool_material.yield_strength
-        shank_l = self.stickout - self.cutting_edge
-        non_cutting = self.cutting_edge - doc
-        solid_inertia, fluted_inertia = self.get_inertia()
-        return min((yield_strength*solid_inertia) / ((self.shank_d/2)* shank_l),
-                   (yield_strength*fluted_inertia) / ((self.diameter/2) * (shank_l+non_cutting)))
-
-    def get_twist_limit(self):
-        """
-        # Returns the maximum torque in Nm to shear the end mill
-        # http://www.engineeringtoolbox.com/torsion-shafts-d_947.html
-        """
-        # TODO: Estimate Shear for the fluted portion of the end mill separately
-        shear_strength = self.tool_material.shear_strength
-        solid_inertia, fluted_inertia = self.get_inertia()
-        return min((shear_strength*solid_inertia) / (self.shank_d/2),
-                   (shear_strength*fluted_inertia) / (self.diameter/2))
-
-    def validate(self):
-        if self.cutting_edge > self.stickout:
-            raise AttributeError(f"Flute Length {self.cutting_edge} must be less than Stickout {self.stickout}")
-        if abs(self.corner_radius or 0) > self.diameter/2:
-            raise AttributeError(f"Corner Radius {self.corner_radius} must be less than End Mill Radius {self.diameter/2}")
-        if self.corner_radius and self.lead_angle:
-            raise AttributeError("Choose one: Lead Angle or Corner Radius")
-        if self.lead_angle and (self.lead_angle < 0 or self.lead_angle > 90):
-            raise AttributeError("Lead Angle must be 0 to 90 degrees")
-
     def _create_pixmap(self):
         # Draw the end mill profile
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.size, self.size)
@@ -181,7 +61,7 @@ class Endmill(object):
         ctx.set_source_rgba(.8, .8, .8, 1)
         ctx.fill()
 
-        # Draw the flutes in dark grey.
+        # Draw the cutting edge area in dark grey.
         ctx.rectangle(center-self.diameter/2,
                       shaft_length,
                       self.diameter,

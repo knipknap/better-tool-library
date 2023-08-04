@@ -1,7 +1,11 @@
+#!/usr/bin/python
 import sys
 from copy import deepcopy
+from btl import Tool
+from btl.params import IntParam
+from btl.shape import builtin_shapes
 from btl.toolmaterial import HSS, Carbide
-from feeds import FeedCalc, Machine, Endmill
+from feeds import FeedCalc, Machine
 from feeds.const import Operation
 from feeds import material
 
@@ -15,20 +19,23 @@ def run(operation):
                       max_rpm=22000,
                       peak_torque_rpm=5020,
                       max_feed=5000)
-    endmill = Endmill(Carbide,
-                      diameter=4,
-                      shank_diameter=6,
-                      stickout=15,
-                      cutting_edge=10,
-                      #corner_radius=1,
-                      flutes=4)
+
+    shape = builtin_shapes['endmill']
+    shape.set_param(IntParam('Flutes'), 4)
+
+    tool_material = Carbide
+    endmill = Tool('Test tool', builtin_shapes['endmill'])
+    endmill.set_stickout(35)
+    endmill.set_material(tool_material)
+    endmill.dump()
+
     mat = material.Aluminium6061
     mat.dump()
 
     fc = FeedCalc(machine, endmill, mat, operation=operation)
     #fc.doc.min = 8
     fc.update()
-    print(f"Running {operation.name} operation on {fc.material.name} using a {endmill.tool_material.name} tool")
+    print(f"Running {operation.name} operation on {fc.material.name} using a {tool_material.name} tool")
 
     results = []
     for i in range(100):
@@ -48,7 +55,7 @@ def run(operation):
         sys.exit(1)
 
     print_result(best)
-    endmill.show_engagement(best['doc'].v, best['woc'].v)
+    endmill.pixmap.show_engagement(best['doc'].v, best['woc'].v)
 
 if __name__ == '__main__':
     #import cProfile
