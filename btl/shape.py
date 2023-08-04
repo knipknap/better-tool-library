@@ -197,6 +197,8 @@ class Shape():
         for param, value in self.get_params():
             print('{}    {: <20} = {}'.format(indent, param.label, value))
 
+# Loading shapes on import doesn't work; FreeCAD as not finished initializing.
+# This proxy delays loading the builtin shapes until they are accessed.
 class DictProxy(dict):
     def __getitem__(self, key):
         if len(self) == 0:
