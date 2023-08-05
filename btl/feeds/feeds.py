@@ -142,7 +142,7 @@ class FeedCalc(object):
         # Working attributes calculated. These also serve as "constraints" to
         # check whether the proposed attributes from Simplex may cause issues.
         self.rpm = Param(0, machine.min_rpm, machine.max_rpm, 1)
-        self.feed = Param(1, 1, machine.max_feed, const.mmToInch, 'mm/min') # The distance the tool travels each minute
+        self.feed = Param(1, machine.min_feed, machine.max_feed, const.mmToInch, 'mm/min') # The distance the tool travels each minute
         self.mrr = Param(2, 0.01, 999, const.cm3ToIn3, 'cm³/min')   # material removal rate
         self.adjusted_chipload = Param(4, 0.0001, chipload, const.mmToInch, 'mm') # Should setup with same values as chipload
 
