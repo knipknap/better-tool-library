@@ -1,16 +1,8 @@
-# Some equations from:
-# SECO - http://www.moldmakingtechnology.com/articles/special-feature-education-training-tailored-training-is-the-best-way-to-build-effective-manufacturing-teams
-
 import math
 import numpy as np
 import random
 from . import const, operation
 from .amoeba import amoeba
-from .hsm import get_hsm_factors, \
-                 SLOTTING_SPEED_MULTIPLIER, \
-                 HSM_SPEED_MULTIPLIER, \
-                 SLOTTING_CHIP_MULTIPLIER, \
-                 HSM_CHIP_MULTIPLIER
 from .util import get_tool_engagement_angle, get_lead_angle_deflection_factor
 
 random.seed(1) # we don't want true randomness, rather reproducible results
@@ -106,13 +98,7 @@ class FeedCalc(object):
         # Speed is the distance the outer edge of of the endmill travels
         # per minute.
         min_speed, max_speed = endmill.get_speed_for_material(material, op)
-
-        # If the material does not provide a speed for HSM or slotting,
-        # estimate it using a factor against the operation.Milling speed.
-        if op == operation.HSM and not max_speed:
-            speed_range = endmill.get_speed_for_material(material, operation.Milling)
-            min_speed, max_speed = speed_range
-            max_speed *= op.speed_multiplier
+        max_speed *= op.speed_multiplier
 
         if not min_speed or not max_speed:
             attrname = 'min_speed' if not min_speed else 'max_speed'
@@ -245,22 +231,18 @@ class FeedCalc(object):
         else:
             self.engagement_angle.v = get_tool_engagement_angle(max(0, self.woc.v), effective_diameter)
 
-        # Optimize chipload.
-        if self.op == operation.HSM:
-            speed_factor, chip_factor, self.feed_factor.v = \
-                get_hsm_factors(self.doc.v,
+        # Optimize chipload for the operation.
+        speed_factor, chip_factor, self.feed_factor.v = \
+            self.op.get_factors(self.doc.v,
                                 max(0.00001, self.woc.v),
                                 effective_diameter,
                                 self.endmill.shape.get_corner_radius(),
                                 self.endmill.shape.get_cutting_edge_angle()/2)
 
-            # Adjust chipload up to max multiplier based on how thin the chips are
-            speed_range = self.endmill.get_speed_for_material(self.material, operation.Milling)
-            self.speed.set_limit(speed_range[1]*speed_factor)
-            chipload = self.endmill.get_chipload_for_material(self.material)
-            self.chipload.set_limit(chipload*chip_factor)
-        else:
-            self.feed_factor.v = 1
+        speed_range = self.endmill.get_speed_for_material(self.material, operation.Milling)
+        self.speed.set_limit(speed_range[1]*speed_factor)
+        chipload = self.endmill.get_chipload_for_material(self.material)
+        self.chipload.set_limit(chipload*chip_factor)
 
         # Adjust for lead angle deflection (unless drilling).
         if self.op == operation.Drilling:

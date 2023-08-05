@@ -5,8 +5,7 @@ from btl import Tool, Machine
 from btl.params import IntParam
 from btl.shape import builtin_shapes
 from btl.toolmaterial import HSS, Carbide
-from feeds import FeedCalc
-from feeds import material, operation
+from btl.feeds import FeedCalc, material, operation
 
 def print_result(params):
     for name, param in sorted(params.items(), key=lambda x: x[0].lower()):
