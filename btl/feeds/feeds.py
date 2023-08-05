@@ -4,8 +4,7 @@
 import math
 import numpy as np
 import random
-from . import const
-from .const import Operation
+from . import const, operation
 from .amoeba import amoeba
 from .hsm import get_hsm_factors, \
                  SLOTTING_SPEED_MULTIPLIER, \
@@ -84,15 +83,14 @@ class Const(Param):
     pass
 
 class FeedCalc(object):
-    def __init__(self, machine, endmill, material, operation=Operation.SLOTTING):
+    def __init__(self, machine, endmill, material, op=operation.Slotting):
         self.machine = machine
         self.endmill = endmill
         self.material = material
-        self.operation = operation    # hsm, drill, slot, profiling
+        self.op = op
 
-        if operation not in Operation:
-            opname = operation.name
-            raise AttributeError(f"operation {operation.name} is not yet supported")
+        if op not in operation.operations:
+            raise AttributeError(f"operation {op.label} is not supported")
 
         # Constants, not looked at by the optimizer. They are
         # derived from our parameter class anyway, to make it easy
@@ -107,33 +105,26 @@ class FeedCalc(object):
         # optimize using Simplex.
         # Speed is the distance the outer edge of of the endmill travels
         # per minute.
-        if operation == Operation.HSM:
-            speed_range = endmill.get_speed_for_material(material, Operation.MILLING)
-        else:
-            speed_range = endmill.get_speed_for_material(material, operation)
-        min_speed, max_speed = speed_range
+        min_speed, max_speed = endmill.get_speed_for_material(material, op)
 
         # If the material does not provide a speed for HSM or slotting,
-        # estimate it using a factor against the Operation.MILLING speed.
-        if operation == Operation.HSM:
-            max_speed *= HSM_SPEED_MULTIPLIER
-        elif operation == Operation.SLOTTING and not max_speed:
-             max_speed *= SLOTTING_SPEED_MULTIPLIER
+        # estimate it using a factor against the operation.Milling speed.
+        if op == operation.HSM and not max_speed:
+            speed_range = endmill.get_speed_for_material(material, operation.Milling)
+            min_speed, max_speed = speed_range
+            max_speed *= op.speed_multiplier
 
         if not min_speed or not max_speed:
             attrname = 'min_speed' if not min_speed else 'max_speed'
             matname = material.name
-            opname = operation.name
-            err = f'no {attrname} found for material {matname} and operation {opname}'
+            err = f'no {attrname} found for material {matname} and operation {op.label}'
             raise AttributeError(err)
+
         self.speed = Param(0, 1, max_speed, const.SMMtoSFM, 'm/min')
 
         # Define the allowed chipload range.
         chipload = endmill.get_chipload_for_material(material)
-        if operation == Operation.HSM:
-            chipload *= HSM_CHIP_MULTIPLIER
-        elif operation == Operation.SLOTTING:
-            chipload *= SLOTTING_CHIP_MULTIPLIER
+        chipload *= op.chip_multiplier
         self.chipload = Param(4, 0.0001, chipload, const.mmToInch, 'mm')
 
         self.woc = Param(3, 0.01, endmill.shape.get_diameter(), const.mmToInch, 'mm') # Width of cut (radial engagement)
@@ -224,7 +215,7 @@ class FeedCalc(object):
         # TODO: Helical Interpolation
         # ------------------------
         # - Adjust WOC and feed
-        if self.operation != Operation.SLOTTING and self.operation != Operation.DRILLING:
+        if self.op != operation.Slotting and self.op != operation.Drilling:
             woc, ipm = interpolate_helical(HELICAL.v, DIAMETER.v, WOC.v)
         """
 
@@ -234,28 +225,28 @@ class FeedCalc(object):
         #  +X is to the right
         #  +Y is down (away from spindle)
         pixmap = self.endmill.get_pixmap()
-        if self.operation == Operation.DRILLING:
+        if self.op == operation.Drilling:
             overlap = math.pi * math.pow(self.endmill.shape.get_diameter()/2, 2)
             effective_diameter = self.endmill.shape.get_diameter()
         else:
-            self.woc.v = self.endmill.shape.get_diameter() if self.operation == Operation.SLOTTING else self.woc.v
+            self.woc.v = self.endmill.shape.get_diameter() if self.op == operation.Slotting else self.woc.v
             overlap = pixmap.get_overlap_from_woc(self.doc.v, self.woc.v)
             effective_diameter = pixmap.get_effective_diameter_from_doc(self.doc.v)
 
         # When slotting/drilling, WOC is fixed.
-        if self.operation == Operation.SLOTTING or self.operation == Operation.DRILLING:
+        if self.op == operation.Slotting or self.op == operation.Drilling:
             self.woc.v = effective_diameter
             self.woc.set_limit(effective_diameter)
 
         # Tool Engagement Angle (straight shoulder along a straight path)
         #    TODO: Check that this works for slotting, helical, etc..
-        if self.operation == Operation.DRILLING:
+        if self.op == operation.Drilling:
             self.engagement_angle.v = 360
         else:
             self.engagement_angle.v = get_tool_engagement_angle(max(0, self.woc.v), effective_diameter)
 
         # Optimize chipload.
-        if self.operation == Operation.HSM:
+        if self.op == operation.HSM:
             speed_factor, chip_factor, self.feed_factor.v = \
                 get_hsm_factors(self.doc.v,
                                 max(0.00001, self.woc.v),
@@ -264,7 +255,7 @@ class FeedCalc(object):
                                 self.endmill.shape.get_cutting_edge_angle()/2)
 
             # Adjust chipload up to max multiplier based on how thin the chips are
-            speed_range = self.endmill.get_speed_for_material(self.material, Operation.MILLING)
+            speed_range = self.endmill.get_speed_for_material(self.material, operation.Milling)
             self.speed.set_limit(speed_range[1]*speed_factor)
             chipload = self.endmill.get_chipload_for_material(self.material)
             self.chipload.set_limit(chipload*chip_factor)
@@ -272,7 +263,7 @@ class FeedCalc(object):
             self.feed_factor.v = 1
 
         # Adjust for lead angle deflection (unless drilling).
-        if self.operation == Operation.DRILLING:
+        if self.op == operation.Drilling:
             radialFactor = 0
             axialFactor = 1
         else:
@@ -295,7 +286,7 @@ class FeedCalc(object):
         self.axial_force.v = (axialFactor*self.power.v*1000)/self.speed.v  # Force acting to pull the end mill out of the tool holder (or the workpiece off the table).
 
         # Get the deflection (multi-part bar)
-        if self.operation == Operation.DRILLING:
+        if self.op == operation.Drilling:
             self.deflection.v = 0
         else:
             self.deflection.v = self.endmill.get_deflection(self.doc.v, self.radial_force.v)

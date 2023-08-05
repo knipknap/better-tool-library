@@ -1,4 +1,5 @@
 import math
+import uuid
 from . import const
 
 class Machine(object):
@@ -9,7 +10,9 @@ class Machine(object):
                  max_rpm=60000,        # RPM
                  peak_torque_rpm=None, # RPM
                  min_feed=1,           # mm/min
-                 max_feed=2000):       # mm/min
+                 max_feed=2000,        # mm/min
+                 id=None):
+        self.id = id or str(uuid.uuid1())
         self.label = label
         self.max_power = max_power
         self.min_rpm = min_rpm
@@ -26,6 +29,10 @@ class Machine(object):
             raise AttributeError(f"Machine name is required")
         if self.peak_torque_rpm > self.max_rpm:
             raise AttributeError(f"Peak Torque RPM {self.peak_torque_rpm} must be less than max RPM {self.max_rpm}")
+        if self.max_rpm <= self.min_rpm:
+            raise AttributeError(f"Max rpm must be larger than min rpm")
+        if self.max_feed <= self.min_feed:
+            raise AttributeError(f"Max feed must be larger than min feed")
 
     def get_torque_at_rpm(self, rpm):
         # TODO: More advanced torque curve: lookup table with linear approximation between entries
@@ -39,15 +46,23 @@ class Machine(object):
 
     def set_min_rpm(self, min_rpm):
         self.min_rpm = min_rpm
+        if self.min_rpm >= self.max_rpm:
+            self.max_rpm = self.min_rpm+1
 
     def set_max_rpm(self, max_rpm):
         self.max_rpm = max_rpm
+        if self.max_rpm <= self.min_rpm:
+            self.min_rpm = self.max_rpm-1
 
     def set_min_feed(self, min_feed):
         self.min_feed = min_feed
+        if self.min_feed >= self.max_feed:
+            self.max_feed = self.min_feed+1
 
     def set_max_feed(self, max_feed):
         self.max_feed = max_feed
+        if self.max_feed <= self.min_feed:
+            self.min_feed = self.max_feed-1
 
     def set_peak_torque_rpm(self, peak_torque_rpm):
         self.peak_torque_rpm = peak_torque_rpm
