@@ -45,6 +45,22 @@ class CamoticsSerializer():
         return sorted(os.path.basename(os.path.splitext(f)[0])
                       for f in files if os.path.isfile(f))
 
+    def serialize_machines(self, machines):
+        # Camotics has no concept of a machine. So nothing to be done here.
+        return
+
+    def deserialize_machines(self):
+        # Camotics has no concept of a machine. So nothing to be done here.
+        return []
+
+    def serialize_machine(self, machine):
+        # Camotics has no concept of a machine. So nothing to be done here.
+        return
+
+    def deserialize_machine(self, attrs):
+        # Camotics has no concept of a machine. So nothing to be done here.
+        raise NotImplemented
+
     def _remove_library_by_id(self, id):
         filename = self._library_filename_from_id(id)
         os.remove(filename)

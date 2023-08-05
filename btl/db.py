@@ -11,6 +11,7 @@ class ToolDB(object):
         self.libraries = dict() # maps library ID to Library
         self.tools = dict()  # maps tool ID to Tool
         self.shapes = dict()  # maps shape name to Shape
+        self.machines = dict()  # maps machine ID to Machine
 
     def add_library(self, library):
         self.libraries[library.id] = library
@@ -23,6 +24,18 @@ class ToolDB(object):
 
     def remove_library(self, library):
         self.libraries.pop(library.id, None)
+
+    def add_machine(self, machine):
+        self.machines[machine.id] = machine
+
+    def get_machine_by_id(self, id):
+        return self.machines[id]
+
+    def get_machines(self):
+        return list(self.machines.values())
+
+    def remove_machine(self, machine):
+        self.machines.pop(machine.id, None)
 
     def add_shape(self, shape):
         if shape.name in Shape.reserved:
@@ -76,6 +89,14 @@ class ToolDB(object):
            library.remove_tool(tool)
         self.tools.pop(tool.id, None)
 
+    def serialize_machines(self, serializer):
+        serializer.serialize_machines(self.machines.values())
+
+    def deserialize_machines(self, serializer):
+        self.machines = dict()
+        for machine in serializer.deserialize_machines():
+            self.machines[machine.id] = machine
+
     def serialize_libraries(self, serializer):
         serializer.serialize_libraries(self.libraries.values())
 
@@ -106,11 +127,13 @@ class ToolDB(object):
                 self.add_tool(tool)
 
     def serialize(self, serializer):
+        self.serialize_machines(serializer)
         self.serialize_libraries(serializer)
         self.serialize_shapes(serializer)
         self.serialize_tools(serializer)
 
     def deserialize(self, serializer):
+        self.deserialize_machines(serializer)
         self.deserialize_libraries(serializer)
         self.deserialize_shapes(serializer)
         self.deserialize_tools(serializer)

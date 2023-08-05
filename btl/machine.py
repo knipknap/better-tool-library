@@ -8,6 +8,7 @@ class Machine(object):
                  max_power=2,          # in kW
                  min_rpm=3000,         # RPM
                  max_rpm=60000,        # RPM
+                 max_torque=None,      # Nm
                  peak_torque_rpm=None, # RPM
                  min_feed=1,           # mm/min
                  max_feed=2000,        # mm/min
@@ -22,7 +23,7 @@ class Machine(object):
         self.max_feed = max_feed
 
         # TODO: More advanced torque curve: lookup table with linear approximation between entries
-        self.max_torque = self.max_power*9548.8/self.peak_torque_rpm
+        self.max_torque = max_torque or self.max_power*9548.8/self.peak_torque_rpm
 
     def validate(self):
         if not self.label:

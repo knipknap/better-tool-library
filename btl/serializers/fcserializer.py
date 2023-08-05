@@ -11,13 +11,14 @@ import json
 import shutil
 import copy
 from textwrap import dedent
-from .. import Library, Shape, Tool
+from .. import Machine, Library, Shape, Tool
 from ..shape import builtin_shapes
 from ..fcutil import *
 
 TOOL_DIR = 'Bit'
 LIBRARY_DIR = 'Library'
 SHAPE_DIR = 'Shape'
+MACHINE_DIR = 'Machine'
 BUILTIN_SHAPE_DIR = 'resources/shapes'
 
 class FCSerializer():
@@ -25,12 +26,14 @@ class FCSerializer():
     TOOL_EXT = '.fctb'
     LIBRARY_EXT = '.fctl'
     SHAPE_EXT = '.fcstd'
+    MACHINE_EXT = '.json'
 
     def __init__(self, path):
         self.path = path
         self.tool_path = os.path.join(path, TOOL_DIR)
         self.lib_path = os.path.join(path, LIBRARY_DIR)
         self.shape_path = os.path.join(path, SHAPE_DIR)
+        self.machine_path = os.path.join(path, MACHINE_DIR)
         self._init_tool_dir()
 
     def _init_tool_dir(self):
@@ -38,9 +41,15 @@ class FCSerializer():
             raise ValueError(repr(self.path) + ' is not a directory')
 
         # Create subdirs if they do not yet exist.
-        subdirs = [self.tool_path, self.lib_path, self.shape_path]
+        subdirs = [self.tool_path, self.lib_path, self.shape_path, self.machine_path]
         for subdir in subdirs:
             os.makedirs(subdir, exist_ok=True)
+
+    def _get_machine_filenames(self):
+        return sorted(glob.glob(os.path.join(self.machine_path, '*'+self.MACHINE_EXT)))
+
+    def _machine_filename_from_name(self, name):
+        return os.path.join(self.machine_path, name+self.MACHINE_EXT)
 
     def _get_library_filenames(self):
         return sorted(glob.glob(os.path.join(self.lib_path, '*'+self.LIBRARY_EXT)))
@@ -75,6 +84,14 @@ class FCSerializer():
             return # File is already in our path
         shutil.copy(filename, self.shape_path)
 
+    def _remove_machine_by_id(self, id):
+        filename = self._machine_filename_from_name(id)
+        os.remove(filename)
+
+    def _get_machine_ids(self):
+        return [self._name_from_filename(f)
+                for f in self._get_machine_filenames()]
+
     def _remove_library_by_id(self, id):
         filename = self._library_filename_from_name(id)
         os.remove(filename)
@@ -90,6 +107,54 @@ class FCSerializer():
     def _get_tool_ids(self):
         return [self._name_from_filename(f)
                 for f in self._get_tool_filenames()]
+
+    def serialize_machines(self, machines):
+        existing = set(self._get_machine_ids())
+        for machine in machines:
+            self.serialize_machine(machine)
+            if machine.id in existing:
+                existing.remove(machine.id)
+        for id in existing:
+            self._remove_machine_by_id(id)
+
+    def deserialize_machines(self):
+        return [self.deserialize_machine(id)
+                for id in self._get_machine_ids()]
+
+    def serialize_machine(self, machine, filename=None):
+        attrs = {}
+        attrs["label"] = machine.label
+        attrs["max-power"] = machine.max_power
+        attrs["max-torque"] = machine.max_torque
+        attrs["peak-torque-rpm"] = machine.peak_torque_rpm
+        attrs["min-rpm"] = machine.min_rpm
+        attrs["max-rpm"] = machine.max_rpm
+        attrs["min-feed"] = machine.min_feed
+        attrs["max-feed"] = machine.max_feed
+
+        if not filename:
+            filename = self._machine_filename_from_name(machine.id)
+        with open(filename, "w") as fp:
+            json.dump(attrs, fp, sort_keys=True, indent=2)
+        return attrs
+
+    def deserialize_machine(self, id):
+        filename = self._machine_filename_from_name(id)
+        with open(filename, "r") as fp:
+            attrs = json.load(fp)
+
+        label = attrs.get('label', id)
+        machine = Machine(label,
+                          id=id,
+                          max_power=attrs['max-power'],
+                          max_torque=attrs['max-torque'],
+                          peak_torque_rpm=attrs['peak-torque-rpm'],
+                          min_rpm=attrs['min-rpm'],
+                          max_rpm=attrs['max-rpm'],
+                          min_feed=attrs['min-feed'],
+                          max_feed=attrs['max-feed'])
+
+        return machine
 
     def serialize_libraries(self, libraries):
         existing = set(self._get_library_ids())

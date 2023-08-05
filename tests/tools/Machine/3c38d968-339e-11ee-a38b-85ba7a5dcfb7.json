@@ -1,0 +1,10 @@
+{
+  "label": "Machine",
+  "max-feed": 5000,
+  "max-power": 2.0,
+  "max-rpm": 22000,
+  "max-torque": 4.0,
+  "min-feed": 1,
+  "min-rpm": 3000,
+  "peak-torque-rpm": 20000
+}
