@@ -7,7 +7,7 @@ calculator that "renders and simulates" your tool.
 It can also visualize the result.
 
 Credits: The algorithm is based on the work done by Bryan Turner.
-Check out [his work][1]!
+Check out [his work](https://github.com/brturn/feeds-and-speeds)!
 
 ## Features
 
@@ -33,7 +33,7 @@ It takes into account a dozen of factors:
 | Machine feed limit                         |
 
 
-## Current Limitations
+## Known Limitations
 
 - Only the following types of tools are supported: Square endmills, torus (=rounded corners),
   ballend, and chamfer (v-bit).
@@ -48,6 +48,3 @@ It takes into account a dozen of factors:
 ## Screenshots
 
 ![Feeds & Speeds](../media/feeds-and-speeds.png)
-
-
-[1] https://github.com/brturn/feeds-and-speeds
