@@ -1,11 +1,11 @@
 #!/usr/bin/python
 import sys
-from copy import deepcopy
 from btl import Tool, Machine
-from btl.params import IntParam
+from btl.params import IntParam, DistanceParam
 from btl.shape import builtin_shapes
 from btl.toolmaterial import HSS, Carbide
 from btl.feeds import FeedCalc, material, operation
+from btl.toolpixmap import EndmillPixmap, BullnosePixmap, ChamferPixmap
 
 def print_result(params):
     for name, param in sorted(params.items(), key=lambda x: x[0].lower()):
@@ -18,35 +18,28 @@ def run(op):
                       peak_torque_rpm=5020,
                       max_feed=5000)
 
-    shape = builtin_shapes['endmill']
+    #shape = builtin_shapes['endmill']
+    shape = builtin_shapes['chamfer']
     shape.set_param(IntParam('Flutes'), 4)
+    shape.set_param(DistanceParam('Diameter'), 10)
+    shape.set_param(DistanceParam('ShankDiameter'), 5)
+    shape.set_param(DistanceParam('CuttingEdgeHeight'), 1.5)
 
     tool_material = Carbide
-    endmill = Tool('Test tool', builtin_shapes['endmill'])
-    endmill.set_stickout(35)
+    endmill = Tool('Test tool', shape)
+    endmill.set_stickout(10)
     endmill.set_material(tool_material)
     endmill.dump()
+    #return endmill.get_pixmap().show_engagement(0.1, 0.1)
 
     mat = material.Aluminium6061
     mat.dump()
 
     fc = FeedCalc(machine, endmill, mat, op=op)
     #fc.doc.min = 8
-    fc.update()
     print(f"Running {op.label} operation on {fc.material.name} using a {tool_material.name} tool")
 
-    results = []
-    for i in range(100):
-        fc.optimize()
-        try:
-            fc.validate()
-        except AttributeError as e:
-            err = str(e)
-        else:
-            err = None
-        results.append((fc.get_error_distance(), err, deepcopy(fc.all_params())))
-
-    error, msg, best = sorted(results, key=lambda x: x[0])[0]
+    error, msg, best = fc.start()
     if msg:
         print(f"No valid result found. Error distance is {error}, with message: {msg}")
         print_result(best)
@@ -56,6 +49,8 @@ def run(op):
     endmill.pixmap.show_engagement(best['doc'].v, best['woc'].v)
 
 if __name__ == '__main__':
+    #px = ChamferPixmap(14, 5, 10, 1.5, 45, .5)
+    #px.show_engagement(0.1, 0.1)
     #import cProfile
     #cProfile.run("run(operation.HSM)")
     run(operation.HSM)

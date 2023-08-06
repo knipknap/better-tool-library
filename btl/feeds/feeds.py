@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import random
+from copy import deepcopy
 from . import const, operation
 from .amoeba import amoeba
 from .util import get_tool_engagement_angle, get_lead_angle_deflection_factor
@@ -36,6 +37,9 @@ class Param:
     def get_percent_of_limit(self):
         return self.v/min(self.max, self.limit)
 
+    def within_minmax(self):
+        return self.v >= self.min and self.v <= self.max
+
     def get_error_distance(self):
         #if self.max < self.min:
         #    return self.min-self.max
@@ -62,6 +66,9 @@ class Param:
                 value += ' '
             value += self.unit
         return value
+
+    def format(self):
+        return self._format_value(self.v)
 
     def to_string(self, decimals=None):
         percent = self.get_percent_of_limit()*100
@@ -113,8 +120,8 @@ class FeedCalc(object):
         chipload *= op.chip_multiplier
         self.chipload = Param(4, 0.0001, chipload, const.mmToInch, 'mm')
 
-        self.woc = Param(3, 0.01, endmill.shape.get_diameter(), const.mmToInch, 'mm') # Width of cut (radial engagement)
-        self.doc = Param(3, 0.01, endmill.shape.get_cutting_edge(), const.mmToInch, 'mm') # Depth of cut (axial engagement)
+        self.woc = Param(3, chipload, endmill.shape.get_diameter(), const.mmToInch, 'mm') # Width of cut (radial engagement)
+        self.doc = Param(3, chipload, endmill.shape.get_cutting_edge(), const.mmToInch, 'mm') # Depth of cut (axial engagement)
 
         # Working attributes calculated. These also serve as "constraints" to
         # check whether the proposed attributes from Simplex may cause issues.
@@ -163,6 +170,12 @@ class FeedCalc(object):
         self.machine.validate()
         self.endmill.validate()
         self.validate_params()
+        if self.endmill.shape.get_shank_diameter() > self.endmill.get_stickout():
+            # This is due to ToolPixmap failing if the shape is wider than it is tall.
+            raise AttributeError(f"Shank diameter larger than stickout is not supported.")
+        if self.endmill.shape.get_diameter() > self.endmill.get_stickout():
+            # This is due to ToolPixmap failing if the shape is wider than it is tall.
+            raise AttributeError(f"Tool width larger than stickout is currently not supported.")
         if self.chipload.v > self.woc.min:
             raise AttributeError(f"Min WOC {self.woc.min} must be larger than Chipload {self.chipload}")
         if self.chipload.v > self.doc.min:
@@ -233,8 +246,8 @@ class FeedCalc(object):
 
         # Optimize chipload for the operation.
         speed_factor, chip_factor, self.feed_factor.v = \
-            self.op.get_factors(self.doc.v,
-                                max(0.00001, self.woc.v),
+            self.op.get_factors(max(0.0001, self.doc.v),
+                                max(0.0001, self.woc.v),
                                 effective_diameter,
                                 self.endmill.shape.get_corner_radius(),
                                 self.endmill.shape.get_cutting_edge_angle()/2)
@@ -373,3 +386,40 @@ class FeedCalc(object):
                  #method='Nelder-Mead',
                  options={'disp': True, 'maxiter': 2000, 'adaptive': False})
         """
+
+    def calculate(self, progress_cb=None, iterations=100):
+        """
+        Returns a list of results, where each result is a tuple:
+
+          (error_distance, error, params)
+
+        - error_distance (float): A smaller error distance means a better result.
+        - error (str): An error message, if the result is invalid. None otherwse.
+        - params (dict): The list of params, as returned by .params().
+        """
+        self.update()
+
+        results = []
+        for i in range(iterations):
+            self.optimize()
+            try:
+                self.validate()
+            except AttributeError as e:
+                err = str(e)
+            else:
+                err = None
+            params = deepcopy(self.all_params())
+            result = self.get_error_distance(), err, params
+            results.append(result)
+            if progress_cb:
+                progress_cb(iterations/100*i*0.01)
+
+        return results
+
+    def start(self, progress_cb=None, iterations=100):
+        """
+        Like calculate(), but only returns the best result.
+        """
+        results = self.calculate(progress_cb, iterations=iterations)
+        results = sorted(results, key=lambda x: x[0])
+        return results[0]

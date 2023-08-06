@@ -6,7 +6,7 @@ from .feeds import operation
 from .shape import Shape
 from .params import Param
 from .toolmaterial import ToolMaterial, HSS, Carbide
-from .toolpixmap import ToolPixmap
+from .toolpixmap import EndmillPixmap, BullnosePixmap, ChamferPixmap
 
 class Tool(object):
     API_VERSION = 1
@@ -40,7 +40,7 @@ class Tool(object):
         return {k:v for k, v in self.attrs.items() if not k.startswith('btl-')}
 
     def get_attrib(self, name, default=None):
-        return self.attrs[name]
+        return self.attrs.get(name, default)
 
     def get_attrib_as_param(self, name, default=None):
         value = self.attrs[name]
@@ -60,7 +60,10 @@ class Tool(object):
         if stickout is not None:
             return float(stickout)
         ce = self.shape.get_cutting_edge()
-        return ce+3 if ce else None
+        if ce is not None:
+            return ce+3
+        length = self.shape.get_length()
+        return length/2 if length else None
 
     def set_notes(self, notes):
         self.attrs['btl-notes'] = notes
@@ -123,21 +126,36 @@ class Tool(object):
         return None
 
     def get_pixmap(self):
-        if not self.pixmap:
-            diameter = self.shape.get_diameter()
-            shank_d = self.shape.get_shank_diameter()
-            stickout = self.get_stickout()
-            cutting_edge = self.shape.get_cutting_edge()
+        if self.pixmap:
+            return self.pixmap
+        if not self.shape.is_builtin():
+            return None
+
+        stickout = self.get_stickout()
+        shank_d = self.shape.get_shank_diameter()
+        diameter = self.shape.get_diameter()
+        cutting_edge = self.shape.get_cutting_edge()
+        if self.shape.name == 'endmill':
+            self.pixmap = EndmillPixmap(stickout,
+                                        shank_d,
+                                        diameter,
+                                        cutting_edge)
+        elif self.shape.name in ('torus', 'bullnose', 'ballend'):
             corner_r = self.shape.get_corner_radius()
+            self.pixmap = BullnosePixmap(stickout,
+                                         shank_d,
+                                         diameter,
+                                         cutting_edge=cutting_edge,
+                                         corner_radius=corner_r)
+        elif self.shape.name == 'chamfer':
             ce_angle = self.shape.get_cutting_edge_angle()
             tip_w = self.shape.get_tip_diameter()
-            self.pixmap = ToolPixmap(diameter=diameter,
-                                     shank_diameter=shank_d,
-                                     stickout=stickout,
-                                     cutting_edge=cutting_edge,
-                                     corner_radius=corner_r,
-                                     lead_angle=ce_angle/2,
-                                     tip_w=tip_w)
+            self.pixmap = ChamferPixmap(stickout,
+                                        shank_d,
+                                        diameter,
+                                        brim=cutting_edge,
+                                        lead_angle=ce_angle/2,
+                                        tip_w=tip_w)
         return self.pixmap
 
     def set_materials(self, materials):
