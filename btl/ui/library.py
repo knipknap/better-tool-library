@@ -1,5 +1,4 @@
 import os
-import re
 import FreeCAD
 import FreeCADGui
 from pathlib import Path
@@ -18,8 +17,8 @@ __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "library.ui")
 
 class LibraryUI():
-    def __init__(self, tooldb, serializer, standalone=False):
-        self.tooldb = tooldb
+    def __init__(self, db, serializer, standalone=False):
+        self.db = db
         self.serializer = serializer
         self.standalone = standalone
         self.form = load_ui(ui_path)
@@ -70,7 +69,7 @@ class LibraryUI():
         if not tools:
             return
 
-        dialog = MoveToolDialog(self.tooldb, tools, parent=self.form)
+        dialog = MoveToolDialog(self.db, tools, parent=self.form)
         if dialog.exec() != QtGui.QDialog.Accepted:
             return
         if not dialog.library:
@@ -78,10 +77,10 @@ class LibraryUI():
 
         library = self.get_selected_library()
         for tool in tools:
-            self.tooldb.add_tool(tool, dialog.library)
+            self.db.add_tool(tool, dialog.library)
             library.remove_tool(tool)
 
-        self.tooldb.serialize(self.serializer)
+        self.db.serialize(self.serializer)
         self.load()
 
     def update_button_state(self):
@@ -98,7 +97,7 @@ class LibraryUI():
         self.form.pushButtonAddToJob.setToolTip(tt)
 
     def load(self):
-        self.tooldb.deserialize(self.serializer)
+        self.db.deserialize(self.serializer)
 
         # Update the library dropdown menu.
         combo = self.form.comboBoxLibrary
@@ -106,7 +105,7 @@ class LibraryUI():
         combo.clear()
         combo.addItem('Unused tools')
         combo.insertSeparator(1)
-        libraries = sorted(self.tooldb.get_libraries(), key=lambda l: l.label)
+        libraries = sorted(self.db.get_libraries(), key=lambda l: l.label)
         for library in libraries:
             combo.addItem(library.label, library.id)
 
@@ -124,7 +123,7 @@ class LibraryUI():
         library_id = self.form.comboBoxLibrary.currentData()
         if not library_id:
             return
-        return self.tooldb.get_library_by_id(library_id)
+        return self.db.get_library_by_id(library_id)
 
     def update_tool_list(self):
         # Find the selected library.
@@ -132,7 +131,7 @@ class LibraryUI():
         if library:
             tools = library.get_tools()
         else:
-            tools = self.tooldb.get_unused_tools()
+            tools = self.db.get_unused_tools()
 
         # Update the tool list.
         listwidget = self.form.listWidgetTools
@@ -176,8 +175,8 @@ class LibraryUI():
         if dialog.exec() != QtGui.QDialog.Accepted:
             return
 
-        self.tooldb.add_library(library)
-        self.tooldb.serialize(self.serializer)
+        self.db.add_library(library)
+        self.db.serialize(self.serializer)
         self.load()
 
     def on_edit_library_clicked(self):
@@ -189,7 +188,7 @@ class LibraryUI():
         if dialog.exec() != QtGui.QDialog.Accepted:
             return
 
-        self.tooldb.serialize(self.serializer)
+        self.db.serialize(self.serializer)
         self.load()
 
     def on_delete_library_clicked(self):
@@ -208,9 +207,9 @@ class LibraryUI():
         if response != QtGui.QMessageBox.AcceptRole:
             return
 
-        self.tooldb.remove_library(library)
+        self.db.remove_library(library)
         self.form.comboBoxLibrary.setCurrentIndex(0)
-        self.tooldb.serialize(self.serializer)
+        self.db.serialize(self.serializer)
         self.load()
 
     def _get_pattern_for_serializer(self, serializer):
@@ -256,7 +255,7 @@ class LibraryUI():
         listwidget.scrollToItem(item, QtGui.QAbstractItemView.EnsureVisible)
 
     def on_create_tool_clicked(self):
-        selector = ShapeSelector(self.tooldb, self.serializer)
+        selector = ShapeSelector(self.db, self.serializer)
         selector.show()
         shape = selector.shape
         if not shape:
@@ -266,14 +265,14 @@ class LibraryUI():
         tool = Tool('New {}'.format(label), shape)
         library = self.get_selected_library()
         pocket = library.get_next_pocket()
-        editor = ToolEditor(tool, pocket)
+        editor = ToolEditor(self.db, self.serializer, tool, pocket)
         if not editor.show():
             return
 
-        self.tooldb.add_tool(tool, library)
+        self.db.add_tool(tool, library)
         if library:
             library.assign_new_pocket(tool, editor.pocket)
-        self.tooldb.serialize(self.serializer)
+        self.db.serialize(self.serializer)
         self.load()
         self.select_tool(tool)
 
@@ -286,9 +285,9 @@ class LibraryUI():
         library = self.get_selected_library()
         if library:
             pocket = library.get_pocket_from_tool(tool)
-            editor = ToolEditor(tool, pocket)
+            editor = ToolEditor(self.db, self.serializer, tool, pocket)
         else:
-            editor = ToolEditor(tool)
+            editor = ToolEditor(self.db, self.serializer, tool)
 
         if not editor.show():
             # Reload the original values.
@@ -296,11 +295,11 @@ class LibraryUI():
             self.select_tool(tool)
             return
 
-        self.tooldb.add_tool(tool)
+        self.db.add_tool(tool)
         if library:
             library.assign_new_pocket(tool, editor.pocket)
 
-        self.tooldb.serialize(self.serializer)
+        self.db.serialize(self.serializer)
         self.load()
         self.select_tool(tool)
 
@@ -334,9 +333,9 @@ class LibraryUI():
 
         for item in self.form.listWidgetTools.selectedItems():
             tool = item.data(QtCore.Qt.UserRole)
-            self.tooldb.remove_tool(tool, library)
+            self.db.remove_tool(tool, library)
 
-        self.tooldb.serialize(self.serializer)
+        self.db.serialize(self.serializer)
         self.load()
 
     def on_add_to_job_clicked(self):

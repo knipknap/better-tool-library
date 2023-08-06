@@ -36,7 +36,7 @@ class ToolPixmap(object):
         """
         raise NotImplementedError
 
-    def show_engagement(self, doc=0, woc=0):
+    def render_engagement(self, doc=0, woc=0):
         mask_surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.size, self.size)
         mask_ctx = cairo.Context(mask_surface)
         mask_ctx.scale(self.scale, self.scale)
@@ -48,12 +48,25 @@ class ToolPixmap(object):
         mask_ctx.set_source_rgba(1, 1, 1, 1)
         mask_ctx.fill()
 
-        self.ctx.identity_matrix() # see https://stackoverflow.com/a/21650227
-        self.ctx.set_operator(cairo.Operator.ATOP)
-        self.ctx.set_source_rgba(1, 0, 0, 1)
-        self.ctx.mask_surface(mask_surface, 0, 0)
+        # Make a copy of our internal surface.
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, self.size, self.size)
+        ctx = cairo.Context(surface)
+        ctx.save()
+        ctx.set_source_surface(self.surface)
+        ctx.set_operator(cairo.Operator.SOURCE)
+        ctx.paint()
+        ctx.restore()
 
-        data = self.surface.get_data()
+        # Apply the mask to the copy.
+        ctx.identity_matrix() # see https://stackoverflow.com/a/21650227
+        ctx.set_operator(cairo.Operator.ATOP)
+        ctx.set_source_rgba(1, 0, 0, 1)
+        ctx.mask_surface(mask_surface, 0, 0)
+
+        return surface.get_data()
+
+    def show_engagement(self, doc=0, woc=0):
+        data = self.render_engagement(doc, woc)
         image_array = np.ndarray(shape=(self.size, self.size, 4), dtype=np.uint8, buffer=data)
         image_array = image_array[:, :, [2, 1, 0, 3]]  # Reorder bytes: BGRA to RGBA
         x_extend = self.size/self.scale
@@ -105,7 +118,7 @@ class ToolPixmap(object):
             self._create_width_and_overlap_array()
         scale = self.scale
         lowY = self.stickout - doc
-        lowY = int(math.floor(lowY * scale))
+        lowY = int(max(0, math.floor(lowY * scale)))
         return self.diameter_list[lowY]
 
     def get_overlap_from_woc(self, doc, woc):
@@ -127,7 +140,7 @@ class ToolPixmap(object):
 
         # Calculate lowest Y position.
         lowY = self.stickout - doc
-        lowY = int(math.floor(lowY * scale))
+        lowY = int(max(0, math.floor(lowY * scale)))
 
         return self.area[lowX][lowY]
 

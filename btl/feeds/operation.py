@@ -26,7 +26,7 @@ class Operation(object):
         - chip factor (float)
         - feed factor (float)
         """
-        return self.speed_multiplier, self.chip_multiplier, 1
+        return cls.speed_multiplier, cls.chip_multiplier, 1
 
 class Slotting(Operation):
     label = 'Slotting'

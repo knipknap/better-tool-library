@@ -21,6 +21,7 @@ It also provides a standalone tool if you want to use your library outside of Fr
 | Modern UI                                  | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Provides a shape browser                   | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Tool search                                | ![X](media/check.svg) | ![-](media/no.svg)        |
+| [Powerful Feeds & Speeds calculator][1]    | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Tool dimension sketch for built-in tools   | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Can be used standalone outside of FreeCAD  | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Provides built-in common shapes            | ![X](media/check.svg) | ![-](media/no.svg)        |
@@ -40,6 +41,7 @@ It also provides a standalone tool if you want to use your library outside of Fr
 ![Library Editor](media/library.png)
 ![Shape Browser](media/shape-browser.png)
 ![Tool Editor](media/tool-editor.png)
+![Feeds & Speeds](media/feeds-and-speeds.png)
 
 
 ## Installation
@@ -132,3 +134,4 @@ btl -f camotics camtest/ export -f freecad fctooldir/
 
 [License](LICENSE)
 [FreeCAD discussions](https://forum.freecad.org/viewtopic.php?t=79854)
+[1]: docs/feeds-and-speeds

@@ -6,8 +6,6 @@ from . import const, operation
 from .amoeba import amoeba
 from .util import get_tool_engagement_angle, get_lead_angle_deflection_factor
 
-random.seed(1) # we don't want true randomness, rather reproducible results
-
 class Param:
     def __init__(self, decimals, min, max, metToImp, unit=None):
         self.decimals = decimals
@@ -105,14 +103,13 @@ class FeedCalc(object):
         # Speed is the distance the outer edge of of the endmill travels
         # per minute.
         min_speed, max_speed = endmill.get_speed_for_material(material, op)
-        max_speed *= op.speed_multiplier
-
         if not min_speed or not max_speed:
             attrname = 'min_speed' if not min_speed else 'max_speed'
             matname = material.name
             err = f'no {attrname} found for material {matname} and operation {op.label}'
             raise AttributeError(err)
 
+        max_speed *= op.speed_multiplier
         self.speed = Param(0, 1, max_speed, const.SMMtoSFM, 'm/min')
 
         # Define the allowed chipload range.
@@ -130,7 +127,7 @@ class FeedCalc(object):
         self.mrr = Param(2, 0.01, 999, const.cm3ToIn3, 'cm³/min')   # material removal rate
         self.adjusted_chipload = Param(4, 0.0001, chipload, const.mmToInch, 'mm') # Should setup with same values as chipload
 
-        self.power = Param(2, 0.01, machine.max_power, const.KWToHP, 'kW')
+        self.power = Param(3, 0.001, machine.max_power, const.KWToHP, 'kW')
         self.torque = Param(2, 0.01, machine.max_torque, const.NMtoInLbs, 'Nm')
         self.deflection = Param(2, 0, 0.025, const.mmToInch, 'mm') # actual deflection
         self.maxdeflection = Param(2, 0, 0.05, const.mmToInch, 'mm') # theoretical max deflection
@@ -241,6 +238,8 @@ class FeedCalc(object):
         #    TODO: Check that this works for slotting, helical, etc..
         if self.op == operation.Drilling:
             self.engagement_angle.v = 360
+            self.engagement_angle.max = 360
+            self.engagement_angle.set_limit(360)
         else:
             self.engagement_angle.v = get_tool_engagement_angle(max(0, self.woc.v), effective_diameter)
 
@@ -357,7 +356,7 @@ class FeedCalc(object):
         # Try to find a valid initial point by assigning random values to all
         # parameters. But if that fails, continue trying to have the optimizer
         # figure it out anyway.
-        for i in range(20):
+        for i in range(50):
             self.reshuffle()
             self.update()
             if self.is_valid():
@@ -397,6 +396,7 @@ class FeedCalc(object):
         - error (str): An error message, if the result is invalid. None otherwse.
         - params (dict): The list of params, as returned by .params().
         """
+        random.seed(1) # we don't want true randomness, rather reproducible results
         self.update()
 
         results = []

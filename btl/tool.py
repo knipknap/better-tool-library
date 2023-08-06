@@ -125,12 +125,20 @@ class Tool(object):
             return Carbide
         return None
 
+    def supports_pixmap(self):
+        if not self.shape.is_builtin():
+            return False
+        return self.shape.name in ('endmill',
+                                   'torus',
+                                   'bullnose',
+                                   'ballend',
+                                   'chamfer')
+
     def get_pixmap(self):
         if self.pixmap:
             return self.pixmap
-        if not self.shape.is_builtin():
+        if not self.supports_pixmap():
             return None
-
         stickout = self.get_stickout()
         shank_d = self.shape.get_shank_diameter()
         diameter = self.shape.get_diameter()
