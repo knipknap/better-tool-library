@@ -124,7 +124,10 @@ class ToolProperties(PropertyWidget):
         for param, value in params:
             abbr = self.tool.shape.get_abbr(param)
             self._add_property(param, value, abbr)
+
         self._makespacing(6)
+        row = self.grid.rowCount()
+        self.grid.setRowStretch(row, 1)
 
     def _add_property(self, param, value, abbreviation=None):
         setter = partial(self.tool.shape.set_param, param)
@@ -150,8 +153,8 @@ class ToolAttributes(PropertyWidget):
             label = QtGui.QLabel("<i>No unknown attributes found</i>")
             self.grid.addWidget(label, row, 0)
 
+        self._makespacing(6)
         row = self.grid.rowCount()
-        self.grid.addWidget(QtGui.QWidget(), row, 0)
         self.grid.setRowStretch(row, 1)
 
     def _add_property(self, param, value):
