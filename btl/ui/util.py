@@ -1,8 +1,8 @@
 import os
 from PySide import QtCore, QtGui, QtUiTools, QtSvg
 
-def load_ui(ui_path):
-    loader = QtUiTools.QUiLoader()
+def load_ui(ui_path, parent=None):
+    loader = QtUiTools.QUiLoader(parent)
     loader.setWorkingDirectory(os.path.dirname(__file__))
     ui_file = QtCore.QFile(ui_path)
     ui_file.open(QtCore.QFile.ReadOnly)
