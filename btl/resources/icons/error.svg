@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   version="1.1"
+   width="40"
+   id="svg1609"
+   height="40"
+   sodipodi:docname="error.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview18"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="6.9387219"
+     inkscape:cx="34.732621"
+     inkscape:cy="72.203499"
+     inkscape:window-width="3840"
+     inkscape:window-height="2005"
+     inkscape:window-x="1920"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g858" />
+  <title
+     id="title4599">Warning sign</title>
+  <metadata
+     id="metadata2">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Warning sign</dc:title>
+        <dc:description />
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li />
+            <rdf:li>caution</rdf:li>
+            <rdf:li>security</rdf:li>
+            <rdf:li>warning</rdf:li>
+            <rdf:li>signs_and_symbols</rdf:li>
+            <rdf:li>sign</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://www.openclipart.org">
+            <dc:title>Thomas Weller</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Thomas Weller</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Thomas Weller</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date />
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://web.resource.org/cc/PublicDomain" />
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs1610">
+    <marker
+       viewBox="0 0 10 10"
+       refY="5"
+       refX="0"
+       orient="auto"
+       markerWidth="4"
+       markerUnits="strokeWidth"
+       markerHeight="3"
+       id="ArrowEnd">
+      <path
+         id="path1612"
+         d="M 0,0 10,5 0,10 Z" />
+    </marker>
+    <marker
+       viewBox="0 0 10 10"
+       refY="5"
+       refX="10"
+       orient="auto"
+       markerWidth="4"
+       markerUnits="strokeWidth"
+       markerHeight="3"
+       id="ArrowStart">
+      <path
+         id="path1614"
+         d="M 10,0 0,5 10,10 Z" />
+    </marker>
+  </defs>
+  <circle
+     style="fill:#e03636;fill-opacity:1;stroke:none;stroke-width:4.10073;stroke-linecap:round;stroke-linejoin:round"
+     id="path1046"
+     cx="20"
+     cy="20"
+     r="16.979088" />
+  <g
+     id="g858"
+     transform="matrix(0.23449631,0,0,0.23449631,1.577055,0.90151399)"
+     style="stroke-width:0.99788351;stroke-dasharray:none">
+    <circle
+       r="9.566678"
+       cy="113.63867"
+       cx="78.5644"
+       id="path846"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.08269;stroke-dasharray:none" />
+    <path
+       id="circle848"
+       d="m 78.5645,39.684088 c -5.28356,-6.06e-4 -9.567211,4.282096 -9.567775,9.565656 3.424479,40.644505 0,0 3.424479,40.644505 9.69e-4,3.392105 2.751191,6.141379 6.143296,6.141177 3.392105,2.02e-4 6.142327,-2.749072 6.143296,-6.141177 3.42236,-40.644505 0,0 3.42236,-40.644505 -5.64e-4,-5.282732 -4.282924,-9.565092 -9.565656,-9.565656 z"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.08269;stroke-dasharray:none" />
+  </g>
+</svg>
