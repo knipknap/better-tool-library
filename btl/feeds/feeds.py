@@ -130,7 +130,7 @@ class FeedCalc(object):
         self.power = Param(3, 0.001, machine.max_power, const.KWToHP, 'kW')
         self.torque = Param(2, 0.01, machine.max_torque, const.NMtoInLbs, 'Nm')
         self.deflection = Param(2, 0, 0.025, const.mmToInch, 'mm') # actual deflection
-        self.maxdeflection = Param(2, 0, 0.05, const.mmToInch, 'mm') # theoretical max deflection
+        self.max_deflection = Param(2, 0, 0.05, const.mmToInch, 'mm') # theoretical max deflection
         self.radial_force = Param(2, 0.01, 99999, const.KGtoLbs, 'N') # Radial cutting force
         self.axial_force = Param(2, 0.01, 99999, const.KGtoLbs, 'N') # Axial cutting force
 
@@ -284,7 +284,7 @@ class FeedCalc(object):
             self.deflection.v = 0
         else:
             self.deflection.v = self.endmill.get_deflection(self.doc.v, self.radial_force.v)
-            self.maxdeflection.v = self.endmill.get_max_deflection(self.power.v/self.speed.v)
+            self.max_deflection.v = self.endmill.get_max_deflection(self.power.v/self.speed.v)
 
         # How much torque is available at this RPM?
         self.available_torque.v = self.machine.get_torque_at_rpm(self.rpm.v)

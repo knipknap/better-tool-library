@@ -206,7 +206,8 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         font.setWeight(75)
         for row, (name, param) in enumerate(params):
             # First column: Name.
-            item = QtGui.QTableWidgetItem(name)
+            label = name.replace('_', ' ').title()
+            item = QtGui.QTableWidgetItem(label)
             item.setFont(font)
             table.setItem(row, 0, item)
 
