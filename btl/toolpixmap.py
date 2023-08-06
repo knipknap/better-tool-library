@@ -1,5 +1,5 @@
 import math
-import cairo
+import cairocffi as cairo
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -53,13 +53,13 @@ class ToolPixmap(object):
         ctx = cairo.Context(surface)
         ctx.save()
         ctx.set_source_surface(self.surface)
-        ctx.set_operator(cairo.Operator.SOURCE)
+        ctx.set_operator(cairo.OPERATOR_SOURCE)
         ctx.paint()
         ctx.restore()
 
         # Apply the mask to the copy.
         ctx.identity_matrix() # see https://stackoverflow.com/a/21650227
-        ctx.set_operator(cairo.Operator.ATOP)
+        ctx.set_operator(cairo.OPERATOR_ATOP)
         ctx.set_source_rgba(1, 0, 0, 1)
         ctx.mask_surface(mask_surface, 0, 0)
 
@@ -85,6 +85,7 @@ class ToolPixmap(object):
           Put differently: If the pixel at x/y contains the number 120, that means: if
           the WOC reaches this pixel, then the overlap is 120.
         """
+        self.surface.flush()
         view = self.surface.get_data()
         stride = self.surface.get_stride()
 
@@ -98,7 +99,7 @@ class ToolPixmap(object):
                 green = view[offset + 1]
                 red = view[offset + 2]
                 alpha = view[offset + 3]
-                if alpha > 0:
+                if ord(alpha) > 0:
                     lastArea += pixel_area
                     xmax = max(x, xmax)  # Record the widest point that we found a red pixel
                 # Set the overlap for this DOC/WOC combo

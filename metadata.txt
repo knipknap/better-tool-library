@@ -1,1 +1,1 @@
-pylibs=pycairo
+pylibs=cairocffi
