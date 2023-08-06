@@ -140,6 +140,10 @@ class Shape():
         item = self.params.get('CuttingEdgeHeight')
         return item[1] if item else None
 
+    def get_length(self):
+        item = self.params.get('Length')
+        return item[1] if item else None
+
     def get_flutes(self):
         item = self.params.get('Flutes')
         return item[1] if item else None
