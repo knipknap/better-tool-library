@@ -49,6 +49,8 @@ def run(op):
     endmill.pixmap.show_engagement(best['doc'].v, best['woc'].v)
 
 if __name__ == '__main__':
+    #px = EndmillPixmap(20, 6, 5, 10)
+    #px = BullnosePixmap(14, 8, 7, 5, -1.5)
     #px = ChamferPixmap(14, 5, 10, 1.5, 45, .5)
     #px.show_engagement(0.1, 0.1)
     #import cProfile

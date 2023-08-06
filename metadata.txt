@@ -1,1 +1,1 @@
-pylibs=cairocffi
+pylibs=
