@@ -585,10 +585,9 @@
   <tabstop>comboBoxMaterial</tabstop>
   <tabstop>comboBoxOperation</tabstop>
   <tabstop>doubleSpinBoxStickout</tabstop>
-  <tabstop>toolButtonWarning</tabstop>
   <tabstop>toolButtonError</tabstop>
-  <tabstop>rpmResultLabel</tabstop>
-  <tabstop>feedResultLabel</tabstop>
+  <tabstop>toolButtonWarning</tabstop>
+  <tabstop>tableWidget</tabstop>
  </tabstops>
  <resources/>
  <connections/>

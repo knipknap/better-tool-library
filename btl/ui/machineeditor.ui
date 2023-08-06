@@ -222,6 +222,17 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>lineEditName</tabstop>
+  <tabstop>doubleSpinBoxMaxPower</tabstop>
+  <tabstop>doubleSpinBoxMaxTorque</tabstop>
+  <tabstop>spinBoxMaxTorqueRpm</tabstop>
+  <tabstop>spinBoxMinRpm</tabstop>
+  <tabstop>spinBoxMaxRpm</tabstop>
+  <tabstop>spinBoxMinFeed</tabstop>
+  <tabstop>spinBoxMaxFeed</tabstop>
+  <tabstop>toolButtonDelete</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
