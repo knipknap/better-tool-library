@@ -5,7 +5,7 @@
   <version>0.9.4</version>
   <maintainer email="knipknap@gmail.com">Samuel Abels</maintainer>
   <license file="LICENSE">MIT</license>
-  <url type="repository" branch="main">https://github.com/knipknap/better-tool-library.git</url>
+  <url type="repository" branch="main">https://github.com/knipknap/better-tool-library</url>
   <url type="readme">https://github.com/knipknap/better-tool-library/blob/main/README.md</url>
 
   <content>
