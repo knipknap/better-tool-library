@@ -6,6 +6,8 @@ from . import operation
 
 # Notes:
 # - *_chipload_divisor attributes are defined as chipload = DIAMETER/divisor
+#   So the divisor is a unitless quantity that would work regardless of the
+#   unit of the diameter.
 # - The power factor originally taken from "Machinery's Handbook 29" (2012) pp1083-1084,
 #   originally specified the "width of a chip that 1 HP can make".
 #   I converted this to metric. In other words, the original factor was "in³ * fac = HP",
