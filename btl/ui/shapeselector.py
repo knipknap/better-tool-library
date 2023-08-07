@@ -38,7 +38,7 @@ class ShapeSelector():
         for i in reversed(range(flow.count())):
             flow.itemAt(i).widget().setParent(None)
 
-        for shape in shapes:
+        for shape in sorted(shapes, key=lambda x: x.get_label()):
             button = ShapeButton(shape)
             flow.addWidget(button)
             cb = partial(self.on_shape_button_clicked, shape)
