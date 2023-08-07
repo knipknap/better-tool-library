@@ -86,9 +86,11 @@ def tool_property_to_param(propname, prop, enums, value):
         return param, bool(value or False)
     elif issubclass(param.type, int):
         return param, int_or_none(value)
-    elif issubclass(param.type, float):
+    elif issubclass(param.type, float) and param.unit:
         value, param.unit = parse_float_with_unit(value)
         return param, value
+    elif issubclass(param.type, float):
+        return param, float_or_none(value)
     elif issubclass(param.type, str):
         return param, value
     raise NotImplementedError(
