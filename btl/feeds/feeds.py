@@ -118,7 +118,8 @@ class FeedCalc(object):
         self.chipload = Param(4, 0.0001, chipload, const.mmToInch, 'mm')
 
         self.woc = Param(3, chipload, endmill.shape.get_diameter(), const.mmToInch, 'mm') # Width of cut (radial engagement)
-        self.doc = Param(3, chipload, endmill.shape.get_cutting_edge(), const.mmToInch, 'mm') # Depth of cut (axial engagement)
+        cutting_edge = endmill.shape.get_cutting_edge() or endmill.get_stickout()
+        self.doc = Param(3, chipload, cutting_edge, const.mmToInch, 'mm') # Depth of cut (axial engagement)
 
         # Working attributes calculated. These also serve as "constraints" to
         # check whether the proposed attributes from Simplex may cause issues.

@@ -6,7 +6,11 @@ from .feeds import operation
 from .shape import Shape
 from .params import Param
 from .toolmaterial import ToolMaterial, HSS, Carbide
-from .toolpixmap import EndmillPixmap, BullnosePixmap, ChamferPixmap, VBitPixmap
+from .toolpixmap import EndmillPixmap, \
+                        BullnosePixmap, \
+                        ChamferPixmap, \
+                        VBitPixmap, \
+                        DrillPixmap
 
 class Tool(object):
     API_VERSION = 1
@@ -125,7 +129,7 @@ class Tool(object):
             return Carbide
         return None
 
-    def supports_pixmap(self):
+    def supports_feeds_and_speeds(self):
         if not self.shape.is_builtin():
             return False
         return self.shape.name in ('endmill',
@@ -138,8 +142,6 @@ class Tool(object):
     def get_pixmap(self):
         if self.pixmap:
             return self.pixmap
-        if not self.supports_pixmap():
-            return None
         stickout = self.get_stickout()
         shank_d = self.shape.get_shank_diameter()
         diameter = self.shape.get_diameter()
@@ -172,6 +174,11 @@ class Tool(object):
                                         diameter,
                                         brim=cutting_edge,
                                         radius=radius)
+        elif self.shape.name == 'drill':
+            angle = self.shape.get_tip_angle()
+            self.pixmap = DrillPixmap(stickout,
+                                      diameter,
+                                      angle=angle)
         return self.pixmap
 
     def set_materials(self, materials):
@@ -233,16 +240,20 @@ class Tool(object):
         """
         Returns a tuple (solid_inertia, fluted_inertia) (mm⁴)
         """
-        # Moment of inertia equation for a SOLID round beam (shank partion of the end mill)
-        # https://en.wikipedia.org/wiki/List_of_area_moments_of_inertia
-        shank_d = self.shape.get_shank_diameter()
-        solid_inertia = (math.pi/4) * (shank_d/2)**4
-
         # Estimated equivalent of the fluted portion = 80% of the fluted diameter
         # "Determination of the Equivalent Diameter of an End Mill Based on its
         # Compliance", L. Kops, D.T. Vo
         diameter = self.shape.get_diameter()
         fluted_inertia = (math.pi * ((diameter*0.8) / 2)**4) / 4
+
+        # Moment of inertia equation for a SOLID round beam (shank partion of the end mill)
+        # https://en.wikipedia.org/wiki/List_of_area_moments_of_inertia
+        shank_d = self.shape.get_shank_diameter()
+        if shank_d:
+            solid_inertia = (math.pi/4) * (shank_d/2)**4
+        else:
+            solid_inertia = fluted_inertia
+
         return solid_inertia, fluted_inertia
 
     def get_deflection(self, doc, force):
@@ -259,7 +270,7 @@ class Tool(object):
         # "Metal Cutting Theory and Practice", By David A. Stephenson, John S. Agapiou, p362
         # "Structural modeling of end mills for form error and stability analysis", E.B. Kivanc, E. Budak
         stickout = self.get_stickout()
-        cutting_edge = self.shape.get_cutting_edge()
+        cutting_edge = self.shape.get_cutting_edge() or stickout
         shank_l = stickout-cutting_edge  # Length of the shank portion
         non_cutting = cutting_edge-doc # Length of the non-cutting flute portion
 
@@ -305,11 +316,11 @@ class Tool(object):
         # TODO: Estimate Yield for the fluted portion of the end mill separately
         stickout = self.get_stickout()
         tool_material = self.get_material()
-        cutting_edge = self.shape.get_cutting_edge()
-        shank_d = self.shape.get_shank_diameter()
+        cutting_edge = self.shape.get_cutting_edge() or stickout
         diameter = self.shape.get_diameter()
+        shank_d = self.shape.get_shank_diameter() or diameter
         yield_strength = tool_material.yield_strength
-        shank_l = stickout-cutting_edge
+        shank_l = max(0.000001, stickout-cutting_edge)
         non_cutting = cutting_edge-doc
         solid_inertia, fluted_inertia = self.get_inertia()
         return min((yield_strength*solid_inertia) / ((shank_d/2)* shank_l),
@@ -322,8 +333,8 @@ class Tool(object):
         """
         # TODO: Estimate Shear for the fluted portion of the end mill separately
         tool_material = self.get_material()
-        shank_d = self.shape.get_shank_diameter()
         diameter = self.shape.get_diameter()
+        shank_d = self.shape.get_shank_diameter() or diameter
         shear_strength = tool_material.shear_strength
         solid_inertia, fluted_inertia = self.get_inertia()
         return min((shear_strength*solid_inertia) / (shank_d/2),
@@ -331,7 +342,7 @@ class Tool(object):
 
     def validate(self):
         stickout = self.get_stickout()
-        cutting_edge = self.shape.get_cutting_edge()
+        cutting_edge = self.shape.get_cutting_edge() or stickout
         corner_r = self.shape.get_corner_radius()
         diameter = self.shape.get_diameter()
         ce_angle = self.shape.get_cutting_edge_angle()

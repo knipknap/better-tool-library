@@ -1,11 +1,13 @@
 {
-  "attribute": {},
+  "attribute": {
+    "btl-stickout": 33.0
+  },
   "name": "New Torus",
   "parameter": {
     "Chipload": "0,0 mm",
     "CuttingEdgeHeight": "30,0 mm",
     "Diameter": "5,0 mm",
-    "Flutes": "0",
+    "Flutes": "1",
     "Length": "50,0 mm",
     "Material": "HSS",
     "ShankDiameter": "3,0 mm",

@@ -32,8 +32,9 @@ class ToolEditor(QtGui.QWidget):
         props.pocketChanged.connect(self._on_pocket_changed)
         tool_tab_layout.addWidget(props)
 
-        self.feeds = FeedsAndSpeedsWidget(db, serializer, tool, parent=self)
-        self.feeds_tab_idx = self.form.tabWidget.insertTab(1, self.feeds, "Feeds && Speeds")
+        if tool.supports_feeds_and_speeds():
+            self.feeds = FeedsAndSpeedsWidget(db, serializer, tool, parent=self)
+            self.feeds_tab_idx = self.form.tabWidget.insertTab(1, self.feeds, "Feeds && Speeds")
 
         attrs = ToolAttributes(tool, parent=self.form)
         attr_tab = self.form.tabWidget.addTab(attrs, "Attributes")

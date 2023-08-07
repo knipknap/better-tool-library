@@ -176,7 +176,7 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         except AttributeError as e:
             self.show_hint(f"Calculator error: {e}")
             return
-        if not self.tool.supports_pixmap():
+        if not self.tool.supports_feeds_and_speeds():
             self.show_hint("This tool shape is not supported by the calculator.")
             return
 

@@ -374,3 +374,16 @@ class VBitPixmap(ToolPixmap):
             self.painter.setBrush(QColor(77, 77, 77, 255))  # Set fill color (medium grey)
             self.painter.setPen(Qt.NoPen)  # Set the pen width to zero (no border)
             self.painter.drawPath(path)
+
+class DrillPixmap(VBitPixmap):
+    def __init__(self,
+                 stickout,        # mm
+                 diameter,        # mm
+                 angle=119,       # degrees (0-180)
+                 tip_w=0.0001):   # mm
+        super(DrillPixmap, self).__init__(stickout,
+                                          diameter,
+                                          diameter,
+                                          0,
+                                          angle/2,
+                                          tip_w)

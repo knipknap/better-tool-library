@@ -1,10 +1,12 @@
 {
-  "attribute": {},
+  "attribute": {
+    "btl-stickout": 25.0
+  },
   "name": "New Drill",
   "parameter": {
     "Chipload": "0,0 mm",
     "Diameter": "3,0 mm",
-    "Flutes": "0",
+    "Flutes": "2",
     "Length": "50,0 mm",
     "Material": "HSS",
     "TipAngle": "119,0 \u00b0"

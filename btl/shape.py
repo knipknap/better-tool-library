@@ -169,6 +169,10 @@ class Shape():
         item = self.params.get('TipDiameter')
         return item[1] if item else 0
 
+    def get_tip_angle(self):
+        item = self.params.get('TipAngle')
+        return item[1] if item else 0
+
     def set_material(self, tool_material):
         assert issubclass(tool_material, ToolMaterial)
         param = Param('Material')
