@@ -36,8 +36,12 @@ It takes into account a dozen of factors:
 
 ## Known Limitations
 
-- Only the following types of tools are supported: Square endmills, torus (=rounded corners),
-  ballend, and chamfer (v-bit).
+- Only the following types of tools are supported:
+  - Square endmills
+  - Torus (=rounded corners)
+  - Ballend
+  - Chamfer
+  - V-Bit
 
 - Tools that are wider than they are long (stickout) are not supported.
 
