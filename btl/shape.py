@@ -254,9 +254,16 @@ class Shape():
 # This proxy delays loading the builtin shapes until they are accessed.
 class DictProxy(dict):
     def __getitem__(self, key):
+        self.prepare()
+        return super().__getitem__(key)
+
+    def values(self):
+        self.prepare()
+        return super().values()
+
+    def prepare(self):
         if len(self) == 0:
             for shape in Shape.builtin:
                 self[shape] = Shape(shape)
-        return super().__getitem__(key)
 
 builtin_shapes = DictProxy()
