@@ -13,12 +13,7 @@ def parse_float_with_unit(distance, default_unit='mm'):
         unit = default_unit
 
     value = value.replace(',', '.')
-    try:
-        return float(value), unit
-    except ValueError:
-        return None, None
-
-    raise NotImplementedError('unsupported value in file: "{}"'.format(value))
+    return float(value), unit
 
 def parse_angle(value):
     return float(value.rstrip(' °').replace(',', '.')) if value else None

@@ -322,7 +322,11 @@ class FCSerializer():
         # to the internal representation.
         for propname, prop, enums in properties:
             value = attrs['parameter'].pop(propname, None)
-            param, value = tool_property_to_param(propname, prop, enums, value)
+            try:
+                param, value = tool_property_to_param(propname, prop, enums, value)
+            except (AttributeError, ValueError) as e:
+                print(f"Ouch! Unsupported attribute '{propname}' with value '{value}' in {filename}")
+                continue
             tool.shape.set_param(param, value)
 
         return tool
