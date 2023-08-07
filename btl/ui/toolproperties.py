@@ -45,6 +45,7 @@ class PropertyWidget(QtGui.QWidget):
             widget.valueChanged.connect(setter)
         elif issubclass(param.type, float):
             widget = QtGui.QDoubleSpinBox()
+            widget.setMaximum(99999)
             widget.setDecimals(3)
             widget.setStepType(QtGui.QAbstractSpinBox.AdaptiveDecimalStepType)
             widget.setValue(float(value or 0))
