@@ -5,7 +5,7 @@ from .util import sha256sum
 
 def parse_float_with_unit(distance, default_unit='mm'):
     if not distance:
-        return None, None
+        return None, default_unit
     try:
         value, unit = distance.split(' ')
     except ValueError:
@@ -87,7 +87,7 @@ def tool_property_to_param(propname, prop, enums, value):
     elif issubclass(param.type, int):
         return param, int_or_none(value)
     elif issubclass(param.type, float) and param.unit:
-        value, param.unit = parse_float_with_unit(value)
+        value, param.unit = parse_float_with_unit(value, param.unit)
         return param, value
     elif issubclass(param.type, float):
         return param, float_or_none(value)
