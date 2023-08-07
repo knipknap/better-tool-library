@@ -2,13 +2,13 @@
   "attribute": {},
   "name": "New Reamer",
   "parameter": {
-    "Chipload": "0,00 mm",
-    "CuttingEdgeHeight": "30,00 mm",
-    "Diameter": "5,00 mm",
+    "Chipload": "0,0 mm",
+    "CuttingEdgeHeight": "30,0 mm",
+    "Diameter": "5,0 mm",
     "Flutes": "0",
-    "Length": "50,00 mm",
+    "Length": "50,0 mm",
     "Material": "HSS",
-    "ShankDiameter": "3,00 mm",
+    "ShankDiameter": "3,0 mm",
     "SpindleDirection": "Forward"
   },
   "shape": "reamer.fcstd",

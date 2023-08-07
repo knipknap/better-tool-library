@@ -1,0 +1,18 @@
+{
+  "attribute": {
+    "btl-stickout": 15.0
+  },
+  "name": "New Chamfer",
+  "parameter": {
+    "Chipload": "0,0 mm",
+    "CuttingEdgeHeight": "2,0 mm",
+    "Diameter": "10,0 mm",
+    "Flutes": "2",
+    "Length": "20,0 mm",
+    "Material": "HSS",
+    "Radius": "4,0 mm",
+    "ShankDiameter": "5,0 mm"
+  },
+  "shape": "chamfer.fcstd",
+  "version": 1
+}

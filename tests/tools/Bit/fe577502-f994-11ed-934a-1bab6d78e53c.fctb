@@ -2,13 +2,13 @@
   "attribute": {},
   "name": "HM TiAln coated endmill 1,5mm 4 flute",
   "parameter": {
-    "Chipload": "0,00 mm",
-    "CuttingEdgeHeight": "4,00 mm",
-    "Diameter": "1,50 mm",
+    "Chipload": "0,0 mm",
+    "CuttingEdgeHeight": "4,0 mm",
+    "Diameter": "1,5 mm",
     "Flutes": "4",
-    "Length": "50,00 mm",
+    "Length": "50,0 mm",
     "Material": "HSS",
-    "ShankDiameter": "4,00 mm",
+    "ShankDiameter": "4,0 mm",
     "SpindleDirection": "Forward"
   },
   "shape": "endmill.fcstd",

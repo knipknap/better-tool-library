@@ -2,16 +2,16 @@
   "attribute": {},
   "name": "New Threadmill",
   "parameter": {
-    "Chipload": "0,00 mm",
-    "Crest": "0,10 mm",
-    "Diameter": "5,00 mm",
+    "Chipload": "0,0 mm",
+    "Crest": "0,1 mm",
+    "Diameter": "5,0 mm",
     "Flutes": "0",
-    "Length": "50,00 mm",
+    "Length": "50,0 mm",
     "Material": "HSS",
-    "NeckDiameter": "3,00 mm",
-    "NeckLength": "20,00 mm",
-    "ShankDiameter": "5,00 mm",
-    "cuttingAngle": "60,00 \u00b0"
+    "NeckDiameter": "3,0 mm",
+    "NeckLength": "20,0 mm",
+    "ShankDiameter": "5,0 mm",
+    "cuttingAngle": "60,0 \u00b0"
   },
   "shape": "threadmill.fcstd",
   "version": 1

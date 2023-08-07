@@ -24,8 +24,7 @@ def get_icon_filename_from_shape_filename(filename, icon_type):
 class Shape():
     aliases = {'bullnose': 'torus',
                'thread-mill': 'threadmill',
-               'vbit': 'chamfer',
-               'v-bit': 'chamfer'}
+               'v-bit': 'vbit'}
     builtin = [os.path.splitext(os.path.basename(f))[0]
                for f in glob.glob(os.path.join(builtin_shape_pattern))]
     well_known = (
@@ -151,6 +150,10 @@ class Shape():
     def get_chipload(self):
         item = self.params.get('Chipload')
         return item[1] if item else None
+
+    def get_radius(self):
+        item = self.params.get('Radius')
+        return item[1] if item else 0
 
     def get_corner_radius(self):
         if self.name == 'ballend':

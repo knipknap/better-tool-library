@@ -5,7 +5,7 @@ from btl.params import IntParam, DistanceParam
 from btl.shape import builtin_shapes
 from btl.toolmaterial import HSS, Carbide
 from btl.feeds import FeedCalc, material, operation
-from btl.toolpixmap import EndmillPixmap, BullnosePixmap, ChamferPixmap
+from btl.toolpixmap import EndmillPixmap, BullnosePixmap, ChamferPixmap, VBitPixmap
 
 def print_result(params):
     for name, param in sorted(params.items(), key=lambda x: x[0].lower()):
@@ -50,8 +50,9 @@ def run(op):
 
 if __name__ == '__main__':
     #px = EndmillPixmap(20, 6, 5, 10)
-    #px = BullnosePixmap(14, 8, 7, 5, -1.5)
-    #px = ChamferPixmap(14, 5, 10, 1.5, 45, .5)
+    #px = BullnosePixmap(14, 8, 7, 5, 1.5)
+    #px = VBitPixmap(14, 5, 10, 1.5, 45, .5)
+    #px = ChamferPixmap(16, 6, 15, 2, 5)
     #px.show_engagement(0.1, 0.1)
     #import cProfile
     #cProfile.run("run(operation.HSM)")

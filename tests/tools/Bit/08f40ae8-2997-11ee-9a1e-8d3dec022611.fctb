@@ -2,9 +2,9 @@
   "attribute": {},
   "name": "New Probe",
   "parameter": {
-    "Diameter": "6,00 mm",
-    "Length": "50,00 mm",
-    "ShaftDiameter": "4,00 mm",
+    "Diameter": "6,0 mm",
+    "Length": "50,0 mm",
+    "ShaftDiameter": "4,0 mm",
     "SpindlePower": 0
   },
   "shape": "probe.fcstd",

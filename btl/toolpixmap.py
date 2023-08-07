@@ -188,6 +188,74 @@ class EndmillPixmap(ToolPixmap):
         """
         return woc*doc
 
+
+class ChamferPixmap(ToolPixmap):
+    def __init__(self,
+                 stickout,        # mm
+                 shank_diameter,  # mm
+                 diameter,        # mm
+                 brim,            # mm
+                 radius):         # mm
+        super(ChamferPixmap, self).__init__(stickout, shank_diameter, diameter)
+        self.brim = brim
+        self.radius = radius
+        self.tip_w = max(0, self.diameter-2*radius)
+        self.paint()
+
+    def paint(self):
+        # Draw the shank in light grey.
+        center_x = self.size/2/self.scale
+        shaft_length = self.stickout-self.brim-self.radius
+        self.painter.fillRect(self.S(center_x-self.shank_d/2),
+                              0,
+                              self.S(self.shank_d),
+                              self.S(shaft_length),
+                              QColor(204, 204, 204))
+
+        # Draw the brim area in dark grey.
+        self.painter.fillRect(self.S(center_x-self.diameter/2),
+                              self.S(shaft_length),
+                              self.S(self.diameter),
+                              self.S(self.brim),
+                              QColor(26, 26, 26))
+
+        # Draw the tip in medium grey.
+        self.painter.fillRect(self.S(center_x-self.tip_w/2),
+                              self.S(self.stickout-self.radius),
+                              self.S(self.tip_w),
+                              self.S(self.radius),
+                              QColor(128, 128, 128))
+
+        # Left corner.
+        arc_center_x = center_x-self.diameter/2
+        arc_center_y = self.stickout
+        path = QPainterPath()
+        path.moveTo(QPoint(self.S(arc_center_x), self.S(self.stickout-self.radius)))
+        path.arcTo(self.S(arc_center_x-self.radius),
+                   self.S(arc_center_y-self.radius),
+                   self.S(2*self.radius),
+                   self.S(2*self.radius),
+                   90, -90)
+        path.lineTo(QPoint(self.S(arc_center_x+self.radius), self.S(self.stickout))) # Fend off some rounding error in Qt
+        path.lineTo(QPoint(self.S(arc_center_x+self.radius), self.S(self.stickout-self.radius)))
+        path.closeSubpath()
+        self.painter.fillPath(path, QColor(77, 77, 77, 255))
+
+        # Right corner.
+        arc_center_x = center_x+self.diameter/2
+        path = QPainterPath()
+        path.moveTo(QPoint(self.S(arc_center_x), self.S(self.stickout-self.radius)))
+        path.arcTo(self.S(arc_center_x-self.radius),
+                   self.S(arc_center_y-self.radius),
+                   self.S(2*self.radius),
+                   self.S(2*self.radius),
+                   90, 90)
+        path.lineTo(QPoint(self.S(arc_center_x-self.radius), self.S(self.stickout))) # Fend off some rounding error in Qt
+        path.lineTo(QPoint(self.S(arc_center_x-self.radius), self.S(self.stickout-self.radius)))
+        path.closeSubpath()
+        self.painter.fillPath(path, QColor(77, 77, 77, 255))
+
+
 class BullnosePixmap(ToolPixmap):
     def __init__(self,
                  stickout,         # mm
@@ -230,61 +298,26 @@ class BullnosePixmap(ToolPixmap):
                               QColor(128, 128, 128))
 
         # Draw the corner radius in yet another grey.
-        if self.corner_radius and self.corner_radius > 0:
-            # Left corner.
-            arc_center_x = center_x - self.diameter/2 + self.corner_radius
-            arc_center_y = self.stickout-self.corner_radius
-            self.painter.setBrush(QColor(77, 77, 77))
-            self.painter.drawPie(self.S(arc_center_x-self.corner_radius),
-                                 self.S(arc_center_y-self.corner_radius),
-                                 self.S(self.corner_radius*2),
-                                 self.S(self.corner_radius*2),
-                                 180*16, 90*16)
+        # Left corner.
+        arc_center_x = center_x - self.diameter/2 + self.corner_radius
+        arc_center_y = self.stickout-self.corner_radius
+        self.painter.setBrush(QColor(77, 77, 77))
+        self.painter.drawPie(self.S(arc_center_x-self.corner_radius),
+                             self.S(arc_center_y-self.corner_radius),
+                             self.S(self.corner_radius*2),
+                             self.S(self.corner_radius*2),
+                             180*16, 90*16)
 
-            # Right corner.
-            arc_center_x = center_x + self.diameter/2 - self.corner_radius
-            self.painter.drawPie(self.S(arc_center_x-self.corner_radius),
-                                 self.S(arc_center_y-self.corner_radius),
-                                 self.S(self.corner_radius*2),
-                                 self.S(self.corner_radius*2),
-                                 270*16, 90*16)
-
-        elif self.corner_radius and self.corner_radius < 0:
-            # Left corner.
-            abs_radius = abs(self.corner_radius)
-            arc_center_x = center_x-self.diameter/2
-            arc_center_y = self.stickout
-            path = QPainterPath()
-            path.moveTo(QPoint(self.S(arc_center_x), self.S(self.stickout-self.tip_h)))
-            path.arcTo(self.S(arc_center_x-abs_radius),
-                       self.S(arc_center_y-abs_radius),
-                       self.S(2*abs_radius),
-                       self.S(2*abs_radius),
-                       90, -90)
-            path.lineTo(QPoint(self.S(arc_center_x+abs_radius), self.S(self.stickout))) # Fend off some rounding error in Qt
-            path.lineTo(QPoint(self.S(arc_center_x+abs_radius), self.S(self.stickout-self.tip_h)))
-            path.closeSubpath()
-            self.painter.fillPath(path, QColor(77, 77, 77, 255))
-
-            # Right corner.
-            arc_center_x = center_x+self.diameter/2
-            path = QPainterPath()
-            path.moveTo(QPoint(self.S(arc_center_x), self.S(self.stickout-self.tip_h)))
-            path.arcTo(self.S(arc_center_x-abs_radius),
-                       self.S(arc_center_y-abs_radius),
-                       self.S(2*abs_radius),
-                       self.S(2*abs_radius),
-                       90, 90)
-            path.lineTo(QPoint(self.S(arc_center_x-abs_radius), self.S(self.stickout))) # Fend off some rounding error in Qt
-            path.lineTo(QPoint(self.S(arc_center_x-abs_radius), self.S(self.stickout-self.tip_h)))
-            path.closeSubpath()
-            self.painter.fillPath(path, QColor(77, 77, 77, 255))
+        # Right corner.
+        arc_center_x = center_x + self.diameter/2 - self.corner_radius
+        self.painter.drawPie(self.S(arc_center_x-self.corner_radius),
+                             self.S(arc_center_y-self.corner_radius),
+                             self.S(self.corner_radius*2),
+                             self.S(self.corner_radius*2),
+                             270*16, 90*16)
 
 
-        self.painter.end()
-
-
-class ChamferPixmap(ToolPixmap):
+class VBitPixmap(ToolPixmap):
     def __init__(self,
                  stickout,        # mm
                  shank_diameter,  # mm
@@ -292,7 +325,7 @@ class ChamferPixmap(ToolPixmap):
                  brim,            # mm
                  lead_angle=0,    # degrees (0-90)
                  tip_w=0):        # mm
-        super(ChamferPixmap, self).__init__(stickout, shank_diameter, diameter)
+        super(VBitPixmap, self).__init__(stickout, shank_diameter, diameter)
         self.brim = brim
         self.lead_angle = lead_angle
         self.tip_w = tip_w

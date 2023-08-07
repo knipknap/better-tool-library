@@ -7,11 +7,11 @@
   },
   "name": "2,5mm dual flute ball nose",
   "parameter": {
-    "Chipload": "0,00 mm",
-    "CuttingEdgeHeight": "12,00 mm",
-    "Diameter": "2,50 mm",
+    "Chipload": "0,0 mm",
+    "CuttingEdgeHeight": "12,0 mm",
+    "Diameter": "2,5 mm",
     "Flutes": "2",
-    "Length": "38,00 mm",
+    "Length": "38,0 mm",
     "Material": "HSS",
     "ShankDiameter": "3,17 mm"
   },

@@ -1,17 +1,19 @@
 {
-  "attribute": {},
-  "name": "New Chamfer",
-  "parameter": {
-    "Chipload": "0,00 mm",
-    "CuttingEdgeAngle": "90,00 \u00b0",
-    "CuttingEdgeHeight": "1,00 mm",
-    "Diameter": "10,00 mm",
-    "Flutes": "0",
-    "Length": "20,00 mm",
-    "Material": "HSS",
-    "ShankDiameter": "5,00 mm",
-    "TipDiameter": "1,00 mm"
+  "attribute": {
+    "btl-stickout": 14.0
   },
-  "shape": "chamfer.fcstd",
+  "name": "New V-Bit",
+  "parameter": {
+    "Chipload": "0,0 mm",
+    "CuttingEdgeAngle": "90,0 \u00b0",
+    "CuttingEdgeHeight": "1,0 mm",
+    "Diameter": "10,0 mm",
+    "Flutes": "1",
+    "Length": "20,0 mm",
+    "Material": "HSS",
+    "ShankDiameter": "5,0 mm",
+    "TipDiameter": "1,0 mm"
+  },
+  "shape": "vbit.fcstd",
   "version": 1
 }

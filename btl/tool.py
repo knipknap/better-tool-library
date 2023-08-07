@@ -6,7 +6,7 @@ from .feeds import operation
 from .shape import Shape
 from .params import Param
 from .toolmaterial import ToolMaterial, HSS, Carbide
-from .toolpixmap import EndmillPixmap, BullnosePixmap, ChamferPixmap
+from .toolpixmap import EndmillPixmap, BullnosePixmap, ChamferPixmap, VBitPixmap
 
 class Tool(object):
     API_VERSION = 1
@@ -132,7 +132,8 @@ class Tool(object):
                                    'torus',
                                    'bullnose',
                                    'ballend',
-                                   'chamfer')
+                                   'chamfer',
+                                   'vbit')
 
     def get_pixmap(self):
         if self.pixmap:
@@ -155,15 +156,22 @@ class Tool(object):
                                          diameter,
                                          cutting_edge=cutting_edge,
                                          corner_radius=corner_r)
-        elif self.shape.name == 'chamfer':
+        elif self.shape.name == 'vbit':
             ce_angle = self.shape.get_cutting_edge_angle()
             tip_w = self.shape.get_tip_diameter()
+            self.pixmap = VBitPixmap(stickout,
+                                     shank_d,
+                                     diameter,
+                                     brim=cutting_edge,
+                                     lead_angle=ce_angle/2,
+                                     tip_w=tip_w)
+        elif self.shape.name == 'chamfer':
+            radius = self.shape.get_radius()
             self.pixmap = ChamferPixmap(stickout,
                                         shank_d,
                                         diameter,
                                         brim=cutting_edge,
-                                        lead_angle=ce_angle/2,
-                                        tip_w=tip_w)
+                                        radius=radius)
         return self.pixmap
 
     def set_materials(self, materials):

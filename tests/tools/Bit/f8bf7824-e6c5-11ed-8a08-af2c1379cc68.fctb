@@ -2,13 +2,13 @@
   "attribute": {},
   "name": "D12,65mm L26mm S8 2 flute wood router bit",
   "parameter": {
-    "Chipload": "0,00 mm",
-    "CuttingEdgeHeight": "26,00 mm",
+    "Chipload": "0,0 mm",
+    "CuttingEdgeHeight": "26,0 mm",
     "Diameter": "12,65 mm",
     "Flutes": "0",
-    "Length": "58,50 mm",
+    "Length": "58,5 mm",
     "Material": "HSS",
-    "ShankDiameter": "8,00 mm",
+    "ShankDiameter": "8,0 mm",
     "SpindleDirection": "Forward"
   },
   "shape": "endmill.fcstd",
