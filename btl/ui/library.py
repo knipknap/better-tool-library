@@ -265,7 +265,7 @@ class LibraryUI():
         tool = Tool('New {}'.format(label), shape)
         library = self.get_selected_library()
         pocket = library.get_next_pocket()
-        editor = ToolEditor(self.db, self.serializer, tool, pocket)
+        editor = ToolEditor(self.db, self.serializer, tool, pocket, parent=self.form)
         if not editor.show():
             return
 

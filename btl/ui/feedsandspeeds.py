@@ -2,6 +2,8 @@ import os
 import FreeCAD
 import FreeCADGui
 from pathlib import Path
+from PySide.QtCore import Qt, QObject, QEvent
+from PySide.QtGui import QApplication
 from PySide import QtGui, QtCore
 from .util import load_ui
 from .machineeditor import MachineEditor
@@ -37,6 +39,25 @@ class FeedCalculatorRunnable(QtCore.QRunnable):
     def run(self):
         self.worker.start()
 
+class KeyPressFilter(QObject):
+    def eventFilter(self, obj, event):
+        if event.type() != QEvent.KeyPress:
+            return super().eventFilter(obj, event)
+        control_modifier = event.modifiers()&Qt.KeyboardModifier.ControlModifier
+        if event.key() == Qt.Key.Key_C and control_modifier:
+            copied_cells = sorted(obj.selectedIndexes())
+            copy_text = ''
+            max_column = copied_cells[-1].column()
+            for c in copied_cells:
+                copy_text += obj.item(c.row(), c.column()).text()
+                if c.column() == max_column:
+                    copy_text += '\n'
+                else:
+                    copy_text += '\t'
+            QApplication.instance().clipboard().setText(copy_text)
+            return True
+        return super().eventFilter(obj, event)
+
 warning_dismissed = False
 
 class FeedsAndSpeedsWidget(QtGui.QWidget):
@@ -48,7 +69,7 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
 
         self.layout = QtGui.QVBoxLayout(self)
         self.setLayout(self.layout)
-        self.form = load_ui(ui_path)
+        self.form = load_ui(ui_path, self)
         self.layout.addWidget(self.form)
 
         header = self.form.tableWidget.horizontalHeader()
@@ -65,6 +86,9 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         self.form.doubleSpinBoxStickout.valueChanged.connect(self._on_stickout_changed)
         self.form.toolButtonWarning.clicked.connect(self._on_warning_dismissed)
         self.form.toolButtonError.clicked.connect(self.form.errorBox.hide)
+
+        key_press_filter = KeyPressFilter(self)
+        self.form.tableWidget.installEventFilter(key_press_filter)
 
     def _on_warning_dismissed(self):
         self.form.warningBox.hide()
