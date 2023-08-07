@@ -174,7 +174,7 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         try:
             fc = FeedCalc(machine, self.tool, material, op=op)
         except AttributeError as e:
-            self.show_hint("Calculator error: {e}")
+            self.show_hint(f"Calculator error: {e}")
             return
         if not self.tool.supports_pixmap():
             self.show_hint("This tool shape is not supported by the calculator.")
