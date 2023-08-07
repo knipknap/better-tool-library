@@ -82,11 +82,12 @@ def tool_property_to_param(propname, prop, enums, value):
     parameter type (as defined in the params module).
     """
     param, default = shape_property_to_param(propname, prop, enums)
+    value = value if value is not None else prop.Value
     if issubclass(param.type, bool):
         return param, bool(value or False)
     elif issubclass(param.type, int):
         return param, int_or_none(value)
-    elif issubclass(param.type, float) and param.unit:
+    elif issubclass(param.type, float) and param.unit and isinstance(value, str):
         value, param.unit = parse_float_with_unit(value, param.unit)
         return param, value
     elif issubclass(param.type, float):
