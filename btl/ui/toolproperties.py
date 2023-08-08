@@ -98,6 +98,7 @@ class ToolProperties(PropertyWidget):
             self.grid.addWidget(label, row, 0)
             spinner = QtGui.QSpinBox()
             spinner.setValue(self.pocket or 0)
+            spinner.setMaximum(99999999)
             spinner.valueChanged.connect(self.pocketChanged.emit)
             self._add_property_from_widget(spinner, 'Pocket', self.pocket)
             self._makespacing(6)
