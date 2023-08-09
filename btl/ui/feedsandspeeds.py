@@ -266,7 +266,7 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         self.form.feedResultLabel.setText(feed.format() if feed else "<i>none</i>")
         diameter = self.tool.shape.get_diameter()
         woc = params.get('woc')
-        woc_label = f'{woc.format()} ({woc.v/diameter:.3f}%)' if woc else None
+        woc_label = f'{woc.format()} ({woc.v/diameter*100:.3f}%)' if woc else None
         self.form.stepoverResultLabel.setText(woc_label if woc else "<i>none</i>")
         doc = params.get('doc')
         self.form.stepdownResultLabel.setText(doc.format() if doc else "<i>none</i>")
