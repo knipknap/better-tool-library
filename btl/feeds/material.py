@@ -39,7 +39,7 @@ class Material(object):
                 print(f"      {op.label}: min {min_speed}, max {max_speed}")
 
 class Aluminium6061(Material):
-    name = 'Aluminium Alloy (e.g. 6061)'
+    name = 'Aluminium Alloy (6061)'
     power_factor = 0.33*METRIC_POWER_FACTOR
 
     cutting_data = {
