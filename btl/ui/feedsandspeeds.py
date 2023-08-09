@@ -9,7 +9,7 @@ from .util import load_ui
 from .machineeditor import MachineEditor
 from ..machine import Machine
 from ..feeds import FeedCalc
-from ..feeds.operation import operations
+from ..feeds.operation import operations, Drilling, Slotting
 from ..feeds.material import materials
 
 __dir__ = os.path.dirname(__file__)
@@ -84,6 +84,12 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         self.form.comboBoxMaterial.activated.connect(self._on_material_selected)
         self.form.comboBoxOperation.activated.connect(self._on_operation_selected)
         self.form.doubleSpinBoxStickout.valueChanged.connect(self._on_stickout_changed)
+
+        self.form.checkBoxDocLimit.stateChanged.connect(lambda x: self.update_state())
+        self.form.doubleSpinBoxDocLimit.valueChanged.connect(lambda x: self.update_state())
+        self.form.checkBoxWocLimit.stateChanged.connect(lambda x: self.update_state())
+        self.form.doubleSpinBoxWocLimit.valueChanged.connect(lambda x: self.update_state())
+
         self.form.toolButtonWarning.clicked.connect(self._on_warning_dismissed)
         self.form.toolButtonError.clicked.connect(self.form.errorBox.hide)
 
@@ -149,12 +155,34 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         self.form.hintLabel.setText(f"<i>{hint}</i>")
         self.form.hintLabel.show()
 
+    def get_doc_limit(self):
+        if not self.form.boxDocLimit.isVisible():
+            return None
+        if self.form.checkBoxDocLimit.isChecked():
+            return None
+        return self.form.doubleSpinBoxDocLimit.value()
+
+    def get_woc_limit(self):
+        if not self.form.boxWocLimit.isVisible():
+            return None
+        if self.form.checkBoxWocLimit.isChecked():
+            return None
+        return self.form.doubleSpinBoxWocLimit.value()
+
     def update_state(self):
         self.form.errorBox.hide()
         self.form.shapePixmap.hide()
         self.form.resultWidget.hide()
         machine = self.get_selected_machine()
         self.form.toolButtonEditMachine.setEnabled(machine is not None)
+
+        op = self.form.comboBoxOperation.currentData()
+        self.form.labelDocLimit.setVisible(op != Drilling)
+        self.form.boxDocLimit.setVisible(op != Drilling)
+        self.form.doubleSpinBoxDocLimit.setEnabled(not self.form.checkBoxDocLimit.isChecked())
+        self.form.labelWocLimit.setVisible(op not in (Drilling, Slotting))
+        self.form.boxWocLimit.setVisible(op not in (Drilling, Slotting))
+        self.form.doubleSpinBoxWocLimit.setEnabled(not self.form.checkBoxWocLimit.isChecked())
 
         material = self.get_selected_material()
         stickout = self.form.doubleSpinBoxStickout.value()
@@ -170,7 +198,6 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         self.form.hintLabel.hide()
 
         # Prepare the calculator.
-        op = self.form.comboBoxOperation.currentData()
         try:
             fc = FeedCalc(machine, self.tool, material, op=op)
         except AttributeError as e:
@@ -179,6 +206,12 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         if not self.tool.supports_feeds_and_speeds():
             self.show_hint("This tool shape is not supported by the calculator.")
             return
+
+        # Apply limits, if any.
+        doc_limit = self.get_doc_limit()
+        fc.doc.max = doc_limit if doc_limit else fc.doc.max
+        woc_limit = self.get_woc_limit()
+        fc.woc.max = woc_limit if woc_limit else fc.woc.max
 
         # Calculate.
         pool.clear()
