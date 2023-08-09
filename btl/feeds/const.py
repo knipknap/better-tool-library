@@ -8,5 +8,6 @@ KWToHP = 1.34102        # KW -> HP
 KWcm3ToHPin3 = 21.9754  # KW/cm^3 -> HP/in^3
 NMtoInLbs = 8.85075     # Nm -> In-Pounds
 GPtoPSI6 = 0.14503      # GigaPascals -> PSI*10^6
+mm2ToIn2 = 0.00155000159
 cm3ToIn3 = 0.06102
 KGtoLbs = 2.20462

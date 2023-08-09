@@ -223,12 +223,12 @@ class Tool(object):
         tool_material = self.get_material()
         return diameter/thematerial.get_chipload_divisor(tool_material)
 
-    def get_speed_for_material(self, thematerial, op=operation.Milling):
+    def get_speed_for_material(self, thematerial, op=operation.Profiling):
         """
         Returns the min_speed and max_speed in m/min for milling, slotting, or
         drilling the given material.
         """
-        op = operation.Milling if op is operation.HSM else op
+        op = operation.Profiling if op is operation.HSM else op
         tool_material = self.get_material()
         speeds = thematerial.get_speeds(tool_material)
         min_speed, max_speed = speeds.get(op, (None, None))

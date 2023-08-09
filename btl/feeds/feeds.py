@@ -4,17 +4,16 @@ import random
 from copy import deepcopy
 from . import const, operation
 from .amoeba import amoeba
-from .util import get_tool_engagement_angle, get_lead_angle_deflection_factor
 
 class Param:
-    def __init__(self, decimals, min, max, metToImp, unit=None):
+    def __init__(self, decimals, min, max, metToImp, unit=None, v=None):
         self.decimals = decimals
         self.min = min
         self.max = max
         self.limit = max
         self.metToImp = metToImp
         self.unit = unit
-        self.v = min
+        self.v = v if v is not None else min
 
     def __str__(self):
         return str(self.v if self.v is not None else '')
@@ -92,11 +91,13 @@ class FeedCalc(object):
         # Constants, not looked at by the optimizer. They are
         # derived from our parameter class anyway, to make it easy
         # to display them with limits and error distance.
-        self.available_torque = Const(2, 0, 9999, const.NMtoInLbs, 'Nm')
-        self.feed_factor = Const(2, 0, 999, 1)
+        self.available_torque = Const(2, 0.00001, 9999, const.NMtoInLbs, 'Nm')
+        self.feed_factor = Const(2, 0, 999, 1, v=1)
         self.engagement_angle = Const(0, 0, 180, 1, '°')
-        self.bend_force_limit = Const(2, 0.01, 9999, const.NMtoInLbs, 'N')
-        self.twist_torque_limit = Const(2, 0.01, 9999, const.NMtoInLbs, 'Nm')
+        self.effective_diameter = Const(3, 0.00001, 99999, const.mmToInch, 'mm')
+        self.overlap_area = Const(3, 0.00001, 999999, const.mm2ToIn2, 'mm²')
+        self.bend_force_limit = Const(2, 0.00001, 9999, const.NMtoInLbs, 'N')
+        self.twist_torque_limit = Const(2, 0.00001, 9999, const.NMtoInLbs, 'Nm')
 
         # Attributes that the optimizer will populate and try to
         # optimize using Simplex.
@@ -109,12 +110,10 @@ class FeedCalc(object):
             err = f'no {attrname} found for material {matname} and operation {op.label}'
             raise AttributeError(err)
 
-        max_speed *= op.speed_multiplier
         self.speed = Param(0, 1, max_speed, const.SMMtoSFM, 'm/min')
 
         # Define the allowed chipload range.
         chipload = endmill.get_chipload_for_material(material)
-        chipload *= op.chip_multiplier
         self.chipload = Param(4, 0.0001, chipload, const.mmToInch, 'mm')
 
         self.woc = Param(3, chipload, endmill.shape.get_diameter(), const.mmToInch, 'mm') # Width of cut (radial engagement)
@@ -125,14 +124,14 @@ class FeedCalc(object):
         # check whether the proposed attributes from Simplex may cause issues.
         self.rpm = Param(0, machine.min_rpm, machine.max_rpm, 1)
         self.feed = Param(1, machine.min_feed, machine.max_feed, const.mmToInch, 'mm/min') # The distance the tool travels each minute
-        self.mrr = Param(2, 0.01, 999, const.cm3ToIn3, 'cm³/min')   # material removal rate
+        self.mrr = Param(2, 0.001, 999, const.cm3ToIn3, 'cm³/min')   # material removal rate
         self.adjusted_chipload = Param(4, 0.0001, chipload, const.mmToInch, 'mm') # Should setup with same values as chipload
 
         self.power = Param(3, 0.001, machine.max_power, const.KWToHP, 'kW')
-        self.torque = Param(2, 0.01, machine.max_torque, const.NMtoInLbs, 'Nm')
+        self.torque = Param(2, 0.001, machine.max_torque, const.NMtoInLbs, 'Nm')
         self.deflection = Param(2, 0, 0.025, const.mmToInch, 'mm') # actual deflection
         self.max_deflection = Param(2, 0, 0.05, const.mmToInch, 'mm') # theoretical max deflection
-        self.radial_force = Param(2, 0.01, 99999, const.KGtoLbs, 'N') # Radial cutting force
+        self.radial_force = Param(2, 0, 99999, const.KGtoLbs, 'N') # Radial cutting force
         self.axial_force = Param(2, 0.01, 99999, const.KGtoLbs, 'N') # Axial cutting force
 
     def all_params(self, names=None):
@@ -189,113 +188,59 @@ class FeedCalc(object):
     def update(self):
         self.reset_limits()
 
-        """
-        # TODO: Drilling
-        # ------------------------
-        # WOC / DOC -- irrelevant?
-        # feed = chipload * rpm
-        # MRR = area of drill * feed
-        # Radial Force = 0 ?
-        # No Helical Interpolation
+        # Step 1:
+        # Let the operation do the heavy lifting. This will adjust the
+        # input DOC, WOC, speed, and chipload to optimize for the operation.
+        # It will NOT guarantee that the result is valid - this will be
+        # checked only by the constraint checker (minimization algorithm)
+        # that aims to choose the best result out of many based on
+        # an error distance, which takes the constraints into account.
+        # See .optimize()
+        self.op.optimize_cut(self, self.endmill, self.material)
 
-        # TODO: Turning
-        # ------------------------
-        # DIAMETER = workpiece diameter
-        # TEETH = 1
-        # CHIPLOAD? = ?    radial depth?
-        # DOC? = ?         irrelevant?
-        # WOC? = ?         IPR?
-        # MRR = (chipload * rpm) * DOC * Diameter
-        # Radial Force = 0 ?
-        # No Helical Interpolation
-
-        # TODO: Helical Interpolation
-        # ------------------------
-        # - Adjust WOC and feed
-        if self.op != operation.Slotting and self.op != operation.Drilling:
-            woc, ipm = interpolate_helical(HELICAL.v, DIAMETER.v, WOC.v)
-        """
-
-        # Given the tool profile, get the effective diameter and MRR from the WOC and DOC.
-        # Coordinates:
-        #  (0,0) is centerline of tool, at the spindle nose.
-        #  +X is to the right
-        #  +Y is down (away from spindle)
-        pixmap = self.endmill.get_pixmap()
-        if self.op == operation.Drilling:
-            overlap = math.pi * math.pow(self.endmill.shape.get_diameter()/2, 2)
-            effective_diameter = self.endmill.shape.get_diameter()
-        else:
-            self.woc.v = self.endmill.shape.get_diameter() if self.op == operation.Slotting else self.woc.v
-            overlap = pixmap.get_overlap_from_woc(self.doc.v, self.woc.v)
-            effective_diameter = pixmap.get_effective_diameter_from_doc(self.doc.v)
-
-        # When slotting/drilling, WOC is fixed.
-        if self.op == operation.Slotting or self.op == operation.Drilling:
-            self.woc.v = effective_diameter
-            self.woc.set_limit(effective_diameter)
-
-        # Tool Engagement Angle (straight shoulder along a straight path)
-        #    TODO: Check that this works for slotting, helical, etc..
-        if self.op == operation.Drilling:
-            self.engagement_angle.v = 360
-            self.engagement_angle.max = 360
-            self.engagement_angle.set_limit(360)
-        else:
-            self.engagement_angle.v = get_tool_engagement_angle(max(0, self.woc.v), effective_diameter)
-
-        # Optimize chipload for the operation.
-        speed_factor, chip_factor, self.feed_factor.v = \
-            self.op.get_factors(max(0.0001, self.doc.v),
-                                max(0.0001, self.woc.v),
-                                effective_diameter,
-                                self.endmill.shape.get_corner_radius(),
-                                self.endmill.shape.get_cutting_edge_angle()/2)
-
-        speed_range = self.endmill.get_speed_for_material(self.material, operation.Milling)
-        self.speed.set_limit(speed_range[1]*speed_factor)
-        chipload = self.endmill.get_chipload_for_material(self.material)
-        self.chipload.set_limit(chipload*chip_factor)
-
-        # Adjust for lead angle deflection (unless drilling).
-        if self.op == operation.Drilling:
-            radialFactor = 0
-            axialFactor = 1
-        else:
-            radialFactor, axialFactor = get_lead_angle_deflection_factor(self.doc.v,
-                                                                         self.woc.v,
-                                                                         effective_diameter)
-
-        # The "classic" equations, in dependency order, assuming we have
+        # Step 2:
+        # Apply "classic" equations, in dependency order, assuming we have
         # selected DOC, WOC, SPEED, and CHIPLOAD:
-        self.rpm.v = self.speed.v*1000 / (effective_diameter*math.pi)
+        self.overlap_area.v = self.op.get_overlap(self.endmill, self.doc.v, self.woc.v)
+        self.rpm.v = self.speed.v*1000 / (self.effective_diameter.v*math.pi)
         self.adjusted_chipload.v = self.chipload.v*self.feed_factor.v
         self.feed.v = self.adjusted_chipload.v*self.endmill.shape.get_flutes()*self.rpm.v
-        self.mrr.v = self.feed.v*overlap/1000
+        self.mrr.v = self.feed.v*self.overlap_area.v/1000
 
+        # Step 3:
+        # Calculate power requirement for the resulting material removal rate.
         # Note: Power calculation can probably be improved:
         #   https://www.machiningdoctor.com/calculators/machining-power/
         self.power.v = self.mrr.v*self.material.power_factor
         self.torque.v = self.power.v*1000/(2*math.pi*self.rpm.v)*9548.8
-        self.radial_force.v = (radialFactor*self.power.v*1000)/self.speed.v  # Force acting to bend the end mill.
-        self.axial_force.v = (axialFactor*self.power.v*1000)/self.speed.v  # Force acting to pull the end mill out of the tool holder (or the workpiece off the table).
+
+
+        # Step 4:
+        # Calculate lead angle deflection for the given operation.
+        radial_factor, axial_factor = self.op.get_lead_angle_deflection_factors(
+            self.doc.v, self.woc.v, self.effective_diameter.v)
+
+        # Force acting to bend the end mill.
+        self.radial_force.v = (radial_factor*self.power.v*1000)/self.speed.v
+        # Force acting to pull the end mill out of the tool holder (or the workpiece off the table).
+        self.axial_force.v = (axial_factor*self.power.v*1000)/self.speed.v
 
         # Get the deflection (multi-part bar)
-        if self.op == operation.Drilling:
-            self.deflection.v = 0
-        else:
-            self.deflection.v = self.endmill.get_deflection(self.doc.v, self.radial_force.v)
-            self.max_deflection.v = self.endmill.get_max_deflection(self.power.v/self.speed.v)
+        self.deflection.v = self.endmill.get_deflection(self.doc.v, self.radial_force.v)
+        self.max_deflection.v = self.endmill.get_max_deflection(self.power.v/self.speed.v)
 
+        # Step 5:
+        # Calculate the force before permanently bending the end mill.
+        self.bend_force_limit.v = self.endmill.get_bend_limit(self.doc.v)
+        self.radial_force.set_limit(min(self.bend_force_limit.v, self.radial_force.limit))
+
+        # Step 6:
         # How much torque is available at this RPM?
         self.available_torque.v = self.machine.get_torque_at_rpm(self.rpm.v)
         self.torque.set_limit(min(self.available_torque.v, self.torque.limit))
 
-        # Maximum Deflection to permanently bend the end mill
-        self.bend_force_limit.v = self.endmill.get_bend_limit(self.doc.v)
-        self.radial_force.set_limit(min(self.bend_force_limit.v, self.radial_force.limit))
-
-        # Maximum Torque to shear the end mill
+        # Step 7:
+        # Maximum torque to shear the end mill
         self.twist_torque_limit.v = self.endmill.get_twist_limit()
         self.torque.set_limit(min(self.twist_torque_limit.v, self.torque.limit))
         self.available_torque.v = min(self.available_torque.v, self.torque.limit)

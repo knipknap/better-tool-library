@@ -5,6 +5,7 @@ from . import operation
 # TODO: Load materials from resource files.
 
 # Notes:
+# - All speeds are in m/min.
 # - *_chipload_divisor attributes are defined as chipload = DIAMETER/divisor
 #   So the divisor is a unitless quantity that would work regardless of the
 #   unit of the diameter.
@@ -45,7 +46,7 @@ class Aluminium6061(Material):
         HSS: {
             'chipload_divisor': 160,  # chipload = DIAMETER/divisor
             'speeds': {
-                operation.Milling: (152, 182), # https://littlemachineshop.com/reference/cuttingspeeds.php
+                operation.Profiling: (152, 182), # https://littlemachineshop.com/reference/cuttingspeeds.php
                 operation.Slotting: (120, 146), # estimated, 80% of milling speed
                 operation.Drilling: (106, 122), # https://littlemachineshop.com/reference/cuttingspeeds.php
             }
@@ -53,7 +54,7 @@ class Aluminium6061(Material):
         Carbide: {
             'chipload_divisor': 80,
             'speeds': { # Source: https://www.machiningdoctor.com/mds/?matId=3850
-                operation.Milling: (640, 865),
+                operation.Profiling: (640, 865),
                 operation.Slotting: (425, 575),
                 operation.Drilling: (215, 290),
                 #operation.Turning: (510, 690),
@@ -71,7 +72,7 @@ class Aluminium7075(Material):
         HSS: {
             'chipload_divisor': 160,
             'speeds': {
-                operation.Milling: (60, 300), # https://bekas.sk/files/pdfs/44.pdf
+                operation.Profiling: (60, 300), # https://bekas.sk/files/pdfs/44.pdf
                 operation.Slotting: (48, 240), # estimated, 80% of milling speed
                 operation.Drilling: (106, 122), # https://littlemachineshop.com/reference/cuttingspeeds.php
             }
@@ -79,7 +80,7 @@ class Aluminium7075(Material):
         Carbide: {
             'chipload_divisor': 80,
             'speeds': { # Source: https://www.machiningdoctor.com/mds/?matId=3970
-                operation.Milling: (400, 545),
+                operation.Profiling: (400, 545),
                 operation.Slotting: (270, 360),
                 operation.Drilling: (135, 180),
                 #operation.Turning: (320, 435),
@@ -96,7 +97,7 @@ class CopperAlloy(Material):
         HSS: {
             'chipload_divisor': 160,
             'speeds': {
-                operation.Milling: (60, 300), # https://bekas.sk/files/pdfs/44.pdf
+                operation.Profiling: (60, 300), # https://bekas.sk/files/pdfs/44.pdf
                 operation.Slotting: (48, 240), # estimated, 80% of milling speed
                 operation.Drilling: (24, 60), # https://www.easyspeedsandfeeds.com/
                 #operation.Parting: (120, 250), # https://www.heinrich-meier.de/upload/shoppictures_29/SchnittgeschwindigkeitNutex.pdf
@@ -105,7 +106,7 @@ class CopperAlloy(Material):
         Carbide: {
             'chipload_divisor': 80,
             'speeds': { # Source: https://www.machiningdoctor.com/mds/?matId=7210
-                operation.Milling: (280, 555),
+                operation.Profiling: (280, 555),
                 operation.Slotting: (185, 370),
                 operation.Drilling: (95, 185),
                 #operation.Turning: (220, 445),
@@ -122,7 +123,7 @@ class Iron(Material):
         HSS: {
             'chipload_divisor': 200,
             'speeds': {
-                operation.Milling: (60, 250), # https://bekas.sk/files/pdfs/44.pdf
+                operation.Profiling: (60, 250), # https://bekas.sk/files/pdfs/44.pdf
                 operation.Slotting: (48, 200), # estimated, 80% of milling speed
                 operation.Drilling: (15, 30), # https://www.easyspeedsandfeeds.com/
                 #operation.Parting: (15, 45), # https://www.heinrich-meier.de/upload/shoppictures_29/SchnittgeschwindigkeitNutex.pdf
@@ -131,7 +132,7 @@ class Iron(Material):
         Carbide: {
             'chipload_divisor': 100,
             'speeds': { # Source: https://www.machiningdoctor.com/mds/?matId=3230
-                operation.Milling: (225, 305),
+                operation.Profiling: (225, 305),
                 operation.Slotting: (230, 315),
                 operation.Drilling: (190, 255),
                 #operation.Parting: (165, 225),
@@ -148,7 +149,7 @@ class ToolSteel(Material):
         HSS: {
             'chipload_divisor': 250,
             'speeds': {
-                operation.Milling: (60, 100), # https://bekas.sk/files/pdfs/44.pdf
+                operation.Profiling: (60, 100), # https://bekas.sk/files/pdfs/44.pdf
                 operation.Slotting: (48, 80), # estimated, 80% of milling speed
                 operation.Drilling: (7, 15), # https://www.easyspeedsandfeeds.com/
                 #operation.Parting: (30, 45), # https://www.heinrich-meier.de/upload/shoppictures_29/SchnittgeschwindigkeitNutex.pdf
@@ -157,7 +158,7 @@ class ToolSteel(Material):
         Carbide: {
             'chipload_divisor': 300,
             'speeds': { # Source: https://www.machiningdoctor.com/mds/?matId=1610
-                operation.Milling: (95, 130),
+                operation.Profiling: (95, 130),
                 operation.Slotting: (90, 120),
                 operation.Drilling: (65, 85),
                 #operation.Turning: (155, 210),
@@ -174,7 +175,7 @@ class LowCarbonSteel(Material):
         HSS: {
             'chipload_divisor': 250,
             'speeds': {
-                operation.Milling: (60, 100), # https://bekas.sk/files/pdfs/44.pdf
+                operation.Profiling: (60, 100), # https://bekas.sk/files/pdfs/44.pdf
                 operation.Slotting: (48, 80), # estimated, 80% of milling speed
                 operation.Drilling: (6, 18), # https://www.easyspeedsandfeeds.com/
                 #operation.Parting: (40, 60), # https://www.heinrich-meier.de/upload/shoppictures_29/SchnittgeschwindigkeitNutex.pdf
@@ -183,7 +184,7 @@ class LowCarbonSteel(Material):
         Carbide: {
             'chipload_divisor': 300,
             'speeds': { # Source: https://www.machiningdoctor.com/mds/?matId=960
-                operation.Milling: (125, 170),
+                operation.Profiling: (125, 170),
                 operation.Slotting: (115, 155),
                 operation.Drilling: (80, 110),
                 #operation.Turning: (205, 275),
@@ -200,7 +201,7 @@ class Stainless(Material):
         HSS: {
             'chipload_divisor': 200,
             'speeds': {
-                operation.Milling: (60, 80), # https://bekas.sk/files/pdfs/44.pdf
+                operation.Profiling: (60, 80), # https://bekas.sk/files/pdfs/44.pdf
                 operation.Slotting: (48, 64), # estimated, 80% of milling speed
                 operation.Drilling: (7, 15), # https://www.easyspeedsandfeeds.com/
                 #operation.Parting: (15, 35), # https://www.heinrich-meier.de/upload/shoppictures_29/SchnittgeschwindigkeitNutex.pdf
@@ -209,7 +210,7 @@ class Stainless(Material):
         Carbide: {
             'chipload_divisor': 200,
             'speeds': { # Source: https://www.machiningdoctor.com/mds/?matId=1750
-                operation.Milling: (100, 135),
+                operation.Profiling: (100, 135),
                 operation.Slotting: (95, 130),
                 operation.Drilling: (45, 60),
                 #operation.Turning: (160, 215),
@@ -226,7 +227,7 @@ class Titanium(Material):
         HSS: {
             'chipload_divisor': 200,
             'speeds': {
-                operation.Milling: (5, 7), # https://mae.ufl.edu/designlab/Advanced%20Manufacturing/Speeds%20and%20Feeds/Speeds%20and%20Feeds.htm
+                operation.Profiling: (5, 7), # https://mae.ufl.edu/designlab/Advanced%20Manufacturing/Speeds%20and%20Feeds/Speeds%20and%20Feeds.htm
                 operation.Slotting: (4, 6), # estimated, 80% of milling speed
                 operation.Drilling: (6, 15), # https://www.easyspeedsandfeeds.com/
                 #operation.Parting: (10, 15), # https://www.heinrich-meier.de/upload/shoppictures_29/SchnittgeschwindigkeitNutex.pdf
@@ -235,7 +236,7 @@ class Titanium(Material):
         Carbide: {
             'chipload_divisor': 250,
             'speeds': { # Source: https://www.machiningdoctor.com/mds/?matId=6640
-                operation.Milling: (45, 60),
+                operation.Profiling: (45, 60),
                 operation.Slotting: (50, 70),
                 operation.Drilling: (50, 70),
                 #operation.Turning: (60, 80),
@@ -252,7 +253,7 @@ class Plastic(Material):
         HSS: {
             'chipload_divisor': 125,
             'speeds': {
-                operation.Milling: (200, 300), # https://bekas.sk/files/pdfs/44.pdf
+                operation.Profiling: (200, 300), # https://bekas.sk/files/pdfs/44.pdf
                 operation.Slotting: (160, 240), # estimated, 80% of milling speed
                 operation.Drilling: (100, 300), # TODO. guesses for now
                 #operation.Parting: (100, 150), # https://www.heinrich-meier.de/upload/shoppictures_29/SchnittgeschwindigkeitNutex.pdf
@@ -261,7 +262,7 @@ class Plastic(Material):
         Carbide: {
             'chipload_divisor': 40,
             'speeds': {
-                operation.Milling: (100, 1000), # TODO. guesses for now
+                operation.Profiling: (100, 1000), # TODO. guesses for now
                 operation.Slotting: (80, 800), # estimated, 80% of milling speed
                 operation.Drilling: (100, 1000), # TODO. guesses for now
                 #operation.Parting: (150, 300), # https://www.heinrich-meier.de/upload/shoppictures_29/SchnittgeschwindigkeitNutex.pdf
@@ -277,7 +278,7 @@ class Softwood(Material):
         HSS: {
             'chipload_divisor': 100,
             'speeds': {
-                operation.Milling: (100, 1300), # TODO. guesses for now
+                operation.Profiling: (100, 1300), # TODO. guesses for now
                 operation.Slotting: (80, 1040), # estimated, 80% of milling speed
                 operation.Drilling: (100, 1000), # TODO. guesses for now
             }
@@ -285,7 +286,7 @@ class Softwood(Material):
         Carbide: {
             'chipload_divisor': 80,
             'speeds': {
-                operation.Milling: (100, 1300), # TODO. guesses for now
+                operation.Profiling: (100, 1300), # TODO. guesses for now
                 operation.Slotting: (None, None), # will be auto-estimated from milling
                 operation.Drilling: (100, 1300), # TODO. guesses for now
             }
@@ -300,7 +301,7 @@ class Hardwood(Material):
         HSS: {
             'chipload_divisor': 100, # Guess based on softwood
             'speeds': {
-                operation.Milling: (100, 1300), # TODO. guesses for now
+                operation.Profiling: (100, 1300), # TODO. guesses for now
                 operation.Slotting: (80, 1040), # estimated, 80% of milling speed
                 operation.Drilling: (100, 1300), # TODO. guesses for now
             }
@@ -308,7 +309,7 @@ class Hardwood(Material):
         Carbide: {
             'chipload_divisor': 80, # Guess based on softwood
             'speeds': {
-                operation.Milling: (100, 1300), # TODO. guesses for now
+                operation.Profiling: (100, 1300), # TODO. guesses for now
                 operation.Slotting: (80, 1040), # estimated, 80% of milling speed
                 operation.Drilling: (100, 1300), # TODO. guesses for now
             }
