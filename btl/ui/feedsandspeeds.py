@@ -173,14 +173,14 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
     def get_doc_limit(self):
         if not self.form.boxDocLimit.isVisible():
             return None
-        if self.form.checkBoxDocLimit.isChecked():
+        if not self.form.checkBoxDocLimit.isChecked():
             return None
         return self.form.doubleSpinBoxDocLimit.value()
 
     def get_woc_limit(self):
         if not self.form.boxWocLimit.isVisible():
             return None
-        if self.form.checkBoxWocLimit.isChecked():
+        if not self.form.checkBoxWocLimit.isChecked():
             return None
         return self.form.doubleSpinBoxWocLimit.value()
 
@@ -194,10 +194,10 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         op = self.form.comboBoxOperation.currentData()
         self.form.labelDocLimit.setVisible(op != Drilling)
         self.form.boxDocLimit.setVisible(op != Drilling)
-        self.form.doubleSpinBoxDocLimit.setEnabled(not self.form.checkBoxDocLimit.isChecked())
+        self.form.doubleSpinBoxDocLimit.setEnabled(self.form.checkBoxDocLimit.isChecked())
         self.form.labelWocLimit.setVisible(op not in (Drilling, Slotting))
+        self.form.doubleSpinBoxWocLimit.setEnabled(self.form.checkBoxWocLimit.isChecked())
         self.form.boxWocLimit.setVisible(op not in (Drilling, Slotting))
-        self.form.doubleSpinBoxWocLimit.setEnabled(not self.form.checkBoxWocLimit.isChecked())
 
         material = self.get_selected_material()
         stickout = self.form.doubleSpinBoxStickout.value()
