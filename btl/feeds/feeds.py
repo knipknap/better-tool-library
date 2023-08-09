@@ -6,6 +6,8 @@ from . import const, operation
 from .amoeba import amoeba
 
 class Param:
+    is_internal = False
+
     def __init__(self, decimals, min, max, metToImp, unit=None, v=None):
         self.decimals = decimals
         self.min = min
@@ -76,7 +78,7 @@ class Param:
         return f"{value} ({percent:.0f}%) (min {min_value}, max {max_value}, limit {limit})"
 
 class Const(Param):
-    pass
+    is_internal = True
 
 class FeedCalc(object):
     def __init__(self, machine, endmill, material, op=operation.Slotting):

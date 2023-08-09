@@ -66,6 +66,7 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         self.db = db
         self.serializer = serializer
         self.tool = tool
+        self.show_internal_results = False
 
         self.layout = QtGui.QVBoxLayout(self)
         self.setLayout(self.layout)
@@ -77,6 +78,8 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         policy = self.form.resultWidget.sizePolicy()
         policy.setRetainSizeWhenHidden(True)
         self.form.resultWidget.setSizePolicy(policy)
+        self.form.tableWidget.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.form.tableWidget.customContextMenuRequested.connect(self._on_result_right_click)
 
         self.form.toolButtonAddMachine.clicked.connect(self._on_new_machine_clicked)
         self.form.toolButtonEditMachine.clicked.connect(self._on_edit_machine_clicked)
@@ -112,6 +115,18 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
 
     def _on_stickout_changed(self, value):
         self.tool.set_stickout(value)
+        self.update_state()
+
+    def _on_result_right_click(self, pos):
+        menu = QtGui.QMenu(self.form.tableWidget)
+        action = QtGui.QAction("Show internal properties", self.form.tableWidget, checkable=True)
+        action.setChecked(self.show_internal_results)
+        action.triggered.connect(self._on_internal_properties_toggled)
+        menu.addAction(action)
+        menu.exec_(self.form.tableWidget.mapToGlobal(pos))
+
+    def _on_internal_properties_toggled(self, checked):
+        self.show_internal_results = checked
         self.update_state()
 
     def update(self):
@@ -256,6 +271,9 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         doc = params.get('doc')
         self.form.stepdownResultLabel.setText(doc.format() if doc else "<i>none</i>")
 
+        if not self.show_internal_results:
+            params = {k: v for k, v in params.items() if not v.is_internal}
+
         table = self.form.tableWidget
         table.clear()
         table.setRowCount(len(params))
@@ -267,6 +285,7 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
             # First column: Name.
             label = name.replace('_', ' ').title()
             item = QtGui.QTableWidgetItem(label)
+            font.setItalic(param.is_internal)
             item.setFont(font)
             table.setItem(row, 0, item)
 
