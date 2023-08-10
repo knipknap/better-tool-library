@@ -99,7 +99,7 @@ class HSM(Operation):
         effective_d = pixmap.get_effective_diameter_from_doc(fc.doc.v)
         fc.effective_diameter.v = effective_d
 
-        # Tool Engagement Angle (straight shoulder along a straight path)A
+        # Tool Engagement Angle (straight shoulder along a straight path)
         doc = max(0.00001, fc.doc.v)
         woc = max(0.00001, fc.woc.v)
         fc.engagement_angle.v = get_tool_engagement_angle(woc, effective_d)
@@ -147,8 +147,11 @@ class HSM(Operation):
         # Equations designed by Bryan Turner (based on WIDIA suggested multipliers for Speed & Chipload)
         # WIDIA: Speed & Chipload Multipliers for HSM
         # TODO: check the curves resulting from these functions
-        speed_factor = Slotting.speed_multiplier+(cls.speed_multiplier-Slotting.speed_multiplier)/(radial_engagement * 50)
-        chip_factor = Slotting.chip_multiplier+(cls.chip_multiplier-Slotting.chip_multiplier)/(radial_engagement * 50)
+        fc.speed_factor.v = Slotting.speed_multiplier \
+            + (cls.speed_multiplier-Slotting.speed_multiplier)/(radial_engagement*50)
+
+        fc.chip_factor.v = Slotting.chip_multiplier \
+            + (cls.chip_multiplier-Slotting.chip_multiplier)/(radial_engagement*50)
     
         # Axial chip thinning: Use DOC & corner-radius
         endmill_corner = endmill.shape.get_corner_radius()
@@ -168,9 +171,9 @@ class HSM(Operation):
 
         fc.feed_factor.v = axial_chip_thinning_factor*radial_chip_thinning_factor
         speed_range = endmill.get_speed_for_material(material, Profiling)
-        fc.speed.set_limit(speed_range[1]*speed_factor)
+        fc.speed.set_limit(speed_range[1]*fc.speed_factor.v)
         chipload = endmill.get_chipload_for_material(material)
-        fc.chipload.set_limit(chipload*chip_factor)
+        fc.chipload.set_limit(chipload*fc.chip_factor.v)
 
 class Drilling(Operation):
     label = 'Drilling'

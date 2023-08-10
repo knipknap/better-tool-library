@@ -278,14 +278,15 @@ class Tool(object):
 
         # Point load at the end of the shank.
         tool_material = self.get_material()
-        elasticity = tool_material.elasticity*1000
+        elasticity = tool_material.elasticity
         deflectionShank = cantilever_deflect_endload(force, shank_l, elasticity, solid_inertia)
         # Point load at the end of the fluted section that isn't currently cutting.
         deflectionNonCutting = cantilever_deflect_endload(force, non_cutting, elasticity, fluted_inertia)
         # Uniform load along fluted section in cut,
         deflectionCutting = cantilever_deflect_uniload(force, doc, elasticity, fluted_inertia)
 
-        # NOTE: We ignore the contribution from the angle of deflection, which should be negligible for cutting purposes.
+        # NOTE: We ignore the contribution from the angle of deflection,
+        # which should be negligible for cutting purposes.
         return deflectionShank+deflectionNonCutting+deflectionCutting
 
     def get_max_deflection(self, force):
@@ -301,7 +302,7 @@ class Tool(object):
         solid_inertia, fluted_inertia = self.get_inertia()
         return cantilever_deflect_endload(force,
                                           stickout,
-                                          tool_material.elasticity*1000,
+                                          tool_material.elasticity,
                                           min(solid_inertia, fluted_inertia))
 
     def get_bend_limit(self, doc):

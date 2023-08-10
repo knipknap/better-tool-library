@@ -38,7 +38,7 @@ def cantilever_deflect_endload(force, length, elasticity, inertia):
     """
     force: N
     length: mm
-    elasticity: N/m²
+    elasticity: N/mm²
     inertia: mm⁴
 
     returns deflection in mm
@@ -49,7 +49,7 @@ def cantilever_deflect_uniload(force, length, elasticity, inertia):
     """
     force: N
     length: mm
-    elasticity: N/m²
+    elasticity: N/mm²
     inertia: mm⁴
 
     returns deflection in mm

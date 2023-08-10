@@ -90,11 +90,17 @@ class FeedCalc(object):
         if op not in operation.operations:
             raise AttributeError(f"operation {op.label} is not supported")
 
-        # Constants, not looked at by the optimizer. They are
+        # Properties NOT looked at by the optimizer. They are
         # derived from our parameter class anyway, to make it easy
         # to display them with limits and error distance.
+        # Their main purpose is providing info for debugging.
         self.available_torque = Const(2, 0.00001, 9999, const.NMtoInLbs, 'Nm')
+        self.material_power_factor = Const(8, 0, 999, 1)
+        self.speed_factor = Const(2, 0, 999, 1, v=1)
+        self.chip_factor = Const(2, 0, 999, 1, v=1)
         self.feed_factor = Const(2, 0, 999, 1, v=1)
+        self.radial_factor = Const(2, 0, 999, 1, v=1)
+        self.axial_factor = Const(2, 0, 999, 1, v=1)
         self.engagement_angle = Const(0, 0, 180, 1, '°')
         self.effective_diameter = Const(3, 0.00001, 99999, const.mmToInch, 'mm')
         self.overlap_area = Const(3, 0.00001, 999999, const.mm2ToIn2, 'mm²')
@@ -127,14 +133,14 @@ class FeedCalc(object):
         self.rpm = Param(0, machine.min_rpm, machine.max_rpm, 1)
         self.feed = Param(1, machine.min_feed, machine.max_feed, const.mmToInch, 'mm/min') # The distance the tool travels each minute
         self.mrr = Param(2, 0.001, 999, const.cm3ToIn3, 'cm³/min')   # material removal rate
-        self.adjusted_chipload = Param(4, 0.0001, chipload, const.mmToInch, 'mm') # Should setup with same values as chipload
+        self.adjusted_chipload = Param(4, 0.0001, 9999, const.mmToInch, 'mm') # Should setup with same values as chipload
 
         self.power = Param(3, 0.001, machine.max_power, const.KWToHP, 'kW')
         self.torque = Param(2, 0.001, machine.max_torque, const.NMtoInLbs, 'Nm')
-        self.deflection = Param(2, 0, 0.025, const.mmToInch, 'mm') # actual deflection
-        self.max_deflection = Param(2, 0, 0.05, const.mmToInch, 'mm') # theoretical max deflection
-        self.radial_force = Param(2, 0, 99999, const.KGtoLbs, 'N') # Radial cutting force
-        self.axial_force = Param(2, 0.01, 99999, const.KGtoLbs, 'N') # Axial cutting force
+        self.deflection = Param(3, 0, 0.025, const.mmToInch, 'mm') # actual deflection
+        self.max_deflection = Param(3, 0, 0.05, const.mmToInch, 'mm') # theoretical max deflection
+        self.radial_force = Param(2, 0, 99999, const.NtoLbs, 'N') # Radial cutting force
+        self.axial_force = Param(2, 0.01, 99999, const.NtoLbs, 'N') # Axial cutting force
 
     def all_params(self, names=None):
         if names is None:
@@ -148,8 +154,9 @@ class FeedCalc(object):
 
     def dump(self):
         params = sorted(self.all_params().items(), key=lambda x: x[0].lower())
+        print(f"Scored {self.get_score():.4f}:")
         for name, param in params:
-            print(f"{name: <18}: {param.to_string()}")
+            print(f"  {name: <18}: {param.to_string()}")
 
     def reshuffle(self):
         for param in self.params().values():
@@ -211,6 +218,7 @@ class FeedCalc(object):
 
         # Step 3:
         # Calculate power requirement for the resulting material removal rate.
+        # The power factor is explained in material.py.
         # Note: Power calculation can probably be improved:
         #   https://www.machiningdoctor.com/calculators/machining-power/
         self.power.v = self.mrr.v*self.material.power_factor
@@ -219,13 +227,16 @@ class FeedCalc(object):
 
         # Step 4:
         # Calculate lead angle deflection for the given operation.
-        radial_factor, axial_factor = self.op.get_lead_angle_deflection_factors(
+        self.radial_factor.v, self.axial_factor.v = self.op.get_lead_angle_deflection_factors(
             self.doc.v, self.woc.v, self.effective_diameter.v)
 
         # Force acting to bend the end mill.
-        self.radial_force.v = (radial_factor*self.power.v*1000)/self.speed.v
-        # Force acting to pull the end mill out of the tool holder (or the workpiece off the table).
-        self.axial_force.v = (axial_factor*self.power.v*1000)/self.speed.v
+        radial_force = (self.radial_factor.v*self.power.v*1000)/self.speed.v # kg m/s²
+        self.radial_force.v = radial_force*60 # in Newton
+        # Force acting to pull the end mill out of the tool holder (or the
+        # workpiece off the table).
+        axial_force = (self.axial_factor.v*self.power.v*1000)/self.speed.v # kg m/s²
+        self.axial_force.v = axial_force*60 # in N
 
         # Get the deflection (multi-part bar)
         self.deflection.v = self.endmill.get_deflection(self.doc.v, self.radial_force.v)

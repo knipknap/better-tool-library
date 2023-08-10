@@ -12,8 +12,8 @@ from . import operation
 # - The power factor originally taken from "Machinery's Handbook 29" (2012) pp1083-1084,
 #   originally specified the "width of a chip that 1 HP can make".
 #   I converted this to metric. In other words, the original factor was "in³ * fac = HP",
-#   which equals "mm³*0.0610237 * fac * 0.745699872 = KW". So below, I multiplied all
-#   factors by 0.000061024*0.745699872=0.00004550260618944 to simplify their use in
+#   which equals "cm³*0.0610237*fac*0.745699872=KW". So below, I multiplied all
+#   factors by 0.061024*0.745699872=0.04550260618944 to simplify their use in
 #   a metric context.
 METRIC_POWER_FACTOR=0.04550260618944
 
