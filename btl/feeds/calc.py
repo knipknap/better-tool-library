@@ -277,7 +277,10 @@ class FeedCalc(object):
         result = minimize(self._evaluate_point,
                           point,
                           bounds=bounds,
+                          method='SLSQP',  # evaluated fastest
+                          #method='Powell',
                           #method='Nelder-Mead',
+                          #method='TNC',
                           tol=0.001)
 
         # Load & recalculate the best result.
