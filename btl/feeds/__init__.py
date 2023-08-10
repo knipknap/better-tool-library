@@ -1,1 +1,1 @@
-from .feeds import FeedCalc
+from .calc import FeedCalc
