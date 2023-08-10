@@ -248,8 +248,8 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         #if pool.activeThreadCount() > 0:
         #    return
         self.form.progressBar.hide()
-        error_distance, error, params = worker.result
-        if error:
+        error, params = worker.result
+        if error is not None:
             self.form.labelError.setText(
                 f"No valid result found. Best result has error: {error}"
             )

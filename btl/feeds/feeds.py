@@ -291,7 +291,6 @@ class FeedCalc(object):
 
           (error_distance, error, params)
 
-        - error_distance (float): A smaller error distance means a better result.
         - error (str): An error message, if the result is invalid. None otherwse.
         - params (dict): The list of params, as stored in .all_params.
         """
@@ -307,7 +306,7 @@ class FeedCalc(object):
             else:
                 err = None
             params = deepcopy(self.all_params)
-            result = self.get_score(), err, params
+            result = err, params
             results.append(result)
             if progress_cb:
                 progress_cb(100/iterations*i*0.01)
@@ -319,5 +318,5 @@ class FeedCalc(object):
         Like calculate(), but only returns the best result.
         """
         results = self.calculate(progress_cb, iterations=iterations)
-        results = sorted(results, key=lambda x: x[0])
+        results = sorted(results, key=lambda x: x[1]['score'].v)
         return results[0]

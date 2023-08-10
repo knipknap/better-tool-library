@@ -38,9 +38,9 @@ def run(op):
     #fc.doc.min = 8
     print(f"Running {op.label} operation on {fc.material.name} using a {tool_material.name} tool")
 
-    error, msg, best = fc.start()
-    if msg:
-        print(f"No valid result found. Error distance is {error}, with message: {msg}")
+    error, best = fc.start()
+    if error is not None:
+        print(f"No valid result found. Error message: {error}")
         print_result(best)
         sys.exit(1)
 
