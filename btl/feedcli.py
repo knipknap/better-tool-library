@@ -18,16 +18,15 @@ def run(op):
                       peak_torque_rpm=5020,
                       max_feed=5000)
 
-    #shape = builtin_shapes['endmill']
-    shape = builtin_shapes['chamfer']
+    shape = builtin_shapes['endmill']
     shape.set_param(IntParam('Flutes'), 4)
-    shape.set_param(DistanceParam('Diameter'), 10)
-    shape.set_param(DistanceParam('ShankDiameter'), 5)
-    shape.set_param(DistanceParam('CuttingEdgeHeight'), 1.5)
+    shape.set_param(DistanceParam('Diameter'), 3.175)
+    shape.set_param(DistanceParam('ShankDiameter'), 3.175)
+    shape.set_param(DistanceParam('CuttingEdgeHeight'), 15)
 
     tool_material = Carbide
     endmill = Tool('Test tool', shape)
-    endmill.set_stickout(10)
+    endmill.set_stickout(20)
     endmill.set_material(tool_material)
     endmill.dump()
     #return endmill.get_pixmap().show_engagement(0.1, 0.1)
@@ -46,7 +45,7 @@ def run(op):
         sys.exit(1)
 
     print_result(best)
-    endmill.pixmap.show_engagement(best['doc'].v, best['woc'].v)
+    #endmill.pixmap.show_engagement(best['doc'].v, best['woc'].v)
 
 if __name__ == '__main__':
     #px = EndmillPixmap(20, 6, 5, 10)
