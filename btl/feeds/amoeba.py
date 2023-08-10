@@ -78,13 +78,13 @@ def check_tolerance(fmax, fmin, tolerance):
     accuracy = (abs(fmax) + abs(fmin)) * tolerance
     return delta < (accuracy + 0.00000001)
 
-def amoeba(point, func, tolerance, simplex):
+def amoeba(simplex, func, tolerance):
     """
-    The func argument must contain a callback function that returns
-    an error distance for the given dimension and point.
+    The simplex argument must contain the simplex (=a two-dimensional
+    array) to be optimized.
 
-    The make_simplex argument must contain a factory function that, given
-    dimension and point, returns a simplex (=a two-dimensional array).
+    The func argument must contain a callback function that returns
+    an error distance for the given point.
     """
     dimension = len(simplex[0])
     extremes = {}
@@ -115,7 +115,4 @@ def amoeba(point, func, tolerance, simplex):
                 # Halving
                 pass
 
-    for i in range(dimension):
-        point[i] = simplex[extremes['lo']][i]
-
-    return fx[extremes['lo']]
+    return simplex[extremes['lo']]

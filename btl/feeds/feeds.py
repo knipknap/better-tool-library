@@ -285,10 +285,6 @@ class FeedCalc(object):
         new_chipload = points[1]+(self.chipload.max-self.chipload.min)/100
         new_woc      = points[2]+(self.woc.max-self.woc.min)/100
         new_doc      = points[3]+(self.doc.max-self.doc.min)/100
-        #new_speed    = max(self.speed.min, min(self.speed.max, new_speed))
-        #new_chipload = max(self.chipload.min, min(self.chipload.max, new_chipload))
-        #new_woc      = max(self.woc.min, min(self.woc.max, new_woc))
-        #new_doc      = max(self.doc.min, min(self.doc.max, new_doc))
         new_points = np.array((new_speed, new_chipload, new_woc, new_doc))
         return points-new_points   # scipy wants a gradient
 
@@ -313,7 +309,7 @@ class FeedCalc(object):
 
         point = [self.speed.v, self.chipload.v, self.woc.v, self.doc.v]
         simplex = self._make_simplex(4, point)
-        amoeba(point, self._optimization_cb, 0.00001, simplex)
+        point = amoeba(simplex, self._optimization_cb, 0.00001)
         self.speed.v, self.chipload.v, self.woc.v, self.doc.v = point
         self.update()
 
