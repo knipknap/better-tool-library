@@ -1,9 +1,9 @@
 import math
+from scipy.optimize import minimize
 import numpy as np
 import random
 from copy import deepcopy
 from . import const, operation
-from .amoeba import amoeba
 
 class Param:
     is_internal = False
@@ -21,7 +21,8 @@ class Param:
         return str(self.v if self.v is not None else '')
 
     def assign_random(self):
-        self.v = random.uniform(self.min, self.max)
+        limit = min(self.max, self.limit)
+        self.v = random.uniform(self.min, limit)
 
     def set_limit(self, limit):
         self.limit = min(self.max, limit)
@@ -30,10 +31,15 @@ class Param:
         self.v = min(self.limit, self.max, self.v)
         self.v = max(self.min, self.v)
 
+    def reset_limit(self):
+        self.limit = self.max
+
     def get_percent_of_max(self):
         return self.v/self.max
 
     def get_percent_of_limit(self):
+        if self.min < 0:
+            return abs(1-abs(self.v)/abs(self.min))
         return self.v/min(self.max, self.limit)
 
     def within_minmax(self):
@@ -44,17 +50,18 @@ class Param:
         #    return self.min-self.max
         #elif self.limit < self.min:
         #    return self.min-self.limit
-        if self.v > self.limit:
+        if self.v > self.max:
+            return self.v-self.max
+        elif self.v > self.limit:
             return self.v-self.limit
-        #elif self.v > self.max:
-        #    return self.v-self.max
         elif self.v < self.min:
             return self.min-self.v
         return 0
 
     def get_error_distance_percent(self):
+        limit = min(self.max, self.limit)
         dist = self.get_error_distance()
-        diff = self.max-self.min
+        diff = abs(limit-self.min)
         return dist/diff if dist else 0
 
     def _format_value(self, value, decimals=None):
@@ -77,6 +84,13 @@ class Param:
         limit = self._format_value(self.limit, decimals)
         return f"{value} ({percent:.0f}%) (min {min_value}, max {max_value}, limit {limit})"
 
+class UncheckedParam(Param):
+    def get_error_distance(self):
+        return 0
+
+class InputParam(Param):
+    pass
+
 class Const(Param):
     is_internal = True
 
@@ -87,11 +101,72 @@ class FeedCalc(object):
         self.material = material
         self.op = op
 
+        # Perform some sanity checks.
         if op not in operation.operations:
             raise AttributeError(f"operation {op.label} is not supported")
 
+        min_speed, max_speed = endmill.get_speed_for_material(material, op)
+        if not min_speed or not max_speed:
+            attrname = 'min_speed' if not min_speed else 'max_speed'
+            matname = material.name
+            err = f'no {attrname} found for material {matname} and operation {op.label}'
+            raise AttributeError(err)
+
+        # The calculator has three groups of properties:
+        # 1. Input properties. These are doc, woc, chipload and speed
+        #    and are never changed by our calculation.
+        # 2. Working properties. These are updated by our calculations
+        #    and later constraint-checked when the optimizer runs.
+        # 3. Info properties. These are not used by the optimizer,
+        #    but included in the result for reference and debugging.
+
+        # A note about the max/limit values of parameters: The max value
+        # should only ever be defined once here in this constructor.
+        # The limit value may be changed during calculation, and it will
+        # be reset to equal max before every iteration of the optimizer.
+        # For setting reasonable "default limits" that depend only on
+        # static parameters such as the tool diameter, set them in
+        # Operation.prepare(), which will be called immediately after
+        # the limits were reset.
+        # This is to ensure that calculated values are clearly separated
+        # from the original values and we won't be guessing whether
+        # max was changed dynamically somewhere.
+
+        # First group: Input properties
+        # Attributes that the optimizer will populate and try to
+        # optimize using Simplex. Note that the min/max values of
+        # these input parameters are later used to calculate the
+        # relative increase of the parameters during optimization.
+        # If the range is small, the rate of change per iteration
+        # is also small and may cause premature convergence.
+        # Speed is the distance the outer edge of of the endmill travels
+        # per minute.
+        chipload = self.endmill.get_chipload_for_material(self.material)
+        self.speed = InputParam(0, 1, 999, const.SMMtoSFM, 'm/min')
+        self.chipload = InputParam(4, 0.0001, 10, const.mmToInch, 'mm')
+        self.woc = InputParam(3, chipload, 2500, const.mmToInch, 'mm') # Width of cut (radial engagement)
+        self.doc = InputParam(3, chipload, 2500, const.mmToInch, 'mm') # Depth of cut (axial engagement)
+
+        # Second group: Working properties
+        # These also are the main attributes that a user may
+        # want to get as a result. The calculator populates and
+        # changes them according to the Operation.
+        # As all properties, they also serve as "constraints" to
+        # check whether the calculated values are valid.
+        self.rpm = Param(0, machine.min_rpm, machine.max_rpm, 1)
+        self.feed = Param(1, machine.min_feed, machine.max_feed, const.mmToInch, 'mm/min') # The distance the tool travels each minute
+        self.mrr = Param(2, 0.001, 999, const.cm3ToIn3, 'cm³/min')   # material removal rate
+        self.adjusted_chipload = Param(4, 0.0001, 12, const.mmToInch, 'mm') # Should setup with same values as chipload
+        self.power = Param(3, 0.001, machine.max_power, const.KWToHP, 'kW')
+        self.torque = Param(2, 0.001, machine.max_torque, const.NMtoInLbs, 'Nm')
+        self.deflection = Param(3, 0, 0.025, const.mmToInch, 'mm') # actual deflection
+        self.max_deflection = Param(3, 0, 0.05, const.mmToInch, 'mm') # theoretical max deflection
+        self.radial_force = Param(2, 0, 99999, const.NtoLbs, 'N') # Radial cutting force
+        self.axial_force = Param(2, 0.01, 99999, const.NtoLbs, 'N') # Axial cutting force
+
+        # Third group: Info properties
         # Properties NOT looked at by the optimizer. They are
-        # derived from our parameter class anyway, to make it easy
+        # derived from our parameter class only to make it easy
         # to display them with limits and error distance.
         # Their main purpose is providing info for debugging.
         self.available_torque = Const(2, 0.00001, 9999, const.NMtoInLbs, 'Nm')
@@ -106,41 +181,9 @@ class FeedCalc(object):
         self.overlap_area = Const(3, 0.00001, 999999, const.mm2ToIn2, 'mm²')
         self.bend_force_limit = Const(2, 0.00001, 9999, const.NMtoInLbs, 'N')
         self.twist_torque_limit = Const(2, 0.00001, 9999, const.NMtoInLbs, 'Nm')
+        self.score = Const(2, -self.mrr.max, 0, 1)
 
-        # Attributes that the optimizer will populate and try to
-        # optimize using Simplex.
-        # Speed is the distance the outer edge of of the endmill travels
-        # per minute.
-        min_speed, max_speed = endmill.get_speed_for_material(material, op)
-        if not min_speed or not max_speed:
-            attrname = 'min_speed' if not min_speed else 'max_speed'
-            matname = material.name
-            err = f'no {attrname} found for material {matname} and operation {op.label}'
-            raise AttributeError(err)
-
-        self.speed = Param(0, 1, max_speed, const.SMMtoSFM, 'm/min')
-
-        # Define the allowed chipload range.
-        chipload = endmill.get_chipload_for_material(material)
-        self.chipload = Param(4, 0.0001, chipload, const.mmToInch, 'mm')
-
-        self.woc = Param(3, chipload, endmill.shape.get_diameter(), const.mmToInch, 'mm') # Width of cut (radial engagement)
-        cutting_edge = endmill.shape.get_cutting_edge() or endmill.get_stickout()
-        self.doc = Param(3, chipload, cutting_edge, const.mmToInch, 'mm') # Depth of cut (axial engagement)
-
-        # Working attributes calculated. These also serve as "constraints" to
-        # check whether the proposed attributes from Simplex may cause issues.
-        self.rpm = Param(0, machine.min_rpm, machine.max_rpm, 1)
-        self.feed = Param(1, machine.min_feed, machine.max_feed, const.mmToInch, 'mm/min') # The distance the tool travels each minute
-        self.mrr = Param(2, 0.001, 999, const.cm3ToIn3, 'cm³/min')   # material removal rate
-        self.adjusted_chipload = Param(4, 0.0001, 9999, const.mmToInch, 'mm') # Should setup with same values as chipload
-
-        self.power = Param(3, 0.001, machine.max_power, const.KWToHP, 'kW')
-        self.torque = Param(2, 0.001, machine.max_torque, const.NMtoInLbs, 'Nm')
-        self.deflection = Param(3, 0, 0.025, const.mmToInch, 'mm') # actual deflection
-        self.max_deflection = Param(3, 0, 0.05, const.mmToInch, 'mm') # theoretical max deflection
-        self.radial_force = Param(2, 0, 99999, const.NtoLbs, 'N') # Radial cutting force
-        self.axial_force = Param(2, 0.01, 99999, const.NtoLbs, 'N') # Axial cutting force
+        self.op.prepare(self)
 
     def all_params(self, names=None):
         if names is None:
@@ -154,17 +197,20 @@ class FeedCalc(object):
 
     def dump(self):
         params = sorted(self.all_params().items(), key=lambda x: x[0].lower())
-        print(f"Scored {self.get_score():.4f}:")
+        err = self.get_error()
+        print(f"Scored {self.get_score():.4f}: {err}")
         for name, param in params:
             print(f"  {name: <18}: {param.to_string()}")
 
     def reshuffle(self):
         for param in self.params().values():
-            param.assign_random()
+            if isinstance(param, InputParam):
+                param.assign_random()
 
     def reset_limits(self):
-        for param in self.params().values():
-            param.limit = param.max
+        for param in self.all_params().values():
+            param.reset_limit()
+        self.op.prepare(self) # This-redefines some limits.
 
     def validate_params(self, names=None, tolerance=0.0001):
         for name, param in self.params(names).items():
@@ -186,6 +232,13 @@ class FeedCalc(object):
             raise AttributeError(f"Min WOC {self.woc.min} must be larger than Chipload {self.chipload}")
         if self.chipload.v > self.doc.min:
             raise AttributeError(f"Min DOC {self.doc.min} must be larger than Chipload {self.chipload}")
+
+    def get_error(self):
+        try:
+            self.validate()
+        except AttributeError as e:
+            return str(e)
+        return ''
 
     def is_valid(self):
         try:
@@ -266,14 +319,15 @@ class FeedCalc(object):
         self.torque.set_limit(min(self.twist_torque_limit.v, self.torque.limit))
         self.available_torque.v = min(self.available_torque.v, self.torque.limit)
 
+        # For information and debugging, include the current score
+        # in our result.
+        self.score.v = self.get_score()
+
     def get_error_distance(self):
         # Calculate the error distance of the result values from their limits
         d = 0
         for name, param in self.params().items():
-            if name == 'doc': # prioritize doc over woc
-                d += param.get_error_distance()*2
-            else:
-                d += param.get_error_distance()
+            d += param.get_error_distance()
         return d
 
     def get_score(self):
@@ -281,73 +335,46 @@ class FeedCalc(object):
         # negative score where lower is better.
         if not self.is_valid():
             return self.get_error_distance()
-        return -self.mrr.v - self.doc.v # weighted. including doc to prioritize it over woc
+        return -self.mrr.v # weighted. including doc to prioritize it over woc
 
-    def _make_simplex(self, dimension, points):
-        simplex = []
-        for i in range(dimension+1):
-            simplex.append([])
-            for j in range(dimension):
-                simplex[i].append(points[j])
-
-        simplex[0][0] += (self.speed.max-self.speed.min)/100
-        simplex[1][1] += (self.chipload.max-self.chipload.min)/100
-        simplex[2][2] += (self.woc.max-self.woc.min)/100
-        simplex[3][3] += (self.doc.max-self.doc.min)/100
-
-        return simplex
-
-    def _jac(self, points):
-        # Note that this function is unused for now; see note about
-        # scipy.optimizer.minimize() below.
-        new_speed    = points[0]+(self.speed.max-self.speed.min)/100
-        new_chipload = points[1]+(self.chipload.max-self.chipload.min)/100
-        new_woc      = points[2]+(self.woc.max-self.woc.min)/100
-        new_doc      = points[3]+(self.doc.max-self.doc.min)/100
-        new_points = np.array((new_speed, new_chipload, new_woc, new_doc))
-        return points-new_points   # scipy wants a gradient
-
-    def _optimization_cb(self, point):
+    def _evaluate_point(self, point):
         self.speed.v = point[0]
         self.chipload.v = point[1]
         self.woc.v = point[2]
         self.doc.v = point[3]
         self.update()
+        #print("EVAL", point, self.get_score(), self.get_error())
         return self.get_score()
 
     def optimize(self):
         # Try to find a valid initial point by assigning random values to all
         # parameters. But if that fails, continue trying to have the optimizer
         # figure it out anyway.
-        for i in range(50):
+        for i in range(20):
+            self.reset_limits()
             self.reshuffle()
             self.update()
             if self.is_valid():
                 #print("Valid starting point found")
                 break
 
-        point = [self.speed.v, self.chipload.v, self.woc.v, self.doc.v]
-        simplex = self._make_simplex(4, point)
-        point = amoeba(simplex, self._optimization_cb, 0.00001)
-        self.speed.v, self.chipload.v, self.woc.v, self.doc.v = point
-        self.update()
+        self.reset_limits()
+        point = self.speed.v, self.chipload.v, self.woc.v, self.doc.v
+        bounds = [(self.speed.min, self.speed.limit),
+                  (self.chipload.min, self.chipload.limit),
+                  (self.woc.min, self.woc.limit),
+                  (self.doc.min, self.doc.limit)]
+        np.set_printoptions(formatter={'float': lambda x: "{0:0.10f}".format(x)})
+        result = minimize(self._evaluate_point,
+                          point,
+                          bounds=bounds,
+                          #method='Nelder-Mead',
+                          tol=0.001)
 
-        # Note: I could not figure out how to use this scipy.optimizer.minimize()
-        # in a similar manner as the Amoeba one here. The gradient returned by the
-        # Jacobian function (_jac()) just doesn't seem to work the way I thought.
-        """
-        from scipy.optimize import minimize
-        minimize(self._optimization_cb,
-                 point,
-                 jac=self._jac,
-                 #hessp=self._make_simplex,
-                 #callback=self.check_intermediate_result,
-                 #constraints=[{'type': 'ineq', 'fun': lambda x: self.is_valid()}],
-                 tol=0.00001,
-                 method='CG',
-                 #method='Nelder-Mead',
-                 options={'disp': True, 'maxiter': 2000, 'adaptive': False})
-        """
+        # Load & recalculate the best result.
+        self.speed.v, self.chipload.v, self.woc.v, self.doc.v = result.x
+        #print("RESULT", result.x, result.success, result.message)
+        self.update()
 
     def calculate(self, progress_cb=None, iterations=100):
         """
@@ -360,7 +387,6 @@ class FeedCalc(object):
         - params (dict): The list of params, as returned by .params().
         """
         random.seed(1) # we don't want true randomness, rather reproducible results
-        self.update()
 
         results = []
         for i in range(iterations):
@@ -372,7 +398,7 @@ class FeedCalc(object):
             else:
                 err = None
             params = deepcopy(self.all_params())
-            result = self.get_error_distance(), err, params
+            result = self.get_score(), err, params
             results.append(result)
             if progress_cb:
                 progress_cb(iterations/100*i*0.01)

@@ -7,24 +7,23 @@ class Operation(object):
     chip_multiplier = 1
 
     @classmethod
-    def get_factors(cls, doc, woc, diameter, corner, lead):
+    def prepare(cls, fc):
         """
-        Given the depth of cut, width of cut, diameter, and corner or lead angle,
-        this function returns some factors to apply for an optimized speed.
-    
-        Metric inputs:
-        - doc in mm
-        - woc in mm
-        - diameter in mm
-        - corner in mm
-        - lead in mm
-    
-        Returns:
-        - speed factor (float)
-        - chip factor (float)
-        - feed factor (float)
+        Should be used to set limits for the calculator input parameters
+        DOC, WOC, speed, and chipload.
         """
-        return cls.speed_multiplier, cls.chip_multiplier, 1
+        # Width of cut cannot be bigger than the tool diameter.
+        fc.woc.set_limit(fc.endmill.shape.get_diameter())
+
+        # Depth of cut cannot be bigger than the tool diameter.
+        fc.doc.set_limit(fc.endmill.shape.get_cutting_edge())
+
+        # Set speed and chipload limits according to the workpiece material
+        # and the endmill material.
+        speed_range = fc.endmill.get_speed_for_material(fc.material, cls)
+        fc.speed.set_limit(speed_range[1]*cls.speed_multiplier)
+        chipload = fc.endmill.get_chipload_for_material(fc.material)
+        fc.chipload.set_limit(chipload*cls.chip_multiplier)
 
     @classmethod
     def get_overlap(cls, endmill, doc, woc):
@@ -63,12 +62,6 @@ class Slotting(Operation):
         angle = get_tool_engagement_angle(max(0, fc.woc.v), effective_d)
         fc.engagement_angle.v = angle
 
-        # Optimize chipload for the operation.
-        speed_range = endmill.get_speed_for_material(material, cls)
-        fc.speed.set_limit(speed_range[1]*cls.speed_multiplier)
-        chipload = endmill.get_chipload_for_material(material)
-        fc.chipload.set_limit(chipload*cls.chip_multiplier)
-
 class Profiling(Operation):
     label = 'Profiling'
 
@@ -77,16 +70,11 @@ class Profiling(Operation):
         pixmap = endmill.get_pixmap()
         effective_d = pixmap.get_effective_diameter_from_doc(fc.doc.v)
         fc.effective_diameter.v = effective_d
+        fc.woc.set_limit(effective_d)
 
         # Tool Engagement Angle (straight shoulder along a straight path)
         woc = max(0.00001, fc.woc.v)
         fc.engagement_angle.v = get_tool_engagement_angle(woc, effective_d)
-
-        # Optimize chipload for the operation.
-        speed_range = endmill.get_speed_for_material(material, cls)
-        fc.speed.set_limit(speed_range[1])
-        chipload = endmill.get_chipload_for_material(material)
-        fc.chipload.set_limit(chipload)
 
 class HSM(Operation):
     label = 'Adaptive (HSM)'
@@ -98,6 +86,7 @@ class HSM(Operation):
         pixmap = endmill.get_pixmap()
         effective_d = pixmap.get_effective_diameter_from_doc(fc.doc.v)
         fc.effective_diameter.v = effective_d
+        fc.woc.set_limit(effective_d)
 
         # Tool Engagement Angle (straight shoulder along a straight path)
         doc = max(0.00001, fc.doc.v)
@@ -110,7 +99,7 @@ class HSM(Operation):
         # TODO: Helical Interpolation
         # ------------------------
         # - Adjust WOC and feed
-        #woc, ipm = interpolate_helical(HELICAL.v, DIAMETER.v, WOC.v)
+        #woc, feed = interpolate_helical(HELICAL.v, DIAMETER.v, WOC.v)
 
         # Adjust chipload based on how thin the chips are.
         # WIDIA -- This is an approximation of average chip thickness. Nice
@@ -196,12 +185,6 @@ class Drilling(Operation):
         fc.engagement_angle.v = 360
         fc.engagement_angle.max = 360
         fc.engagement_angle.set_limit(360)
-
-        # Optimize chipload for the operation.
-        speed_range = endmill.get_speed_for_material(material, cls)
-        fc.speed.set_limit(speed_range[1])
-        chipload = endmill.get_chipload_for_material(material)
-        fc.chipload.set_limit(chipload)
 
     @classmethod
     def get_overlap(cls, endmill, doc, woc):
