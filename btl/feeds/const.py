@@ -2,7 +2,7 @@ OneHP = 33000           # (lb-ft) per minute
 InchesPerFoot = 12
 
 # Metric Input Conversions (reverse for output)
-SMMtoSFM = 3.28084      # SMM -> SFM
+SMMtoSFM = 3.28084      # m/min -> ft/min
 mmToInch = 0.03937      # mm -> Inch
 KWToHP = 1.34102        # KW -> HP
 KWcm3ToHPin3 = 21.9754  # KW/cm^3 -> HP/in^3
