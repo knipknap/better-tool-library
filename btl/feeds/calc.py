@@ -46,9 +46,10 @@ class FeedCalc(object):
 
         # First group: Input properties
         # Attributes that the optimizer will populate and try to
-        # optimize using Simplex. Note that the min/max values of
-        # these input parameters are later used to calculate the
-        # relative increase of the parameters during optimization.
+        # optimize using a minimization algorithm (see .calculate()).
+        # Note that the min/max values of these input parameters are
+        # later used to calculate the relative increase of the parameters
+        # during optimization.
         # If the range is small, the rate of change per iteration
         # is also small and may cause premature convergence.
         # Speed is the distance the outer edge of of the endmill travels
