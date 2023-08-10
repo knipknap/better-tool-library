@@ -35,6 +35,9 @@ class ToolEditor(QtGui.QWidget):
         if tool.supports_feeds_and_speeds():
             self.feeds = FeedsAndSpeedsWidget(db, serializer, tool, parent=self)
             self.feeds_tab_idx = self.form.tabWidget.insertTab(1, self.feeds, "Feeds && Speeds")
+        else:
+            self.feeds = None
+            self.feeds_tab_idx = None
 
         attrs = ToolAttributes(tool, parent=self.form)
         attr_tab = self.form.tabWidget.addTab(attrs, "Attributes")
