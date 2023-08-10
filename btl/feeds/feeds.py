@@ -183,37 +183,33 @@ class FeedCalc(object):
         self.twist_torque_limit = Const(2, 0.00001, 9999, const.NMtoInLbs, 'Nm')
         self.score = Const(2, -self.mrr.max, 0, 1)
 
+        # For easy access to all results.
+        self.all_params = dict(p for p in self.__dict__.items()
+                               if isinstance(p[1], Param))
+        self.params = dict(p for p in self.all_params.items()
+                           if not isinstance(p[1], Const))
+
         self.op.prepare(self)
 
-    def all_params(self, names=None):
-        if names is None:
-            return dict(p for p in self.__dict__.items()
-                        if isinstance(p[1], Param))
-        return {n: getattr(self, n) for n in names}
-
-    def params(self, names=None, include_const=False):
-        return dict(p for p in self.all_params(names).items()
-                    if not isinstance(p[1], Const))
-
     def dump(self):
-        params = sorted(self.all_params().items(), key=lambda x: x[0].lower())
+        params = sorted(self.all_params.items(), key=lambda x: x[0].lower())
         err = self.get_error()
         print(f"Scored {self.get_score():.4f}: {err}")
         for name, param in params:
             print(f"  {name: <18}: {param.to_string()}")
 
     def reshuffle(self):
-        for param in self.params().values():
+        for param in self.params.values():
             if isinstance(param, InputParam):
                 param.assign_random()
 
     def reset_limits(self):
-        for param in self.all_params().values():
+        for param in self.all_params.values():
             param.reset_limit()
         self.op.prepare(self) # This-redefines some limits.
 
-    def validate_params(self, names=None, tolerance=0.0001):
-        for name, param in self.params(names).items():
+    def validate_params(self, tolerance=0.0001):
+        for name, param in self.params.items():
             if param.get_error_distance() > tolerance:
                 #print("FAILED", name, param.v, param.min, param.max, param.get_error_distance(), tolerance)
                 raise AttributeError(f"Parameter {name} must be between {param.min} and {param.max}/{param.limit}, but is {param}")
@@ -247,8 +243,9 @@ class FeedCalc(object):
             return False
         return True
 
-    def update(self):
-        self.reset_limits()
+    def update(self, reset_limits=True):
+        if reset_limits:
+            self.reset_limits()
 
         # Step 1:
         # Let the operation do the heavy lifting. This will adjust the
@@ -326,7 +323,7 @@ class FeedCalc(object):
     def get_error_distance(self):
         # Calculate the error distance of the result values from their limits
         d = 0
-        for name, param in self.params().items():
+        for name, param in self.params.items():
             d += param.get_error_distance()
         return d
 
@@ -353,7 +350,7 @@ class FeedCalc(object):
         for i in range(20):
             self.reset_limits()
             self.reshuffle()
-            self.update()
+            self.update(reset_limits=False)
             if self.is_valid():
                 #print("Valid starting point found")
                 break
@@ -376,7 +373,7 @@ class FeedCalc(object):
         #print("RESULT", result.x, result.success, result.message)
         self.update()
 
-    def calculate(self, progress_cb=None, iterations=100):
+    def calculate(self, progress_cb=None, iterations=80):
         """
         Returns a list of results, where each result is a tuple:
 
@@ -384,7 +381,7 @@ class FeedCalc(object):
 
         - error_distance (float): A smaller error distance means a better result.
         - error (str): An error message, if the result is invalid. None otherwse.
-        - params (dict): The list of params, as returned by .params().
+        - params (dict): The list of params, as stored in .all_params.
         """
         random.seed(1) # we don't want true randomness, rather reproducible results
 
@@ -397,15 +394,15 @@ class FeedCalc(object):
                 err = str(e)
             else:
                 err = None
-            params = deepcopy(self.all_params())
+            params = deepcopy(self.all_params)
             result = self.get_score(), err, params
             results.append(result)
             if progress_cb:
-                progress_cb(iterations/100*i*0.01)
+                progress_cb(100/iterations*i*0.01)
 
         return results
 
-    def start(self, progress_cb=None, iterations=100):
+    def start(self, progress_cb=None, iterations=80):
         """
         Like calculate(), but only returns the best result.
         """
