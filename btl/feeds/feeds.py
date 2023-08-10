@@ -221,9 +221,17 @@ class FeedCalc(object):
         # The power factor is explained in material.py.
         # Note: Power calculation can probably be improved:
         #   https://www.machiningdoctor.com/calculators/machining-power/
-        self.power.v = self.mrr.v*self.material.power_factor
-        self.torque.v = self.power.v*1000/(2*math.pi*self.rpm.v)*9548.8
-
+        self.material_power_factor.v = self.material.power_factor
+        self.power.v = self.mrr.v*self.material_power_factor.v   # power in KW
+        #    (HP.v * OneHP * InchesPerFoot) / (2 * PI * RPM.v) = ft-lbf
+        # =  (lb-ft/min * inchesperfoot)    / (2 * PI * RPM.v) = ft-lbf
+        # =  lb-in/min                      / (2 * PI * RPM.v) = ft-lbf
+        # =  lb-in/min                      / (2 * PI * RPM.v) = ft-lbf
+        # =  lb-in/min                      / (2 * PI * RPM.v) * 1,35582= Nm
+        # =  KW*44,253.73                   / (2 * PI * RPM.v) * 1,35582= Nm
+        # =  KW*44,253.73*1.35582           / (2 * PI * RPM.v) = Nm
+        # =  KW*60000                       / (2 * PI * RPM.v) = Nm
+        self.torque.v = (self.power.v*60000)/(2*math.pi*self.rpm.v)
 
         # Step 4:
         # Calculate lead angle deflection for the given operation.
