@@ -19,10 +19,10 @@ def run(op):
                       max_feed=5000)
 
     shape = builtin_shapes['endmill']
-    shape.set_param(IntParam('Flutes'), 4)
-    shape.set_param(DistanceParam('Diameter'), 3.175)
-    shape.set_param(DistanceParam('ShankDiameter'), 3.175)
-    shape.set_param(DistanceParam('CuttingEdgeHeight'), 15)
+    shape.set_param('Flutes', 4)
+    shape.set_param('Diameter', 3.175)
+    shape.set_param('ShankDiameter', 3.175)
+    shape.set_param('CuttingEdgeHeight', 15)
 
     tool_material = Carbide
     endmill = Tool('Test tool', shape)

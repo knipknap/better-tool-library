@@ -22,25 +22,25 @@ class PropertyWidget(QtGui.QWidget):
         self.grid.setColumnStretch(1, 1)
         self.layout.addLayout(self.grid)
 
-    def _get_widget_from_param(self, param, value, setter):
+    def _get_widget_from_param(self, param, setter):
         validator = FuncValidator(param.validate)
         if param.choices is not None:
             widget = QtGui.QComboBox()
             for choice in param.choices:
                 widget.addItem(choice)
-            widget.setCurrentText(value)
+            widget.setCurrentText(param.format())
             widget.currentTextChanged.connect(setter)
         elif issubclass(param.type, str):
-            widget = QtGui.QLineEdit(param.format(value))
+            widget = QtGui.QLineEdit(param.format())
             widget.setValidator(validator)
             widget.textChanged.connect(setter)
         elif issubclass(param.type, bool):
             widget = QtGui.QCheckBox()
-            widget.setCheckState(QtCore.Qt.Checked if value else QtCore.Qt.Unchecked)
+            widget.setCheckState(QtCore.Qt.Checked if param.v else QtCore.Qt.Unchecked)
             widget.stateChanged.connect(setter)
         elif issubclass(param.type, int):
             widget = QtGui.QSpinBox()
-            widget.setValue(int(value or 0))
+            widget.setValue(int(param.v or 0))
             widget.setSuffix(' '+param.unit if param.unit else '')
             widget.valueChanged.connect(setter)
         elif issubclass(param.type, float):
@@ -48,7 +48,7 @@ class PropertyWidget(QtGui.QWidget):
             widget.setMaximum(99999)
             widget.setDecimals(3)
             widget.setStepType(QtGui.QAbstractSpinBox.AdaptiveDecimalStepType)
-            widget.setValue(float(value or 0))
+            widget.setValue(float(param.v or 0))
             widget.setSuffix(' '+param.unit if param.unit else '')
             widget.valueChanged.connect(setter)
         else:
@@ -110,9 +110,9 @@ class ToolProperties(PropertyWidget):
         self.grid.addWidget(label, row, 0)
 
         # Add entry fields per property.
-        for param, value in self.tool.shape.get_well_known_params():
+        for param in self.tool.shape.get_well_known_params():
             abbr = self.tool.shape.get_abbr(param)
-            self._add_property(param, value, abbr)
+            self._add_property(param, abbr)
         self._makespacing(6)
 
         # Add remaining properties under a separate title.
@@ -122,19 +122,19 @@ class ToolProperties(PropertyWidget):
 
         # Add entry fields per property.
         params = sorted(self.tool.shape.get_non_well_known_params(),
-                        key=lambda x: x[0].name)
-        for param, value in params:
+                        key=lambda x: x.name)
+        for param in params:
             abbr = self.tool.shape.get_abbr(param)
-            self._add_property(param, value, abbr)
+            self._add_property(param, abbr)
 
         self._makespacing(6)
         row = self.grid.rowCount()
         self.grid.setRowStretch(row, 1)
 
-    def _add_property(self, param, value, abbreviation=None):
-        setter = partial(self.tool.shape.set_param, param)
-        widget = self._get_widget_from_param(param, value, setter)
-        self._add_property_from_widget(widget, param.label, value, abbreviation)
+    def _add_property(self, param, abbreviation=None):
+        setter = partial(self.tool.shape.set_param, param.name)
+        widget = self._get_widget_from_param(param, setter)
+        self._add_property_from_widget(widget, param.label, abbreviation)
 
 class ToolAttributes(PropertyWidget):
     def __init__ (self, tool, parent=None):
@@ -148,8 +148,8 @@ class ToolAttributes(PropertyWidget):
         # Add entry fields per property.
         params = sorted(tool.get_non_btl_attribs())
         for name in params:
-            param, value = tool.get_attrib_as_param(name)
-            self._add_property(param, value)
+            param = tool.get_attrib_as_param(name)
+            self._add_property(param)
         if not params:
             row = self.grid.rowCount()
             label = QtGui.QLabel("<i>No unknown attributes found</i>")
@@ -159,7 +159,7 @@ class ToolAttributes(PropertyWidget):
         row = self.grid.rowCount()
         self.grid.setRowStretch(row, 1)
 
-    def _add_property(self, param, value):
+    def _add_property(self, param):
         setter = partial(self.tool.set_attrib, param.name)
-        widget = self._get_widget_from_param(param, value, setter)
-        self._add_property_from_widget(widget, param.label, value)
+        widget = self._get_widget_from_param(param, setter)
+        self._add_property_from_widget(widget, param.label, param.v)

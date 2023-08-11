@@ -58,22 +58,22 @@ def shape_property_to_param(propname, prop, enums):
 
     param = param_type(propname)
     if hasattr(prop, 'Unit'):
-        value = prop.Value
+        param.v = prop.Value
         param.unit = prop.getUserPreferred()[2]
     else:
-        value = prop
+        param.v = prop
 
     # In case of enumerations, collect all allowed values.
     #choices = attrs.getEnumerationsOfProperty(prop.Name)
     if enums is not None:
         param.choices = enums
 
-    return param, value
+    return param
 
 def shape_properties_to_shape(properties, shape):
     for propname, prop, enums in properties:
-        param, value = shape_property_to_param(propname, prop, enums)
-        shape.set_param(param, value)
+        param = shape_property_to_param(propname, prop, enums)
+        shape.set_param(param.name, param)
 
 def tool_property_to_param(propname, prop, enums, value):
     """
@@ -81,22 +81,22 @@ def tool_property_to_param(propname, prop, enums, value):
     a type hint, this function converts the given value to our internal
     parameter type (as defined in the params module).
     """
-    param, default = shape_property_to_param(propname, prop, enums)
+    param = shape_property_to_param(propname, prop, enums)
     value = value if value is not None else prop.Value
     if issubclass(param.type, bool):
-        return param, bool(value or False)
+        param.v = bool(value or False)
     elif issubclass(param.type, int):
-        return param, int_or_none(value)
+        param.v = int_or_none(value)
     elif issubclass(param.type, float) and param.unit and isinstance(value, str):
-        value, param.unit = parse_float_with_unit(value, param.unit)
-        return param, value
+        param.v, param.unit = parse_float_with_unit(value, param.unit)
     elif issubclass(param.type, float):
-        return param, float_or_none(value)
+        param.v = float_or_none(value)
     elif issubclass(param.type, str):
-        return param, value
-    raise NotImplementedError(
-        'whoops - param {} with type {} is not implemented'.format(
-            propname, param.type))
+        param.v = value
+    else:
+        raise NotImplementedError(
+          f'whoops - param {propname} with type {param.type} not implemented')
+    return param
 
 shape_cache = {}
 

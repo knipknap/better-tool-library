@@ -272,23 +272,22 @@ class FCSerializer():
         # Walk through the supported properties, and copy them from the internal
         # model to the tool file representation.
         for propname, prop, enums in properties:
-            btlparam = tool.shape.get_param_type(propname)
-            btlvalue = tool.shape.get_param(propname)
+            param = tool.shape.get_param(propname)
 
             if isinstance(prop, bool):
-                value = 1 if btlvalue else 0
+                value = 1 if param.v else 0
             elif isinstance(prop, int):
-                value = str(btlvalue or 0)
+                value = str(param.v or 0)
             elif isinstance(prop, (float, str)):
-                if btlvalue is None:
+                if param.v is None:
                     continue
-                value = btlvalue
+                value = param.v
             else:
                 # FIXME: this hack is used because FreeCAD writes these parameters using comma
                 # separator when run in the UI, but not when running it here. I couldn't yet
                 # figure out where this (likely locale dependent) setting is made.
-                value = str(btlvalue).replace('.', ',')
-                value = value+' '+btlparam.unit
+                value = str(param.v).replace('.', ',')
+                value = value+' '+param.unit
 
             attrs["parameter"][propname] = value
 
@@ -323,10 +322,10 @@ class FCSerializer():
         for propname, prop, enums in properties:
             value = attrs['parameter'].pop(propname, None)
             try:
-                param, value = tool_property_to_param(propname, prop, enums, value)
+                param = tool_property_to_param(propname, prop, enums, value)
             except (AttributeError, ValueError) as e:
                 print(f"Ouch! Unsupported attribute '{propname}' with value '{value}' in {filename}")
                 continue
-            tool.shape.set_param(param, value)
+            tool.shape.set_param(param.name, param)
 
         return tool

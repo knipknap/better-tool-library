@@ -45,7 +45,7 @@ class Shape():
         self.icon = None # Shape SVG or PNG as a binary string
         self.icon_type = None # Shape PNG as a binary string
         self.abbr = {} # map param name to an abbreviation, if found in SVG
-        self.params = {} # map param name to a tuple (param, value)
+        self.params = {} # map param name to a param
 
         # Load the shape files. Builtin types get preference, so they
         # overwrite any values already defined above.
@@ -64,42 +64,39 @@ class Shape():
     def __eq__(self, other):
         return self.name == other.name
 
-    def set_param(self, param, value):
-        self.params[param.name] = param, value
+    def set_param(self, name, value):
+        if not isinstance(name, str):
+            paramtype = type(name)
+            raise AttributeError(f"name argument has invalid type {paramtype}")
+        if isinstance(value, Param):
+            self.params[name] = value
+        else:
+            self.params[name].v = value
 
-    def get_param(self, param, default=None):
-        if not isinstance(param, str):
-            param = param.name
-        if param not in self.params:
-            return default
-        return self.params[param][1]
-
-    def get_param_type(self, param, default=None):
-        if not isinstance(param, str):
-            param = param.name
-        if param not in self.params:
-            return default
-        return self.params[param][0]
+    def get_param(self, name, default=None):
+        if not isinstance(name, str):
+            paramtype = type(name)
+            raise AttributeError(f"name argument has invalid type {paramtype}")
+        return self.params.get(name, default)
 
     def get_params(self):
-        return [(v[0], v[1]) for (k, v) in sorted(self.params.items())]
+        return sorted(self.params.items())
 
     def get_param_summary(self):
         summary = self.get_label()
 
         for name in self.well_known:
-            value = self.get_param(name)
-            if not value:
+            param = self.get_param(name)
+            if not param:
                 continue
-            param = self.get_param_type(name)
             abbr = self.get_abbr(param)
 
             if abbr:
-                summary += ' '+abbr+param.format(value)
+                summary += ' '+abbr+param.format()
             elif param.choices is not None:
-                summary += ' '+param.format(value)
+                summary += ' '+param.format()
             else:
-                summary += ' {} {}'.format(param.label, param.format(value))
+                summary += ' {} {}'.format(param.label, param.format())
 
         return summary.strip()
 
@@ -109,9 +106,9 @@ class Shape():
                 yield self.params[name]
 
     def get_non_well_known_params(self):
-        for param, value in self.params.values():
+        for param in self.params.values():
             if param.name not in self.well_known:
-                yield param, value
+                yield param
 
     def is_builtin(self):
         return self.name in Shape.builtin
@@ -129,60 +126,60 @@ class Shape():
 
     def get_shank_diameter(self):
         item = self.params.get('ShankDiameter')
-        return item[1] if item else None
+        return item.v if item else None
 
     def get_diameter(self):
         item = self.params.get('Diameter')
-        return item[1] if item else None
+        return item.v if item else None
 
     def get_cutting_edge(self):
         item = self.params.get('CuttingEdgeHeight')
-        return item[1] if item else None
+        return item.v if item else None
 
     def get_length(self):
         item = self.params.get('Length')
-        return item[1] if item else None
+        return item.v if item else None
 
     def get_flutes(self):
         item = self.params.get('Flutes')
-        return item[1] if item else None
+        return item.v if item else None
 
     def get_chipload(self):
         item = self.params.get('Chipload')
-        return item[1] if item else None
+        return item.v if item else None
 
     def get_radius(self):
         item = self.params.get('Radius')
-        return item[1] if item else 0
+        return item.v if item else 0
 
     def get_corner_radius(self):
         if self.name == 'ballend':
             return self.get_diameter()/2
         item = self.params.get('TorusRadius')
-        return item[1] if item else 0
+        return item.v if item else 0
 
     def get_cutting_edge_angle(self):
         item = self.params.get('CuttingEdgeAngle')
-        return item[1] if item else 0
+        return item.v if item else 0
 
     def get_tip_diameter(self):
         item = self.params.get('TipDiameter')
-        return item[1] if item else 0
+        return item.v if item else 0
 
     def get_tip_angle(self):
         item = self.params.get('TipAngle')
-        return item[1] if item else 0
+        return item.v if item else 0
 
     def set_material(self, tool_material):
         assert issubclass(tool_material, ToolMaterial)
-        param = Param('Material')
-        self.set_param(param, tool_material.name)
+        param = Param('Material', v=tool_material.name)
+        self.set_param(param.name, param)
 
     def get_material(self):
         material = self.get_param('Material')
-        if material.lower() == 'hss':
+        if material.v.lower() == 'hss':
             return HSS
-        elif material.lower() == 'carbide':
+        elif material.v.lower() == 'carbide':
             return Carbide
         return None
 
@@ -254,8 +251,8 @@ class Shape():
             return
 
         print('{}  Parameters:'.format(indent))
-        for param, value in self.get_params():
-            print('{}    {: <20} = {}'.format(indent, param.label, value))
+        for param in self.params.values():
+            print('{}    {: <20} = {}'.format(indent, param.label, param.format()))
 
 # Loading shapes on import doesn't work; FreeCAD as not finished initializing.
 # This proxy delays loading the builtin shapes until they are accessed.

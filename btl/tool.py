@@ -48,7 +48,7 @@ class Tool(object):
 
     def get_attrib_as_param(self, name, default=None):
         value = self.attrs[name]
-        return Param(name), value
+        return Param(name, v=value)
 
     def set_label(self, label):
         self.label = label
