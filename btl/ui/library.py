@@ -228,7 +228,7 @@ class LibraryUI():
         self.update_button_state()
 
     def show(self):
-        self.form.show()
+        self.form.exec()
 
     def on_create_library_clicked(self):
         library = Library('New Library')
