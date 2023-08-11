@@ -35,8 +35,8 @@ def run():
     serializer = serializer_cls(args.name)
 
     app = QtGui.QApplication([])
-    dialog = LibraryUI(tool_db, serializer, standalone=True)
-    dialog.show()
+    window = LibraryUI(tool_db, serializer, standalone=True, parent=app)
+    window.show()
     app.exec_()
 
 if __name__ == '__main__':

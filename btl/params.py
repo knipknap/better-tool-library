@@ -26,6 +26,17 @@ class Param(object):
             return False
         return True
 
+    def to_dict(self):
+        return {
+            'objtype': self.__class__.__name__,
+            'label': self.label,
+            'name': self.name,
+            'unit': self.unit,
+            'fmt': self.fmt,
+            'type': self.type.__name__,
+            'choices': self.choices,
+        }
+
 class BoolParam(Param):
     type = bool
 

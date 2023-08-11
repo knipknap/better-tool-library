@@ -37,6 +37,15 @@ class Tool(object):
     def __hash__(self):
         return hash(self.id)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'label': self.label,
+            'filename': self.filename,
+            'shape': self.shape.to_dict(),
+            'attrs': self.attrs,
+        }
+
     def set_attrib(self, name, value):
         self.attrs[name] = value
 
@@ -200,9 +209,10 @@ class Tool(object):
     def deserialize(cls, serializer, id):
         return serializer.deserialize_tool(id)
 
-    def dump(self, indent=0, summarize=False):
+    def to_string(self, indent=0, summarize=False):
+        result = []
         indent = ' '*indent
-        print('{}Tool "{}" ({}) (instance {})'.format(
+        result.append('{}Tool "{}" ({}) (instance {})'.format(
             indent,
             self.label,
             self.id,
@@ -211,9 +221,13 @@ class Tool(object):
 
         shape = self.shape.get_label()
         shape_name = self.shape.name
-        print('{}  Shape = {} ({})'.format(indent, shape, shape_name))
+        result.append(f'{indent}  Shape = {shape} ({shape_name})')
 
-        self.shape.dump(indent=2, summarize=summarize)
+        shape_str = self.shape.to_string(indent=2, summarize=summarize)
+        return '\n'.join(result) + '\n' + shape_str
+
+    def dump(self, indent=0, summarize=False):
+        print(self.to_string(indent, summarize))
 
     def get_chipload_for_material(self, thematerial):
         chipload = self.shape.get_chipload()

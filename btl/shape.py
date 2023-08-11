@@ -64,6 +64,13 @@ class Shape():
     def __eq__(self, other):
         return self.name == other.name
 
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'filename': self.filename,
+            'params': [p.to_dict() for p in self.params.values()],
+        }
+
     def set_param(self, name, value):
         if not isinstance(name, str):
             paramtype = type(name)
@@ -235,24 +242,27 @@ class Shape():
         with open(filename, 'wb') as fp:
             fp.write(self.icon)
 
-    def dump(self, indent=0, summarize=True):
+    def to_string(self, indent=0, summarize=False):
+        result = []
         indent = ' '*indent
-        print('{}Shape "{}"'.format(
-            indent,
-            self.name
-        ))
-        print('{}  File       = {}'.format(indent, self.filename))
-        print('{}  Icon type  = {}'.format(indent, self.icon_type))
-        print('{}  Icon bytes = {}'.format(indent, self.get_icon_len()))
+        result.append(f'{indent}Shape "{self.name}"')
+        result.append(f'{indent}  File       = {self.filename}')
+        result.append(f'{indent}  Icon type  = {self.icon_type}')
+        result.append(f'{indent}  Icon bytes = {self.get_icon_len()}')
 
         if summarize:
             summary = self.get_param_summary()
-            print('{}  Summary = {}'.format(indent, summary))
+            result.append(f'{indent}  Summary = {summary}')
             return
 
-        print('{}  Parameters:'.format(indent))
+        result.append(f'{indent}  Parameters:')
         for param in self.params.values():
-            print('{}    {: <20} = {}'.format(indent, param.label, param.format()))
+            result.append(f'{indent}    {param.label: <20} = {param.format()}')
+
+        return '\n'.join(result)
+
+    def dump(self, indent=0, summarize=True):
+        print(self.to_string(indent, summarize))
 
 # Loading shapes on import doesn't work; FreeCAD as not finished initializing.
 # This proxy delays loading the builtin shapes until they are accessed.

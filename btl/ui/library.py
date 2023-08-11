@@ -1,8 +1,11 @@
 import os
+import json
 import FreeCAD
 import FreeCADGui
 from pathlib import Path
 from PySide import QtGui, QtCore
+from PySide.QtCore import Qt, QMimeData
+from PySide.QtGui import QApplication, QShortcut
 from .. import Library, Tool
 from ..serializers import serializers, FCSerializer, LinuxCNCSerializer
 from ..fcutil import add_tool_to_job, get_active_job
@@ -17,11 +20,11 @@ __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "library.ui")
 
 class LibraryUI():
-    def __init__(self, db, serializer, standalone=False):
+    def __init__(self, db, serializer, standalone=False, parent=None):
         self.db = db
         self.serializer = serializer
         self.standalone = standalone
-        self.form = load_ui(ui_path)
+        self.form = load_ui(ui_path, parent)
 
         self.form.buttonBox.clicked.connect(self.form.close)
         self.form.listWidgetTools.itemDoubleClicked.connect(self.on_edit_tool_clicked)
@@ -34,6 +37,7 @@ class LibraryUI():
         self.form.lineEditSearch.setFocus()
         self.form.lineEditSearch.textChanged.connect(self.update_search)
 
+        # Connect signals for buttons at the bottom.
         self.form.comboBoxLibrary.currentIndexChanged.connect(self.library_selected)
         self.form.toolButtonAddLibrary.clicked.connect(self.on_create_library_clicked)
         self.form.toolButtonRemoveLibrary.clicked.connect(self.on_delete_library_clicked)
@@ -44,6 +48,21 @@ class LibraryUI():
         self.form.pushButtonDeleteTool.clicked.connect(self.on_delete_tool_clicked)
         self.form.pushButtonAddToJob.clicked.connect(self.on_add_to_job_clicked)
 
+        # Automatically connect shortcuts to their respective menu item signals.
+        for menu in self.form.menubar.children():
+            for action in menu.actions():
+                key_sequence = action.shortcut()
+                if not key_sequence.isEmpty():
+                    context = action.shortcutContext()
+                    shortcut = QShortcut(key_sequence, menu)
+                    shortcut.setContext(context)
+                    shortcut.activated.connect(action.trigger)
+
+        # Connect signals for menu items.
+        self.form.actionCopy.triggered.connect(self._copy_tool)
+        self.form.actionPaste.triggered.connect(self._paste_tool)
+        self.form.actionDelete.triggered.connect(self.on_delete_tool_clicked)
+
         if standalone:
             self.form.pushButtonAddToJob.hide()
 
@@ -52,6 +71,46 @@ class LibraryUI():
         item = self.form.listWidgetTools.item(0)
         if item:
             self.form.listWidgetTools.setCurrentItem(item)
+
+    def _copy_tool(self):
+        library = self.get_selected_library()
+        items = self.form.listWidgetTools.selectedItems()
+        if not items:
+            return
+
+        tool_ids = []
+        tool_str = []
+        for item in self.form.listWidgetTools.selectedItems():
+            tool = item.data(QtCore.Qt.UserRole)
+            tool_ids.append(tool.id)
+            tool_str.append(tool.to_string())
+
+        clipboard = QApplication.instance().clipboard()
+        tool_data = bytes(json.dumps(tool_ids).encode('utf-8'))
+        mime_data = QMimeData()
+        mime_data.setText('\n'.join(tool_str))
+        mime_data.setData('application/btl-tool-ids', tool_data)
+        clipboard.setMimeData(mime_data)
+
+    def _paste_tool(self):
+        library = self.get_selected_library()
+        if not library:
+            return
+
+        clipboard = QApplication.instance().clipboard()
+        mime_data = clipboard.mimeData()
+        if not mime_data.hasFormat("application/btl-tool-ids"):
+            return
+
+        json_data = mime_data.data("application/btl-tool-ids")
+        tool_ids = json.loads(bytes(json_data))
+        for tool_id in tool_ids:
+            tool = self.db.get_tool_by_id(tool_id)
+            if tool and not library.has_tool(tool):
+                self.db.add_tool(tool, library)
+
+        self.db.serialize(self.serializer)
+        self.load()
 
     def on_right_click(self, pos):
         menu = QtGui.QMenu(self.form.listWidgetTools)
