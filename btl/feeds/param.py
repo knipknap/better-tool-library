@@ -3,12 +3,12 @@ import random
 class Param:
     is_internal = False
 
-    def __init__(self, decimals, min, max, metToImp, unit=None, v=None):
+    def __init__(self, decimals, min, max, metric_to_imperial, unit=None, v=None):
         self.decimals = decimals
         self.min = min
         self.max = max
         self.limit = max
-        self.metToImp = metToImp
+        self.metric_to_imperial = meric_to_imperial
         self.unit = unit
         self.v = v if v is not None else min
 
@@ -18,6 +18,9 @@ class Param:
     def assign_random(self):
         limit = min(self.max, self.limit)
         self.v = random.uniform(self.min, limit)
+
+    def get_imperial(self):
+        return self.v*self.metric_to_imperial
 
     def set_limit(self, limit):
         self.limit = min(self.max, limit)
