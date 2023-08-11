@@ -22,8 +22,7 @@ class PreferencesDialog(QtGui.QWidget):
         self.serializer = serializer
 
         lib_path = prefs.GetString("LastPathToolLibrary", "~/.btl/tools")
-        lib_dir = os.path.dirname(lib_path)
-        self.form.lineEditToolPath.setText(lib_dir)
+        self.form.lineEditToolPath.setText(lib_path)
 
     def on_lib_path_select_clicked(self):
         filename = QtGui.QFileDialog.getOpenFileName(
