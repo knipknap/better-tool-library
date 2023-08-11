@@ -8,7 +8,7 @@ class Param:
         self.min = min
         self.max = max
         self.limit = max
-        self.metric_to_imperial = meric_to_imperial
+        self.metric_to_imperial = metric_to_imperial
         self.unit = unit
         self.v = v if v is not None else min
 
