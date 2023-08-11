@@ -37,6 +37,7 @@ def run():
     app = QtGui.QApplication([])
     dialog = LibraryUI(tool_db, serializer, standalone=True)
     dialog.show()
+    app.exec_()
 
 if __name__ == '__main__':
     run()
