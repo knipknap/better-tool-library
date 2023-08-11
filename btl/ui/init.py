@@ -20,7 +20,7 @@ def on_library_open_clicked():
     lib_base_dir = os.path.expanduser(lib_base_dir)
     serializer = serializers.FCSerializer(lib_base_dir)
 
-    dialog = LibraryUI(tool_db, serializer)
+    dialog = LibraryUI(tool_db, serializer, parent=FreeCADGui.getMainWindow())
     dialog.show()
 
 def on_workbench_activated(workbench):
