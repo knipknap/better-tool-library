@@ -20,7 +20,7 @@ class Param:
         self.v = random.uniform(self.min, limit)
 
     def get_imperial(self):
-        return self.v*self.metric_to_imperial
+        return self.v*self.metric_to_imperial if self.v is not None else None
 
     def set_limit(self, limit):
         self.limit = min(self.max, limit)
