@@ -29,14 +29,14 @@ class FCSerializer():
     MACHINE_EXT = '.json'
 
     def __init__(self, path):
+        self.set_tool_dir(path)
+
+    def set_tool_dir(self, path):
         self.path = path
         self.tool_path = os.path.join(path, TOOL_DIR)
         self.lib_path = os.path.join(path, LIBRARY_DIR)
         self.shape_path = os.path.join(path, SHAPE_DIR)
         self.machine_path = os.path.join(path, MACHINE_DIR)
-        self._init_tool_dir()
-
-    def _init_tool_dir(self):
         if os.path.exists(self.path) and not os.path.isdir(self.path):
             raise ValueError(repr(self.path) + ' is not a directory')
 

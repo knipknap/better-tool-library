@@ -6,10 +6,11 @@ from pathlib import Path
 from PySide import QtGui, QtCore
 from PySide.QtCore import Qt, QMimeData
 from PySide.QtGui import QApplication, QShortcut
-from .. import Library, Tool
+from .. import Library, Tool, serializers
 from ..serializers import serializers, FCSerializer, LinuxCNCSerializer
 from ..fcutil import add_tool_to_job, get_active_job
 from .util import load_ui
+from .preferences import PreferencesDialog
 from .tablecell import TwoLineTableCell
 from .shapeselector import ShapeSelector
 from .tooleditor import ToolEditor
@@ -62,6 +63,7 @@ class LibraryUI():
         self.form.actionCopy.triggered.connect(self._copy_tool)
         self.form.actionPaste.triggered.connect(self._paste_tool)
         self.form.actionDelete.triggered.connect(self.on_delete_tool_clicked)
+        self.form.actionPreferences.triggered.connect(self.on_preferences_clicked)
 
         if standalone:
             self.form.pushButtonAddToJob.hide()
@@ -412,3 +414,9 @@ class LibraryUI():
             pocket = library.get_pocket_from_tool(tool)
             assert pocket is not None
             add_tool_to_job(job, tool, pocket)
+
+    def on_preferences_clicked(self):
+        dialog = PreferencesDialog(self.serializer, parent=self.form)
+        if not dialog.exec():
+            return
+        self.load()

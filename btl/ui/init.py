@@ -17,6 +17,7 @@ def on_library_open_clicked():
     # Note: Creating the serializer automatically initializes the library
     # directory.
     tool_db = ToolDB()
+    lib_base_dir = os.path.expanduser(lib_base_dir)
     serializer = serializers.FCSerializer(lib_base_dir)
 
     dialog = LibraryUI(tool_db, serializer)

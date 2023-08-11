@@ -24,10 +24,10 @@ class CamoticsSerializer():
     LIBRARY_EXT='.ctbl'
 
     def __init__(self, path, *args, **kwargs):
-        self.path = path
-        self._init_tool_dir()
+        self.set_tool_dir(path)
 
-    def _init_tool_dir(self):
+    def set_tool_dir(self, path):
+        self.path = path
         if os.path.exists(self.path) and not os.path.isdir(self.path):
             raise ValueError(repr(self.path) + ' is not a directory')
 

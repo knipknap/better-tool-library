@@ -293,6 +293,15 @@
     <string>Del</string>
    </property>
   </action>
+  <action name="actionPreferences">
+   <property name="icon">
+    <iconset>
+     <normaloff>../resources/icons/tool-settings.svg</normaloff>../resources/icons/tool-settings.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Preferences</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
