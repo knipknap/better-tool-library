@@ -3,7 +3,8 @@ from scipy.optimize import minimize
 import numpy as np
 import random
 from copy import deepcopy
-from . import const, operation
+from .. import const
+from . import operation
 from .param import Param, InputParam, Const
 
 class FeedCalc(object):

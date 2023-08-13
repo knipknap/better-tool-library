@@ -1,4 +1,5 @@
 import re
+from . import const
 
 class Param(object):
     name = None
@@ -37,6 +38,9 @@ class Param(object):
             'choices': self.choices,
         }
 
+    def get_imperial(self):
+        return self.v
+
 class BoolParam(Param):
     type = bool
 
@@ -49,6 +53,10 @@ class FloatParam(Param):
 class DistanceParam(FloatParam):
     unit = 'mm'
     fmt = '{}'
+    metric_to_imperial = const.mmToInch
+
+    def get_imperial(self):
+        return self.v*self.metric_to_imperial if self.v is not None else None
 
 class AngleParam(FloatParam):
     unit = '°'
