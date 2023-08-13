@@ -336,10 +336,10 @@ class Tool(object):
         shank_d = self.shape.get_shank_diameter() or diameter
         yield_strength = tool_material.yield_strength
         shank_l = max(0.000001, stickout-cutting_edge)
-        non_cutting = cutting_edge-doc
+        non_cutting = max(0.000001, shank_l+cutting_edge-doc)
         solid_inertia, fluted_inertia = self.get_inertia()
         return min((yield_strength*solid_inertia) / ((shank_d/2)* shank_l),
-                   (yield_strength*fluted_inertia) / ((diameter/2) * (shank_l+non_cutting)))
+                   (yield_strength*fluted_inertia) / ((diameter/2) * non_cutting))
 
     def get_twist_limit(self):
         """
