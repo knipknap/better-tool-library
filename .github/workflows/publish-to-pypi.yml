@@ -1,0 +1,26 @@
+name: Publish BTL to PyPi
+on: push
+
+jobs:
+  build-and-publish:
+    name: Build and publish BTL to PyPI
+    runs-on: ubuntu-latest
+￼
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.x"
+￼
+    - name: Install requirements
+      run: pip install --no-cache-dir -r requirements.txt
+
+    - name: Build a wheel
+      run: python3 -m build
+￼
+    - name: Publish to PyPI
+      if: startsWith(github.ref, 'refs/tags')
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        password: ${{ secrets.PYPI_API_TOKEN }}
