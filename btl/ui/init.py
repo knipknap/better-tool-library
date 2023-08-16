@@ -31,6 +31,10 @@ class OpenBTL:
     def Activated(self):
         on_library_open_clicked()
 
+class BitLibraryReplacer(object):
+    def open(self):
+        on_library_open_clicked()
+
 def on_library_open_clicked():
     # Ensure that a library dir is defined in the preferences.
     lib_dir = prefs.GetString("LastPathToolLibrary", "~/.btl/Library")
@@ -60,6 +64,11 @@ def on_workbench_activated(workbench):
     tool_button.setIcon(QtGui.QPixmap(ICON_FILE))
     tool_button.clicked.connect(on_library_open_clicked)
     toolbar.addWidget(tool_button)
+
+    # Hack: Replace FreeCAD tool library by BTL by monkey-patching
+    # the path workbench.
+    from Path.Tool.Gui import BitLibrary
+    BitLibrary.ToolBitLibrary = BitLibraryReplacer
 
     print('Better Tool Library loaded successfully.')
 
