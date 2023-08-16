@@ -1,12 +1,35 @@
 import os
 import FreeCAD, FreeCADGui
 from PySide import QtGui
+from PySide.QtCore import QT_TRANSLATE_NOOP
 from .. import ToolDB, serializers
 from ..const import icon_dir
 from .library import LibraryUI
 
 ICON_FILE = os.path.join(icon_dir, 'tool-library.svg')
 prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Path")
+
+class OpenBTL:
+    """Opens the Better Tool Library dialog."""
+
+    def GetResources(self):
+        return {
+            'Pixmap': 'Path_ToolTable',
+            'Accel': "P, T",
+            "MenuText": QT_TRANSLATE_NOOP(
+                "Path_ToolBitLibraryOpen", "ToolBit Library editor"
+            ),
+            "ToolTip": QT_TRANSLATE_NOOP(
+                "Path_ToolBitLibraryOpen", "Open an editor to manage ToolBit libraries"
+            ),
+            "CmdType": "ForEdit",
+        }
+
+    def IsActive(self):
+        return True
+
+    def Activated(self):
+        on_library_open_clicked()
 
 def on_library_open_clicked():
     # Ensure that a library dir is defined in the preferences.
@@ -40,4 +63,5 @@ def on_workbench_activated(workbench):
 
     print('Better Tool Library loaded successfully.')
 
+FreeCADGui.addCommand("Path_ToolBitLibraryOpen", OpenBTL())
 FreeCADGui.getMainWindow().workbenchActivated.connect(on_workbench_activated)
