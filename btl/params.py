@@ -1,5 +1,6 @@
 import re
-from . import const
+from copy import copy
+from .imperial import si_to_imperial, si_unit_to_imperial_unit
 
 class Param(object):
     name = None
@@ -38,8 +39,8 @@ class Param(object):
             'choices': self.choices,
         }
 
-    def get_imperial(self):
-        return self.v
+    def to_imperial(self):
+        return copy(self)
 
 class BoolParam(Param):
     type = bool
@@ -53,10 +54,13 @@ class FloatParam(Param):
 class DistanceParam(FloatParam):
     unit = 'mm'
     fmt = '{}'
-    metric_to_imperial = const.mmToInch
 
     def get_imperial(self):
-        return self.v*self.metric_to_imperial if self.v is not None else None
+        obj = copy(self)
+        obj.unit = si_unit_to_imperial_unit(self.unit)
+        if self.v is not None:
+            obj.v = si_to_imperial(self.v, self.unit)
+        return obj
 
 class AngleParam(FloatParam):
     unit = '°'
