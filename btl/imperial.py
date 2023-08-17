@@ -12,6 +12,9 @@ m3_to_in3 = 61023.7
 m3_to_ft3 = 35.3147
 m3_to_yd3 = 1.30795
 m3_to_mi3 = 2.3991e-10
+kw_to_hp = 1.34102
+newton_to_lbf = 0.2248090795
+nm_to_lbfin = 8.85075
 
 _symbols = {
     # SI units.
@@ -30,6 +33,15 @@ _symbols = {
     'kilometer': 'km',
     'kilometers': 'km',
 
+    'kw': 'kW',
+    'kilowatt': 'kW',
+    'kilowatts': 'kW',
+
+    'newton': 'N',
+    'newtons': 'N',
+    'newton-meter': 'Nm',
+    'newton-meters': 'Nm',
+
     # Imperial.
     '"': 'in',
     'inch': 'in',
@@ -42,6 +54,12 @@ _symbols = {
     'yards': 'yd',
     'mile': 'mi',
     'miles': 'mi',
+
+    'hp': 'HP',
+    'horsepower': 'HP',
+
+    'pound-force': 'lbf',
+    'inch-pounds': 'lbf-in',
 }
 
 _to_meter = {
@@ -68,6 +86,11 @@ _to_meter = {
     'dm³': 1000,
     'm³':  1,
     'km³': 10e-9,
+
+    'kW': 1,
+
+    'N': 1,
+    'Nm': 1,
 }
 
 _meter_to_imperial = {
@@ -83,6 +106,9 @@ _meter_to_imperial = {
     'ft³': m3_to_ft3,
     'yd³': m3_to_yd3,
     'mi³': m3_to_mi3,
+    'HP': kw_to_hp,
+    'lbf': newton_to_lbf,
+    'lbf-in': nm_to_lbfin,
 }
 
 _unit_map = {
@@ -93,6 +119,10 @@ _unit_map = {
     'dm': 'in',
     'm':  'yd',
     'km': 'mi',
+
+    'kW': 'HP',
+    'N': 'lbf',
+    'Nm': 'lbf-in',
 }
 
 _exponent_map = {
@@ -116,7 +146,7 @@ def _exponent_replace(match):
 
 def _base_unit_normalize(unit):
     assert '/' not in unit
-    unit = re.sub(r'^([a-z]+)', _symbol_replace, unit.lower())
+    unit = re.sub(r'^([a-z]+)', _symbol_replace, unit)
     return re.sub(r'\^?(\d)', _exponent_replace, unit)
 
 def unit_normalize(unit):
@@ -125,7 +155,7 @@ def unit_normalize(unit):
     return base_unit+'/'+suffix if suffix else base_unit
 
 def _split_exponent(unit):
-    match = re.match(r'^([a-z]+)([⁰¹²³⁴⁵⁶⁷⁸⁹]*)$', unit)
+    match = re.match(r'^([a-z]+)([⁰¹²³⁴⁵⁶⁷⁸⁹]*)$', unit, re.I)
     return match.group(1), match.group(2)
 
 def si_unit_to_imperial_unit(unit):

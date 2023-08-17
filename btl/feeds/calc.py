@@ -56,10 +56,10 @@ class FeedCalc(object):
         # Speed is the distance the outer edge of of the endmill travels
         # per minute.
         chipload = self.endmill.get_chipload_for_material(self.material)
-        self.speed = InputParam(0, 1, 999, const.SMMtoSFM, 'm/min')
-        self.chipload = InputParam(4, 0.0001, 10, const.mmToInch, 'mm')
-        self.woc = InputParam(3, chipload, 2500, const.mmToInch, 'mm') # Width of cut (radial engagement)
-        self.doc = InputParam(3, chipload, 2500, const.mmToInch, 'mm') # Depth of cut (axial engagement)
+        self.speed = InputParam(0, 1, 999, 'm/min')
+        self.chipload = InputParam(4, 0.0001, 10, 'mm')
+        self.woc = InputParam(3, chipload, 2500, 'mm') # Width of cut (radial engagement)
+        self.doc = InputParam(3, chipload, 2500, 'mm') # Depth of cut (axial engagement)
 
         # Second group: Working properties
         # These also are the main attributes that a user may
@@ -67,35 +67,35 @@ class FeedCalc(object):
         # changes them according to the Operation.
         # As all properties, they also serve as "constraints" to
         # check whether the calculated values are valid.
-        self.rpm = Param(0, machine.min_rpm, machine.max_rpm, 1)
-        self.feed = Param(1, machine.min_feed, machine.max_feed, const.mmToInch, 'mm/min') # The distance the tool travels each minute
-        self.mrr = Param(2, 0.001, 999, const.cm3ToIn3, 'cm³/min')   # material removal rate
-        self.adjusted_chipload = Param(4, 0.0001, 12, const.mmToInch, 'mm') # Should setup with same values as chipload
-        self.power = Param(3, 0.001, machine.max_power, const.KWToHP, 'kW')
-        self.torque = Param(2, 0.001, machine.max_torque, const.NMtoInLbs, 'Nm')
-        self.deflection = Param(3, 0, 0.025, const.mmToInch, 'mm') # actual deflection
-        self.max_deflection = Param(3, 0, 0.05, const.mmToInch, 'mm') # theoretical max deflection
-        self.radial_force = Param(2, 0, 99999, const.NtoLbs, 'N') # Radial cutting force
-        self.axial_force = Param(2, 0.01, 99999, const.NtoLbs, 'N') # Axial cutting force
+        self.rpm = Param(0, machine.min_rpm, machine.max_rpm)
+        self.feed = Param(1, machine.min_feed, machine.max_feed, 'mm/min') # The distance the tool travels each minute
+        self.mrr = Param(2, 0.001, 999, 'cm³/min')   # material removal rate
+        self.adjusted_chipload = Param(4, 0.0001, 12, 'mm') # Should setup with same values as chipload
+        self.power = Param(3, 0.001, machine.max_power, 'kW')
+        self.torque = Param(2, 0.001, machine.max_torque, 'Nm')
+        self.deflection = Param(3, 0, 0.025, 'mm') # actual deflection
+        self.max_deflection = Param(3, 0, 0.05, 'mm') # theoretical max deflection
+        self.radial_force = Param(2, 0, 99999, 'N') # Radial cutting force
+        self.axial_force = Param(2, 0.01, 99999, 'N') # Axial cutting force
 
         # Third group: Info properties
         # Properties NOT looked at by the optimizer. They are
         # derived from our parameter class only to make it easy
         # to display them with limits and error distance.
         # Their main purpose is providing info for debugging.
-        self.available_torque = Const(2, 0.00001, 9999, const.NMtoInLbs, 'Nm')
-        self.material_power_factor = Const(8, 0, 999, 1)
-        self.speed_factor = Const(2, 0, 999, 1, v=1)
-        self.chip_factor = Const(2, 0, 999, 1, v=1)
-        self.feed_factor = Const(2, 0, 999, 1, v=1)
-        self.radial_factor = Const(2, 0, 999, 1, v=1)
-        self.axial_factor = Const(2, 0, 999, 1, v=1)
-        self.engagement_angle = Const(0, 0, 180, 1, '°')
-        self.effective_diameter = Const(3, 0.00001, 99999, const.mmToInch, 'mm')
-        self.overlap_area = Const(3, 0.00001, 999999, const.mm2ToIn2, 'mm²')
-        self.bend_force_limit = Const(2, 0.00001, 9999, const.NMtoInLbs, 'N')
-        self.twist_torque_limit = Const(2, 0.00001, 9999, const.NMtoInLbs, 'Nm')
-        self.score = Const(2, -self.mrr.max, 0, 1)
+        self.available_torque = Const(2, 0.00001, 9999, 'Nm')
+        self.material_power_factor = Const(8, 0, 999)
+        self.speed_factor = Const(2, 0, 999, v=1)
+        self.chip_factor = Const(2, 0, 999, v=1)
+        self.feed_factor = Const(2, 0, 999, v=1)
+        self.radial_factor = Const(2, 0, 999, v=1)
+        self.axial_factor = Const(2, 0, 999, v=1)
+        self.engagement_angle = Const(0, 0, 180, '°')
+        self.effective_diameter = Const(3, 0.00001, 99999, 'mm')
+        self.overlap_area = Const(3, 0.00001, 999999, 'mm²')
+        self.bend_force_limit = Const(2, 0.00001, 9999, 'N')
+        self.twist_torque_limit = Const(2, 0.00001, 9999, 'Nm')
+        self.score = Const(2, -self.mrr.max, 0)
 
         # For easy access to all results.
         self.all_params = dict(p for p in self.__dict__.items()

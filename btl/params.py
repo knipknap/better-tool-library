@@ -1,5 +1,4 @@
 import re
-from copy import copy
 from .imperial import si_to_imperial, si_unit_to_imperial_unit
 
 class Param(object):
@@ -39,8 +38,9 @@ class Param(object):
             'choices': self.choices,
         }
 
-    def to_imperial(self):
-        return copy(self)
+    def get_imperial(self, unit=None):
+        """Returns a tuple (value, unit)"""
+        return self.v, unit
 
 class BoolParam(Param):
     type = bool
@@ -51,16 +51,17 @@ class IntParam(Param):
 class FloatParam(Param):
     type = float
 
+    def get_imperial(self, unit=None):
+        if self.unit is None:
+             return self.v, unit
+        if self.v is None:
+             unit = unit if unit else si_unit_to_imperial_unit(self.unit)
+             return None, unit
+        return si_to_imperial(self.v, self.unit, unit)
+
 class DistanceParam(FloatParam):
     unit = 'mm'
     fmt = '{}'
-
-    def get_imperial(self):
-        obj = copy(self)
-        obj.unit = si_unit_to_imperial_unit(self.unit)
-        if self.v is not None:
-            obj.v = si_to_imperial(self.v, self.unit)
-        return obj
 
 class AngleParam(FloatParam):
     unit = '°'

@@ -1,14 +1,14 @@
 import random
+from ..imperial import si_to_imperial, si_unit_to_imperial_unit
 
 class Param:
     is_internal = False
 
-    def __init__(self, decimals, min, max, metric_to_imperial, unit=None, v=None):
+    def __init__(self, decimals, min, max, unit=None, v=None):
         self.decimals = decimals
         self.min = min
         self.max = max
         self.limit = max
-        self.metric_to_imperial = metric_to_imperial
         self.unit = unit
         self.v = v if v is not None else min
 
@@ -81,6 +81,14 @@ class Param:
         max_value = self._format_value(self.max, decimals)
         limit = self._format_value(self.limit, decimals)
         return f"{value} ({percent:.0f}%) (min {min_value}, max {max_value}, limit {limit})"
+
+    def get_imperial(self, unit=None):
+        if self.unit is None:
+             return self.v, unit
+        if self.v is None:
+             unit = unit if unit else si_unit_to_imperial_unit(self.unit)
+             return None, unit
+        return si_to_imperial(self.v, self.unit, unit)
 
 class UncheckedParam(Param):
     def get_error_distance(self):
