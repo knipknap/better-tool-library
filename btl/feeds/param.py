@@ -19,9 +19,6 @@ class Param:
         limit = min(self.max, self.limit)
         self.v = random.uniform(self.min, limit)
 
-    def get_imperial(self):
-        return self.v*self.metric_to_imperial if self.v is not None else None
-
     def set_limit(self, limit):
         self.limit = min(self.max, limit)
 
@@ -44,10 +41,6 @@ class Param:
         return self.v >= self.min and self.v <= self.max
 
     def get_error_distance(self):
-        #if self.max < self.min:
-        #    return self.min-self.max
-        #elif self.limit < self.min:
-        #    return self.min-self.limit
         if self.v > self.max:
             return self.v-self.max
         elif self.v > self.limit:
