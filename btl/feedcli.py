@@ -1,7 +1,6 @@
 #!/usr/bin/python
 import sys
 from btl import Tool, Machine
-from btl.params import IntParam, DistanceParam
 from btl.shape import builtin_shapes
 from btl.toolmaterial import HSS, Carbide
 from btl.feeds import FeedCalc, material, operation

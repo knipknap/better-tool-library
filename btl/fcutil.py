@@ -56,7 +56,7 @@ def shape_property_to_param(propname, prop, enums):
             'param {} with type {} not supported'.format(
                  propname, prop))
 
-    param = param_type(propname)
+    param = param_type(name=propname)
     if hasattr(prop, 'Unit'):
         param.v = prop.Value
         param.unit = prop.getUserPreferred()[2]

@@ -3,9 +3,23 @@ from scipy.optimize import minimize
 import numpy as np
 import random
 from copy import deepcopy
-from .. import const
+from ..params import Param, IntParam, FloatParam
 from . import operation
-from .param import Param, InputParam, Const
+
+class InputParam(FloatParam):
+    is_internal = False
+
+class IntVar(IntParam):
+    is_internal = False
+
+class FloatVar(FloatParam):
+    is_internal = False
+
+class IntConst(IntParam):
+    is_internal = True
+
+class FloatConst(FloatParam):
+    is_internal = True
 
 class FeedCalc(object):
     def __init__(self, machine, endmill, material, op=operation.Slotting):
@@ -56,10 +70,10 @@ class FeedCalc(object):
         # Speed is the distance the outer edge of of the endmill travels
         # per minute.
         chipload = self.endmill.get_chipload_for_material(self.material)
-        self.speed = InputParam(0, 1, 999, 'm/min')
-        self.chipload = InputParam(4, 0.0001, 10, 'mm')
-        self.woc = InputParam(3, chipload, 2500, 'mm') # Width of cut (radial engagement)
-        self.doc = InputParam(3, chipload, 2500, 'mm') # Depth of cut (axial engagement)
+        self.speed = InputParam(1, 999, 0, 'm/min')
+        self.chipload = InputParam(0.0001, 10, 4, 'mm')
+        self.woc = InputParam(chipload, 2500, 3, 'mm') # Width of cut (radial engagement)
+        self.doc = InputParam(chipload, 2500, 3, 'mm') # Depth of cut (axial engagement)
 
         # Second group: Working properties
         # These also are the main attributes that a user may
@@ -67,41 +81,41 @@ class FeedCalc(object):
         # changes them according to the Operation.
         # As all properties, they also serve as "constraints" to
         # check whether the calculated values are valid.
-        self.rpm = Param(0, machine.min_rpm, machine.max_rpm)
-        self.feed = Param(1, machine.min_feed, machine.max_feed, 'mm/min') # The distance the tool travels each minute
-        self.mrr = Param(2, 0.001, 999, 'cm³/min')   # material removal rate
-        self.adjusted_chipload = Param(4, 0.0001, 12, 'mm') # Should setup with same values as chipload
-        self.power = Param(3, 0.001, machine.max_power, 'kW')
-        self.torque = Param(2, 0.001, machine.max_torque, 'Nm')
-        self.deflection = Param(3, 0, 0.025, 'mm') # actual deflection
-        self.max_deflection = Param(3, 0, 0.05, 'mm') # theoretical max deflection
-        self.radial_force = Param(2, 0, 99999, 'N') # Radial cutting force
-        self.axial_force = Param(2, 0.01, 99999, 'N') # Axial cutting force
+        self.rpm = IntVar(machine.min_rpm, machine.max_rpm)
+        self.feed = FloatVar(machine.min_feed, machine.max_feed, 1, 'mm/min') # The distance the tool travels each minute
+        self.mrr = FloatVar(0.001, 999, 2, 'cm³/min')   # material removal rate
+        self.adjusted_chipload = FloatVar(0.0001, 12, 4, 'mm') # Should setup with same values as chipload
+        self.power = FloatVar(0.001, machine.max_power, 3, 'kW')
+        self.torque = FloatVar(0.001, machine.max_torque, 2, 'Nm')
+        self.deflection = FloatVar(0, 0.025, 3, 'mm') # actual deflection
+        self.max_deflection = FloatVar(0, 0.05, 3, 'mm') # theoretical max deflection
+        self.radial_force = FloatVar(0, 99999, 2, 'N') # Radial cutting force
+        self.axial_force = FloatVar(0.01, 99999, 2, 'N') # Axial cutting force
 
         # Third group: Info properties
         # Properties NOT looked at by the optimizer. They are
         # derived from our parameter class only to make it easy
         # to display them with limits and error distance.
         # Their main purpose is providing info for debugging.
-        self.available_torque = Const(2, 0.00001, 9999, 'Nm')
-        self.material_power_factor = Const(8, 0, 999)
-        self.speed_factor = Const(2, 0, 999, v=1)
-        self.chip_factor = Const(2, 0, 999, v=1)
-        self.feed_factor = Const(2, 0, 999, v=1)
-        self.radial_factor = Const(2, 0, 999, v=1)
-        self.axial_factor = Const(2, 0, 999, v=1)
-        self.engagement_angle = Const(0, 0, 180, '°')
-        self.effective_diameter = Const(3, 0.00001, 99999, 'mm')
-        self.overlap_area = Const(3, 0.00001, 999999, 'mm²')
-        self.bend_force_limit = Const(2, 0.00001, 9999, 'N')
-        self.twist_torque_limit = Const(2, 0.00001, 9999, 'Nm')
-        self.score = Const(2, -self.mrr.max, 0)
+        self.available_torque = FloatConst(0.00001, 9999, 2, 'Nm')
+        self.material_power_factor = FloatConst(0, 999, 8)
+        self.speed_factor = FloatConst(0, 999, 2, v=1)
+        self.chip_factor = FloatConst(0, 999, 2, v=1)
+        self.feed_factor = FloatConst(0, 999, 2, v=1)
+        self.radial_factor = FloatConst(0, 999, 2, v=1)
+        self.axial_factor = FloatConst(0, 999, 2, v=1)
+        self.engagement_angle = FloatConst(0, 180, 1, '°')
+        self.effective_diameter = FloatConst(0.00001, 99999, 3, 'mm')
+        self.overlap_area = FloatConst(0.00001, 999999, 3, 'mm²')
+        self.bend_force_limit = FloatConst(0.00001, 9999, 2, 'N')
+        self.twist_torque_limit = FloatConst(0.00001, 9999, 2, 'Nm')
+        self.score = FloatConst(-self.mrr.max, 0, 2)
 
         # For easy access to all results.
         self.all_params = dict(p for p in self.__dict__.items()
                                if isinstance(p[1], Param))
         self.params = dict(p for p in self.all_params.items()
-                           if not isinstance(p[1], Const))
+                           if not p[1].is_internal)
 
         self.op.prepare(self)
 
