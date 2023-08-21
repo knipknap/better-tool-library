@@ -1,6 +1,6 @@
 import re
 import random
-from .imperial import si_to_imperial, get_default_unit_conversion
+from .imperial import convert, get_default_unit_conversion
 
 class Param(object):
     name = None
@@ -65,7 +65,7 @@ class NumericParam(Param):
         self.v = v if v is not None else min
 
     def set(self, value, unit=None):
-        self.v = convert(self.v, unit, unit or self.unit)
+        self.v, self.unit = convert(self.v, unit, unit or self.unit)
 
     def format(self, value=None, decimals=None):
         value = value if value is not None else self.v
