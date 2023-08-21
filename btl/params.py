@@ -1,6 +1,6 @@
 import re
 import random
-from .imperial import si_to_imperial, si_unit_to_imperial_unit
+from .imperial import si_to_imperial, get_default_unit_conversion
 
 class Param(object):
     name = None
@@ -63,6 +63,9 @@ class NumericParam(Param):
         self.max = max
         self.limit = max
         self.v = v if v is not None else min
+
+    def set(self, value, unit=None):
+        self.v = convert(self.v, unit, unit or self.unit)
 
     def format(self, value=None, decimals=None):
         value = value if value is not None else self.v
@@ -130,9 +133,9 @@ class NumericParam(Param):
         if self.unit is None:
              return self.v, unit
         if self.v is None:
-             unit = unit if unit else si_unit_to_imperial_unit(self.unit)
+             unit = unit if unit else get_default_unit_conversion(self.unit)
              return None, unit
-        return si_to_imperial(self.v, self.unit, unit)
+        return convert(self.v, self.unit, unit)
 
 class IntParam(NumericParam):
     type = int
