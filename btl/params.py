@@ -64,8 +64,8 @@ class NumericParam(Param):
         self.limit = max
         self.v = v if v is not None else min
 
-    def set(self, value, unit=None):
-        self.v, self.unit = convert(self.v, unit, unit or self.unit)
+    def set(self, value, unit):
+        self.v, self.unit = convert(self.v, unit, self.unit)
 
     def format(self, value=None, decimals=None):
         value = value if value is not None else self.v

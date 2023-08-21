@@ -55,6 +55,33 @@ _symbols = {
 }
 
 _si_to_imperial = {
+    ('um', 'nm'): 1000,
+    ('mm', 'nm'): 1000000,
+    ('cm', 'nm'): 10000000,
+    ('dm', 'nm'): 100000000,
+    ('m', 'nm'):  1000000000,
+    ('km', 'nm'): 1000000000000,
+
+    ('mm', 'um'): 1000,
+    ('cm', 'um'): 10000,
+    ('dm', 'um'): 100000,
+    ('m', 'um'):  1000000,
+    ('km', 'um'): 1000000000,
+
+    ('cm', 'mm'): 10,
+    ('dm', 'mm'): 100,
+    ('m', 'mm'):  1000,
+    ('km', 'mm'): 1000000,
+
+    ('dm', 'cm'): 10,
+    ('m', 'cm'):  100,
+    ('km', 'cm'): 100000,
+
+    ('m', 'dm'):  10,
+    ('km', 'dm'): 10000,
+
+    ('km', 'm'): 1000,
+
     ('nm', 'in'): 0.000000001*meters_to_inch,
     ('um', 'in'): 0.000001*meters_to_inch,
     ('mm', 'in'): 0.001*meters_to_inch,
@@ -94,6 +121,8 @@ _si_to_imperial = {
 }
 unitmap = {}
 for (src, dest), factor in _si_to_imperial.items():
+    unitmap[(src, src)] = 1
+    unitmap[(dest, dest)] = 1
     unitmap[(src, dest)] = factor
     unitmap[(dest, src)] = 1/factor
 
