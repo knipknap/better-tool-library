@@ -210,17 +210,15 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
             return self.show_hint("Please enter the stickout of the tool.")
         elif not self.tool.shape.get_flutes():
             return self.show_hint("Tool needs to have more than zero flutes.")
+        elif not self.tool.supports_feeds_and_speeds():
+            return self.show_hint("Tool shape not supported by the calculator.")
         self.form.hintLabel.hide()
 
         # Prepare the calculator.
-        try:
-            fc = FeedCalc(machine, self.tool, material, op=op)
-        except AttributeError as e:
-            self.show_hint(f"Calculator error: {e}")
-            return
-        if not self.tool.supports_feeds_and_speeds():
-            self.show_hint("This tool shape is not supported by the calculator.")
-            return
+        fc = FeedCalc(machine, self.tool, material, op=op)
+        error = fc.get_error()
+        if error:
+            return self.show_hint(f"Calculator error: {error}")
 
         # Apply limits, if any.
         doc_limit = self.get_doc_limit()
