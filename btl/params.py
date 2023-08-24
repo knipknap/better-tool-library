@@ -20,6 +20,9 @@ class Param(object):
     def __str__(self):
         return str(self.v if self.v is not None else '')
 
+    def value(self):
+        return self.v
+
     def format(self):
         unit = ' '+self.unit if self.unit else ''
         return self.fmt.format(self.v)+unit
@@ -66,6 +69,22 @@ class NumericParam(Param):
 
     def set(self, value, unit):
         self.v, self.unit = convert(self.v, unit, self.unit)
+
+    def value(self, unit=None):
+        if self.v is None:
+            return None
+        if unit is None:
+            unit = self.unit
+        value, unit = convert(self.v, self.unit, unit)
+        return value
+
+    def get_imperial(self, unit=None):
+        if self.unit is None:
+            return self.v, unit
+        if self.v is None:
+            unit = unit if unit else get_default_unit_conversion(self.unit)
+            return None, unit
+        return convert(self.v, self.unit, unit)
 
     def format(self, value=None, decimals=None):
         value = value if value is not None else self.v
@@ -128,14 +147,6 @@ class NumericParam(Param):
         max_value = self.format(self.max, decimals)
         limit = self.format(self.limit, decimals)
         return f"{value} ({percent:.0f}%) (min {min_value}, max {max_value}, limit {limit})"
-
-    def get_imperial(self, unit=None):
-        if self.unit is None:
-             return self.v, unit
-        if self.v is None:
-             unit = unit if unit else get_default_unit_conversion(self.unit)
-             return None, unit
-        return convert(self.v, self.unit, unit)
 
 class IntParam(NumericParam):
     type = int

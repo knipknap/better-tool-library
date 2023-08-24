@@ -133,19 +133,19 @@ class Shape():
 
     def get_shank_diameter(self):
         item = self.params.get('ShankDiameter')
-        return item.v if item else None
+        return item.value('mm') if item else None
 
     def get_diameter(self):
         item = self.params.get('Diameter')
-        return item.v if item else None
+        return item.value('mm') if item else None
 
     def get_cutting_edge(self):
         item = self.params.get('CuttingEdgeHeight')
-        return item.v if item else None
+        return item.value('mm') if item else None
 
     def get_length(self):
         item = self.params.get('Length')
-        return item.v if item else None
+        return item.value('mm') if item else None
 
     def get_flutes(self):
         item = self.params.get('Flutes')
@@ -153,17 +153,17 @@ class Shape():
 
     def get_chipload(self):
         item = self.params.get('Chipload')
-        return item.v if item else None
+        return item.value('mm') if item else None
 
     def get_radius(self):
         item = self.params.get('Radius')
-        return item.v if item else 0
+        return item.value('mm') if item else 0
 
     def get_corner_radius(self):
         if self.name == 'ballend':
             return self.get_diameter()/2
         item = self.params.get('TorusRadius')
-        return item.v if item else 0
+        return item.value('mm') if item else 0
 
     def get_cutting_edge_angle(self):
         item = self.params.get('CuttingEdgeAngle')
@@ -171,7 +171,7 @@ class Shape():
 
     def get_tip_diameter(self):
         item = self.params.get('TipDiameter')
-        return item.v if item else 0
+        return item.value('mm') if item else 0
 
     def get_tip_angle(self):
         item = self.params.get('TipAngle')

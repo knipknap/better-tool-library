@@ -1,16 +1,16 @@
 {
   "attribute": {
-    "btl-stickout": 11.0
+    "btl-stickout": 10.0
   },
   "name": "2,5mm uncoated aluminium dual flute HRC50",
   "parameter": {
-    "Chipload": "0,0 mm",
-    "CuttingEdgeHeight": "8,0 mm",
-    "Diameter": "2,5 mm",
+    "Chipload": "25 um",
+    "CuttingEdgeHeight": "7,0 mm",
+    "Diameter": "1,0 mm",
     "Flutes": "2",
-    "Length": "50,0 mm",
-    "Material": "HSS",
-    "ShankDiameter": "4,0 mm",
+    "Length": "40,0 mm",
+    "Material": "Carbide",
+    "ShankDiameter": "3,175 mm",
     "SpindleDirection": "Forward"
   },
   "shape": "endmill.fcstd",
