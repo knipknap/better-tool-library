@@ -92,8 +92,12 @@ class NumericParam(Param):
         if decimals is None:
             return super(NumericParam, self).format()
 
-        fmt = "{{:.{}f}}".format(decimals)
-        value = fmt.format(value) if isinstance(value, float) else str(value)
+        if isinstance(value, float):
+            fmt = "{{:.{}f}}".format(decimals)
+            value = fmt.format(value).rstrip('0').rstrip('.')
+        else:
+            value = str(value)
+
         if self.unit:
             if self.unit != '°':
                 value += ' '
@@ -157,7 +161,7 @@ class FloatParam(NumericParam):
     def __init__(self,
                  min=None,
                  max=None,
-                 decimals=2,
+                 decimals=3,
                  unit=None,
                  v=None,
                  name=None):
