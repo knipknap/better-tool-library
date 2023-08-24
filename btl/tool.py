@@ -364,7 +364,7 @@ class Tool(object):
 
     def validate(self):
         stickout = self.get_stickout()
-        cutting_edge = self.shape.get_cutting_edge() or stickout
+        cutting_edge = self.shape.get_cutting_edge() or 0
         corner_r = self.shape.get_corner_radius()
         diameter = self.shape.get_diameter()
         ce_angle = self.shape.get_cutting_edge_angle()
@@ -374,5 +374,9 @@ class Tool(object):
             raise AttributeError(f"Corner radius {corner_r} is larger than tool radius {diameter/2}")
         if corner_r and ce_angle:
             raise AttributeError("Tool has radius and cutting edge angle; only one supported")
+        if corner_r and cutting_edge < corner_r:
+            raise AttributeError(f"Cutting edge {cutting_edge} is smaller than radius {corner_r}")
         if ce_angle and (ce_angle < 0 or ce_angle > 180):
             raise AttributeError("Cutting edge angle must be between 0 and 180 degrees")
+        if cutting_edge <= 0:
+            raise AttributeError(f"Cutting edge {cutting_edge} too small")
