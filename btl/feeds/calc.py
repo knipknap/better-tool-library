@@ -83,10 +83,10 @@ class FeedCalc(object):
         # check whether the calculated values are valid.
         self.rpm = IntVar(machine.min_rpm, machine.max_rpm)
         self.feed = FloatVar(machine.min_feed, machine.max_feed, 1, 'mm/min') # The distance the tool travels each minute
-        self.mrr = FloatVar(0.001, 999, 2, 'cm³/min')   # material removal rate
+        self.mrr = FloatVar(0.00001, 999, 2, 'cm³/min')   # material removal rate
         self.adjusted_chipload = FloatVar(0.0001, 12, 4, 'mm') # Should setup with same values as chipload
-        self.power = FloatVar(0.001, machine.max_power, 3, 'kW')
-        self.torque = FloatVar(0.001, machine.max_torque, 2, 'Nm')
+        self.power = FloatVar(0.00001, machine.max_power, 3, 'kW')
+        self.torque = FloatVar(0.00001, machine.max_torque, 2, 'Nm')
         self.deflection = FloatVar(0, 0.025, 3, 'mm') # actual deflection
         self.max_deflection = FloatVar(0, 0.05, 3, 'mm') # theoretical max deflection
         self.radial_force = FloatVar(0, 99999, 2, 'N') # Radial cutting force
