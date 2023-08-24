@@ -79,11 +79,14 @@ class Tool(object):
         stickout = self.get_attrib('btl-stickout')
         if stickout is not None:
             return float(stickout)
+
+        diameter = self.shape.get_diameter() or 0
+        shank = self.shape.get_shank_diameter() or 0
         ce = self.shape.get_cutting_edge()
-        if ce is not None:
-            return ce+3
-        length = self.shape.get_length()
-        return length/2 if length else None
+        ce = ce+3 if ce else 0
+        stickout = max(diameter+1, shank+1, ce)
+        length = self.shape.get_length() or 50
+        return math.floor(max(stickout, length*0.6))
 
     def set_notes(self, notes):
         self.attrs['btl-notes'] = notes
