@@ -163,7 +163,8 @@ def _exponent_replace(match):
 
 def _base_unit_normalize(unit):
     assert '/' not in unit
-    unit = re.sub(r'^([μa-z]+)', _symbol_replace, unit)
+    inputs = '|'.join(_symbols.keys())
+    unit = re.sub(f'^({inputs})', _symbol_replace, unit)
     unit = re.sub(r'\^?(\d)', _exponent_replace, unit)
     return re.sub(r'^([μa-z]+)¹$', r'\1', unit) # strip "1" exponent
 
