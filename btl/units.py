@@ -12,6 +12,7 @@ _symbols = {
     # SI units.
     'nanometer': 'nm',
     'nanometers': 'nm',
+    'um': 'μm',
     'micrometer': 'μm',
     'micrometers': 'μm',
     'millimeter': 'mm',
@@ -55,18 +56,18 @@ _symbols = {
 }
 
 _si_to_imperial = {
-    ('um', 'nm'): 1000,
+    ('μm', 'nm'): 1000,
     ('mm', 'nm'): 1000000,
     ('cm', 'nm'): 10000000,
     ('dm', 'nm'): 100000000,
     ('m', 'nm'):  1000000000,
     ('km', 'nm'): 1000000000000,
 
-    ('mm', 'um'): 1000,
-    ('cm', 'um'): 10000,
-    ('dm', 'um'): 100000,
-    ('m', 'um'):  1000000,
-    ('km', 'um'): 1000000000,
+    ('mm', 'μm'): 1000,
+    ('cm', 'μm'): 10000,
+    ('dm', 'μm'): 100000,
+    ('m', 'μm'):  1000000,
+    ('km', 'μm'): 1000000000,
 
     ('cm', 'mm'): 10,
     ('dm', 'mm'): 100,
@@ -83,7 +84,7 @@ _si_to_imperial = {
     ('km', 'm'): 1000,
 
     ('nm', 'in'): 0.000000001*meters_to_inch,
-    ('um', 'in'): 0.000001*meters_to_inch,
+    ('μm', 'in'): 0.000001*meters_to_inch,
     ('mm', 'in'): 0.001*meters_to_inch,
     ('cm', 'in'): 0.01*meters_to_inch,
     ('dm', 'in'): 0.1*meters_to_inch,
@@ -91,7 +92,7 @@ _si_to_imperial = {
     ('km', 'in'): 1000*meters_to_inch,
 
     ('nm', 'ft'): 0.000000001*meters_to_feet,
-    ('um', 'ft'): 0.000001*meters_to_feet,
+    ('μm', 'ft'): 0.000001*meters_to_feet,
     ('mm', 'ft'): 0.001*meters_to_feet,
     ('cm', 'ft'): 0.01*meters_to_feet,
     ('dm', 'ft'): 0.1*meters_to_feet,
@@ -99,7 +100,7 @@ _si_to_imperial = {
     ('km', 'ft'): 1000*meters_to_feet,
 
     ('nm', 'yd'): 0.000000001*meters_to_yards,
-    ('um', 'yd'): 0.000001*meters_to_yards,
+    ('μm', 'yd'): 0.000001*meters_to_yards,
     ('mm', 'yd'): 0.001*meters_to_yards,
     ('cm', 'yd'): 0.01*meters_to_yards,
     ('dm', 'yd'): 0.1*meters_to_yards,
@@ -107,7 +108,7 @@ _si_to_imperial = {
     ('km', 'yd'): 1000*meters_to_yards,
 
     ('nm', 'mi'): 0.000000001*meters_to_miles,
-    ('um', 'mi'): 0.000001*meters_to_miles,
+    ('μm', 'mi'): 0.000001*meters_to_miles,
     ('mm', 'mi'): 0.001*meters_to_miles,
     ('cm', 'mi'): 0.01*meters_to_miles,
     ('dm', 'mi'): 0.1*meters_to_miles,
@@ -128,7 +129,7 @@ for (src, dest), factor in _si_to_imperial.items():
 
 _default_conversions = {
     'nm': 'nm',    # no conversion
-    'um': 'um',    # no conversion
+    'μm': 'μm',    # no conversion
     'mm': 'in',
     'cm': 'in',
     'dm': 'in',
@@ -162,9 +163,9 @@ def _exponent_replace(match):
 
 def _base_unit_normalize(unit):
     assert '/' not in unit
-    unit = re.sub(r'^([a-z]+)', _symbol_replace, unit)
+    unit = re.sub(r'^([μa-z]+)', _symbol_replace, unit)
     unit = re.sub(r'\^?(\d)', _exponent_replace, unit)
-    return re.sub(r'^([a-z]+)¹$', r'\1', unit) # strip "1" exponent
+    return re.sub(r'^([μa-z]+)¹$', r'\1', unit) # strip "1" exponent
 
 def unit_normalize(unit):
     base_unit, suffix = _suffix_split(unit)
@@ -172,7 +173,7 @@ def unit_normalize(unit):
     return base_unit+'/'+suffix if suffix else base_unit
 
 def _split_exponent(unit):
-    match = re.match(r'^([a-z]+)([⁰¹²³⁴⁵⁶⁷⁸⁹]*)$', unit, re.I)
+    match = re.match(r'^([μa-z]+)([⁰¹²³⁴⁵⁶⁷⁸⁹]*)$', unit, re.I)
     return match.group(1), match.group(2)
 
 def get_default_unit_conversion(unit):
