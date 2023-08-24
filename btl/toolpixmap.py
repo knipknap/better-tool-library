@@ -51,8 +51,9 @@ class ToolPixmap(object):
         mask_painter = QPainter(mask_image)
     
         center = self.size/2/self.scale
+        diameter = self.get_effective_diameter_from_doc(doc)
         mask_painter.setBrush(QColor(255, 0, 0, 255))
-        mask_painter.drawRect(self.S(center+self.diameter/2-woc),
+        mask_painter.drawRect(self.S(center+diameter/2-woc),
                               self.S(self.stickout-doc),
                               self.S(woc), self.S(doc))
         mask_painter.end()
@@ -136,7 +137,8 @@ class ToolPixmap(object):
         pixelArea = 1 / (scale * scale)
 
         # Calculate lowest X position.
-        lowX = self.diameter/2 - woc
+        diameter = self.get_effective_diameter_from_doc(doc)
+        lowX = diameter/2 - woc
         lowX = int(max(0, math.floor(lowX*scale) + self.size/2))
 
         # Calculate lowest Y position.
