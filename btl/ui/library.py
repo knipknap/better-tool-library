@@ -63,6 +63,7 @@ class LibraryUI():
         self.form.actionCopy.triggered.connect(self._copy_tool)
         self.form.actionPaste.triggered.connect(self._paste_tool)
         self.form.actionDelete.triggered.connect(self.on_delete_tool_clicked)
+        self.form.actionDuplicate.triggered.connect(self._duplicate_tool)
         self.form.actionPreferences.triggered.connect(self.on_preferences_clicked)
 
         if standalone:
@@ -93,6 +94,19 @@ class LibraryUI():
         mime_data.setText('\n'.join(tool_str))
         mime_data.setData('application/btl-tool-ids', tool_data)
         clipboard.setMimeData(mime_data)
+
+    def _duplicate_tool(self):
+        library = self.get_selected_library()
+        items = self.form.listWidgetTools.selectedItems()
+        if not items:
+            return
+
+        for item in self.form.listWidgetTools.selectedItems():
+            tool = item.data(QtCore.Qt.UserRole)
+            self.db.add_tool(tool.copy(), library)
+
+        self.db.serialize(self.serializer)
+        self.load()
 
     def _paste_tool(self):
         library = self.get_selected_library()
@@ -297,7 +311,6 @@ class LibraryUI():
         dirname = os.path.dirname(filename)
         serializer = filters[format](dirname)
 
-        print("Selected", filename, serializer)
         library.serialize(serializer, filename)
 
     def get_tool_list_item(self, tool):

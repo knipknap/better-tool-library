@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import uuid
 import math
+from copy import deepcopy
 from .feeds.util import cantilever_deflect_endload, cantilever_deflect_uniload
 from .feeds import operation
 from .shape import Shape
@@ -36,6 +37,12 @@ class Tool(object):
 
     def __hash__(self):
         return hash(self.id)
+
+    def copy(self):
+        obj = deepcopy(self)
+        obj.id = str(uuid.uuid4())
+        obj.label += ' (copy)'
+        return obj
 
     def to_dict(self):
         return {

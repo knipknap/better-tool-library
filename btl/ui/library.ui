@@ -23,6 +23,7 @@
       <addaction name="actionCopy"/>
       <addaction name="actionPaste"/>
       <addaction name="actionDelete"/>
+      <addaction name="actionDuplicate"/>
       <addaction name="separator"/>
       <addaction name="actionPreferences"/>
      </widget>
@@ -286,6 +287,18 @@
    </property>
    <property name="text">
     <string>Preferences</string>
+   </property>
+  </action>
+  <action name="actionDuplicate">
+   <property name="icon">
+    <iconset>
+     <normaloff>../resources/icons/duplicate.svg</normaloff>../resources/icons/duplicate.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Duplicate</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+D</string>
    </property>
   </action>
  </widget>
