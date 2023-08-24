@@ -1,6 +1,6 @@
 import re
 import random
-from .imperial import convert, get_default_unit_conversion
+from .units import convert, get_default_unit_conversion
 
 class Param(object):
     name = None
