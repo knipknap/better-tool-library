@@ -3,16 +3,15 @@ import os
 import sys
 import argparse
 from PySide import QtGui
+from btl import ToolDB, serializers
+from btl.const import resource_dir
+from btl.ui.library import LibraryUI
 
 try:
     import FreeCAD
 except ImportError:
     sys.stderr.write('error: FreeCAD not found. Make sure to include it in your PYTHONPATH')
     sys.exit(1)
-
-from btl import ToolDB, serializers
-from btl.const import resource_dir
-from btl.ui.library import LibraryUI
 
 parser = argparse.ArgumentParser(
     prog=__file__,
