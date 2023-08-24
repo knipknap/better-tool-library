@@ -4,7 +4,7 @@
   },
   "name": "2,5mm uncoated aluminium dual flute HRC50",
   "parameter": {
-    "Chipload": "25 um",
+    "Chipload": "25,0 \u03bcm",
     "CuttingEdgeHeight": "7,0 mm",
     "Diameter": "1,0 mm",
     "Flutes": "2",

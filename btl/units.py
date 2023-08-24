@@ -127,6 +127,11 @@ for (src, dest), factor in _si_to_imperial.items():
     unitmap[(src, dest)] = factor
     unitmap[(dest, src)] = 1/factor
 
+distance_units = {
+    'nm', 'μm', 'mm', 'cm', 'dm', 'm', 'km',
+    'in', 'ft', 'yd', 'mi'
+}
+
 _default_conversions = {
     'nm': 'nm',    # no conversion
     'μm': 'μm',    # no conversion
