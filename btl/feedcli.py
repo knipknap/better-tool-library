@@ -25,7 +25,7 @@ def run(op):
 
     tool_material = Carbide
     endmill = Tool('Test tool', shape)
-    endmill.set_stickout(20)
+    endmill.set_stickout(20, 'mm')
     endmill.set_material(tool_material)
     endmill.dump()
     #return endmill.get_pixmap().show_engagement(0.1, 0.1)
