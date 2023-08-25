@@ -18,9 +18,9 @@ class UnitSpinBox(QDoubleSpinBox):
         #self.setKeyboardTracking(False)
 
     def setValue(self, value, unit=None):
-        super().setValue(value)
         if unit:
             self.unit = unit
+        super().setValue(value)
 
     def setValueFromParam(self, param):
         self.setValue(param.v, param.unit)
