@@ -53,6 +53,9 @@ class Param(object):
         """Returns a tuple (value, unit)"""
         return self.v, unit
 
+    def dump(self):
+        print(self.to_dict())
+
 class BoolParam(Param):
     type = bool
 
@@ -74,7 +77,7 @@ class NumericParam(Param):
     @classmethod
     def from_value(cls, name, value, default_unit=None):
         if isinstance(value, Param):
-            return param
+            return value
         value, unit = parse_value(value)
         return cls(name=name, unit=unit or default_unit, v=value)
 
@@ -131,7 +134,9 @@ class NumericParam(Param):
 
         if isinstance(value, float):
             fmt = "{{:.{}f}}".format(decimals)
-            value = fmt.format(value).rstrip('0').rstrip('.')
+            value = fmt.format(value)
+            if '.' in value:
+                value = value.rstrip('0').rstrip('.')
         else:
             value = str(value)
 
