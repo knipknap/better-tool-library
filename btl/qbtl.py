@@ -5,7 +5,8 @@ import argparse
 from PySide import QtGui
 from PySide.QtCore import QTranslator, QLocale
 from btl import ToolDB, serializers
-from btl.const import resource_dir, translations_dir
+from btl.const import resource_dir
+from btl.i18n import install_translator
 from btl.ui.library import LibraryUI
 
 try:
@@ -35,10 +36,7 @@ def run():
     serializer = serializer_cls(args.name)
 
     app = QtGui.QApplication([])
-    translator = QTranslator(app)
-    if not translator.load(QLocale.system(), 'btl', '.', translations_dir, '.qm'):
-        sys.stderr.write('Warning: failed to load locale\n')
-    app.installTranslator(translator)
+    install_translator(app)
     window = LibraryUI(tool_db, serializer, standalone=True, parent=app)
     window.show()
 
