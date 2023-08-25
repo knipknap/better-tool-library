@@ -219,6 +219,9 @@ def parse_value(value):
     return float(value), unit_normalize(unit) or None
 
 def convert(value, source_unit, dest_unit=None):
+    if source_unit == dest_unit:   # Exists for performance reasons.
+        return value, source_unit
+
     # Normalize the source unit.
     source_base_unit, source_suffix = _suffix_split(source_unit)
     source_base_unit = _base_unit_normalize(source_base_unit)
