@@ -1,7 +1,7 @@
 from functools import partial
 from PySide import QtGui, QtSvg, QtCore
 from ..params import DistanceParam
-from .distancespinbox import DistanceSpinBox
+from .spinbox import DistanceSpinBox
 
 class FuncValidator(QtGui.QValidator):
     def __init__(self, func, parent=None):
@@ -33,7 +33,7 @@ class PropertyWidget(QtGui.QWidget):
             widget.setCurrentText(param.format())
             widget.currentTextChanged.connect(setter)
         elif isinstance(param, DistanceParam):
-            widget = DistanceSpinBox(param.unit)
+            widget = DistanceSpinBox(unit=param.unit)
             widget.setMaximum(param.max or 99999)
             widget.setDecimals(param.decimals)
             widget.setValue(float(param.v or 0))

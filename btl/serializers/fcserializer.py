@@ -13,6 +13,7 @@ import copy
 from textwrap import dedent
 from .. import Machine, Library, Shape, Tool
 from ..shape import builtin_shapes
+from ..params import Param, IntParam, FloatParam
 from ..fcutil import *
 
 TOOL_DIR = 'Bit'
@@ -124,13 +125,13 @@ class FCSerializer():
     def serialize_machine(self, machine, filename=None):
         attrs = {}
         attrs["label"] = machine.label
-        attrs["max-power"] = machine.max_power
-        attrs["max-torque"] = machine.max_torque
-        attrs["peak-torque-rpm"] = machine.peak_torque_rpm
-        attrs["min-rpm"] = machine.min_rpm
-        attrs["max-rpm"] = machine.max_rpm
-        attrs["min-feed"] = machine.min_feed
-        attrs["max-feed"] = machine.max_feed
+        attrs["max-power"] = machine.max_power.format()
+        attrs["max-torque"] = machine.max_torque.format()
+        attrs["peak-torque-rpm"] = machine.peak_torque_rpm.format()
+        attrs["min-rpm"] = machine.min_rpm.format()
+        attrs["max-rpm"] = machine.max_rpm.format()
+        attrs["min-feed"] = machine.min_feed.format()
+        attrs["max-feed"] = machine.max_feed.format()
 
         if not filename:
             filename = self._machine_filename_from_name(machine.id)
@@ -143,16 +144,24 @@ class FCSerializer():
         with open(filename, "r") as fp:
             attrs = json.load(fp)
 
+        max_power = FloatParam.from_value('max-power', attrs['max-power'], 'kW')
+        max_torque = FloatParam.from_value('max-torque', attrs['max-torque'], 'Nm')
+        peak_torque_rpm = IntParam.from_value('peak-torque-rpm', attrs['peak-torque-rpm'])
+        min_rpm = IntParam.from_value('min-rpm', attrs['min-rpm'])
+        max_rpm = IntParam.from_value('max-rpm', attrs['max-rpm'])
+        min_feed = FloatParam.from_value('min-feed', attrs['min-feed'], 'mm/min')
+        max_feed = FloatParam.from_value('max-feed', attrs['max-feed'], 'mm/min')
+
         label = attrs.get('label', id)
         machine = Machine(label,
                           id=id,
-                          max_power=attrs['max-power'],
-                          max_torque=attrs['max-torque'],
-                          peak_torque_rpm=attrs['peak-torque-rpm'],
-                          min_rpm=attrs['min-rpm'],
-                          max_rpm=attrs['max-rpm'],
-                          min_feed=attrs['min-feed'],
-                          max_feed=attrs['max-feed'])
+                          max_power=max_power.value('kW'),
+                          max_torque=max_torque.value('Nm'),
+                          peak_torque_rpm=peak_torque_rpm.v,
+                          min_rpm=min_rpm.v,
+                          max_rpm=max_rpm.v,
+                          min_feed=min_feed.value('mm/min'),
+                          max_feed=max_feed.value('mm/min'))
 
         return machine
 

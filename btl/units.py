@@ -115,6 +115,8 @@ _si_to_imperial = {
     ('m', 'mi'): meters_to_miles,
     ('km', 'mi'): 1000*meters_to_miles,
 
+    ('W', 'kW'): 0.001,
+    ('W', 'HP'): 0.001*kw_to_hp,
     ('kW', 'HP'): kw_to_hp,
 
     ('N', 'lbf'): newton_to_lbf,
@@ -130,6 +132,14 @@ for (src, dest), factor in _si_to_imperial.items():
 distance_units = {
     'nm', 'μm', 'mm', 'cm', 'dm', 'm', 'km',
     'in', 'ft', 'yd', 'mi'
+}
+
+power_units = {
+    'W', 'kW', 'HP'
+}
+
+torque_units = {
+    'Nm', 'lbf-in'
 }
 
 _default_conversions = {
@@ -200,6 +210,13 @@ def _superscript2int(string):
         return int(intstr)
     except ValueError:
         return None
+
+_value_split_re = re.compile(r'^([\d\.]+)\s*(\S*)$')
+def parse_value(value):
+    if not isinstance(value, str):
+        return value, None
+    value, unit = _value_split_re.match(value).groups()
+    return float(value), unit_normalize(unit) or None
 
 def convert(value, source_unit, dest_unit=None):
     # Normalize the source unit.

@@ -1,6 +1,6 @@
 import re
 import random
-from .units import convert, get_default_unit_conversion
+from .units import convert, get_default_unit_conversion, parse_value
 
 class Param(object):
     name = None
@@ -16,6 +16,10 @@ class Param(object):
         self.label = self.label if name is None else label
         self.unit = self.unit if unit is None else unit
         self.v = v
+
+    @classmethod
+    def from_value(cls, name, value, default_unit=None):
+        return cls(name=name, unit=default_unit, v=value)
 
     def __str__(self):
         return str(self.v if self.v is not None else '')
@@ -67,6 +71,13 @@ class NumericParam(Param):
         self.limit = max
         self.v = v if v is not None else min
 
+    @classmethod
+    def from_value(cls, name, value, default_unit=None):
+        if isinstance(value, Param):
+            return param
+        value, unit = parse_value(value)
+        return cls(name=name, unit=unit or default_unit, v=value)
+
     def set(self, value, unit):
         self.v, self.unit = convert(self.v, unit, self.unit)
 
@@ -75,6 +86,8 @@ class NumericParam(Param):
             return None
         if unit is None:
             unit = self.unit
+        if not unit:
+            return self.v
         value, unit = convert(self.v, self.unit, unit)
         return value
 
@@ -85,6 +98,30 @@ class NumericParam(Param):
             unit = unit if unit else get_default_unit_conversion(self.unit)
             return None, unit
         return convert(self.v, self.unit, unit)
+
+    def __lt__(self, other):
+        other_value = other.value(self.unit)
+        return self.v < other_value
+
+    def __le__(self, other):
+        other_value = other.value(self.unit)
+        return self.v <= other_value
+
+    def __gt__(self, other):
+        other_value = other.value(self.unit)
+        return self.v > other_value
+
+    def __ge__(self, other):
+        other_value = other.value(self.unit)
+        return self.v >= other_value
+
+    def __eq__(self, other):
+        other_value = other.value(self.unit)
+        return self.v == other_value
+
+    def __ne__(self, other):
+        other_value = other.value(self.unit)
+        return self.v != other_value
 
     def format(self, value=None, decimals=None):
         value = value if value is not None else self.v
@@ -179,3 +216,10 @@ class DistanceParam(FloatParam):
 class AngleParam(FloatParam):
     unit = '°'
     fmt = '{}'
+
+type_map = {
+   bool: BoolParam,
+   int: IntParam,
+   float: FloatParam,
+   str: Param,
+}
