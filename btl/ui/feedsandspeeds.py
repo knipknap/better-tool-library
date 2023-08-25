@@ -17,6 +17,11 @@ from .machineeditor import MachineEditor
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "feedsandspeeds.ui")
 pool = QtCore.QThreadPool()
+pool.setMaxThreadCount(1)
+active_worker = None
+
+class CalculatorCancelled(Exception):
+    pass
 
 class FeedCalculatorWorker(QtCore.QObject):
     finished = QtCore.Signal()
@@ -28,7 +33,10 @@ class FeedCalculatorWorker(QtCore.QObject):
         self.result = None
 
     def start(self):
-        progress_cb = lambda x: self.progress.emit(x*100)
+        def progress_cb(percent):
+            if active_worker != self:
+                raise CalculatorCancelled()
+            return self.progress.emit(percent*100)
         self.result = self.fc.start(progress_cb=progress_cb)
         self.finished.emit()
 
@@ -39,7 +47,10 @@ class FeedCalculatorRunnable(QtCore.QRunnable):
         self.worker = FeedCalculatorWorker(fc)
 
     def run(self):
-        self.worker.start()
+        try:
+            self.worker.start()
+        except CalculatorCancelled:
+            pass
 
 class KeyPressFilter(QObject):
     def eventFilter(self, obj, event):
@@ -233,9 +244,11 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         # Calculate.
         pool.clear()
         runnable = FeedCalculatorRunnable(fc)
-        runnable.worker.finished.connect(pool.releaseThread)
-        runnable.worker.progress.connect(self._on_calculator_progress)
-        runnable.worker.finished.connect(lambda: self._on_calculator_finished(runnable.worker))
+        global active_worker
+        active_worker = runnable.worker
+        active_worker.finished.connect(pool.releaseThread)
+        active_worker.progress.connect(self._on_calculator_progress)
+        active_worker.finished.connect(lambda: self._on_calculator_finished(runnable.worker))
         pool.start(runnable)
 
     def _on_calculator_progress(self, progress):
