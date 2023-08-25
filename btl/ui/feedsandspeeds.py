@@ -320,7 +320,6 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
     def _show_machine_editor(self, machine):
         editor = MachineEditor(self.db, self.serializer, machine, self)
         if not editor.exec():
-            self.update()
             return
         self.db.add_machine(machine)
         self.db.serialize_machines(self.serializer)
