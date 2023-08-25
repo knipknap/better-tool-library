@@ -167,17 +167,19 @@ def get_selected_job():
 
     return None
 
-def get_active_job():
+def get_jobs():
     try:
         from PathScripts import PathUtilsGui
     except ImportError:
         raise RuntimeError('Error: Could not access Path workbench, is it loaded?')
+    return PathUtilsGui.PathUtils.GetJobs()
 
+def get_active_job():
     # Currently, Job objects have no active/inactive state, so we "simulate"
     # this behavior: If there's only one job, return that one.
     # Otherwise, find the job by searching the object tree, beginning at the
     # current selection.
-    jobs = PathUtilsGui.PathUtils.GetJobs()
+    jobs = get_jobs()
     if not jobs:
         return None
     elif len(jobs) == 1:

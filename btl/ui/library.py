@@ -8,13 +8,14 @@ from PySide.QtCore import Qt, QMimeData
 from PySide.QtGui import QApplication, QShortcut
 from .. import Library, Tool, serializers
 from ..serializers import serializers, FCSerializer, LinuxCNCSerializer
-from ..fcutil import add_tool_to_job, get_active_job
+from ..fcutil import add_tool_to_job, get_jobs, get_active_job
 from .util import load_ui
 from .preferences import PreferencesDialog
 from .tablecell import TwoLineTableCell
 from .shapeselector import ShapeSelector
 from .tooleditor import ToolEditor
 from .libraryproperties import LibraryProperties
+from .jobselector import JobSelector
 from .movetool import MoveToolDialog
 
 __dir__ = os.path.dirname(__file__)
@@ -159,8 +160,9 @@ class LibraryUI():
         self.load()
 
     def update_button_state(self):
-        # Avoid calling get_active_job() in standalone mode - it doesn't support that
-        has_job = self.standalone or bool(get_active_job())
+        # Avoid calling get_jobs() or get_active_job() in standalone mode,
+        # it doesn't support that.
+        has_job = self.standalone or bool(get_jobs())
         library = self.get_selected_library()
         tool_selected = bool(self.form.listWidgetTools.selectedItems())
         self.form.toolButtonRemoveLibrary.setEnabled(library is not None)
@@ -168,7 +170,7 @@ class LibraryUI():
         self.form.toolButtonExportLibrary.setEnabled(library is not None)
         self.form.pushButtonDeleteTool.setEnabled(tool_selected)
         self.form.pushButtonAddToJob.setEnabled(tool_selected and has_job)
-        tt = '' if has_job else 'No job is selected in main window'
+        tt = '' if has_job else 'No job found in main window'
         self.form.pushButtonAddToJob.setToolTip(tt)
 
     def load(self):
@@ -418,15 +420,18 @@ class LibraryUI():
         if not items:
             return
 
-        job = get_active_job()
-        if not job:
+        jobs = [get_active_job()]
+        if not jobs:
+            jobs = JobSelector(self.form).exec()
+        if not jobs:
             return
 
-        for item in items:
-            tool = item.data(QtCore.Qt.UserRole)
-            pocket = library.get_pocket_from_tool(tool)
-            assert pocket is not None
-            add_tool_to_job(job, tool, pocket)
+        for job in jobs:
+            for item in items:
+                tool = item.data(QtCore.Qt.UserRole)
+                pocket = library.get_pocket_from_tool(tool)
+                assert pocket is not None
+                add_tool_to_job(job, tool, pocket)
 
     def on_preferences_clicked(self):
         dialog = PreferencesDialog(self.serializer, parent=self.form)

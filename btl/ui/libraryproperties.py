@@ -1,8 +1,6 @@
 import os
 from PySide import QtGui, QtCore
-from ..const import icon_dir
 from .util import load_ui
-from .toolproperties import ToolProperties
 
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "libraryproperties.ui")
