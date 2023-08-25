@@ -45,9 +45,16 @@ It takes into account a dozen of factors:
 
 - Tools that are wider than they are long (stickout) are not supported.
 
-- SI units (metric) only. While the backend already has support for converting to/from
-  imperial, this is not used in the UI. If you want this feature, please submit a pull
-  request.
+- The calculator outputs SI units (metric) only. All input fields support entering
+  any supported unit and the calculation should succeed, but the calculator output
+  is displayed in SI units only.
+  If you want support for imperial outputs, please submit a pull request.
+
+
+## Supported units
+
+- International (SI): nm, um, mm, cm, dm, m, km, Nm, W, kW
+- Imperial: in, ft, yd, mi, lbs-in, HP
 
 
 ## Screenshots
