@@ -421,7 +421,7 @@ class LibraryUI():
             return
 
         jobs = [get_active_job()]
-        if not jobs:
+        if not jobs[0]:
             jobs = JobSelector(self.form).exec()
         if not jobs:
             return
