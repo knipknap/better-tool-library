@@ -5,12 +5,14 @@ from pathlib import Path
 from PySide.QtCore import Qt, QObject, QEvent
 from PySide.QtGui import QApplication
 from PySide import QtGui, QtCore
-from .util import load_ui
-from .machineeditor import MachineEditor
 from ..machine import Machine
 from ..feeds import FeedCalc
 from ..feeds.operation import operations, Drilling, Slotting
 from ..feeds.material import materials
+from ..units import convert
+from .util import load_ui
+from .spinbox import DistanceSpinBox
+from .machineeditor import MachineEditor
 
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "feedsandspeeds.ui")
@@ -70,7 +72,7 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
 
         self.layout = QtGui.QVBoxLayout(self)
         self.setLayout(self.layout)
-        self.form = load_ui(ui_path, self)
+        self.form = load_ui(ui_path, self, custom_widgets=(DistanceSpinBox,))
         self.layout.addWidget(self.form)
 
         header = self.form.tableWidget.horizontalHeader()
@@ -114,7 +116,7 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         self.update_state()
 
     def _on_stickout_changed(self, value):
-        self.tool.set_stickout(value)
+        self.tool.set_stickout(value, self.form.doubleSpinBoxStickout.unit)
         self.update_state()
 
     def _on_result_right_click(self, pos):
@@ -163,8 +165,8 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
 
         self.form.warningBox.setVisible(not warning_dismissed)
         # Updating the stickout also triggers .update_state()
-        stickout = self.tool.get_stickout()
-        self.form.doubleSpinBoxStickout.setValue(stickout or 10)
+        stickout = self.tool.get_stickout_param()
+        self.form.doubleSpinBoxStickout.setValueFromParam(stickout)
 
     def show_hint(self, hint):
         self.form.hintLabel.setText(f"<i>{hint}</i>")
@@ -175,14 +177,16 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
             return None
         if not self.form.checkBoxDocLimit.isChecked():
             return None
-        return self.form.doubleSpinBoxDocLimit.value()
+        value = self.form.doubleSpinBoxDocLimit.value()
+        return convert(value, self.form.doubleSpinBoxDocLimit.unit, 'mm')[0]
 
     def get_woc_limit(self):
         if not self.form.boxWocLimit.isVisible():
             return None
         if not self.form.checkBoxWocLimit.isChecked():
             return None
-        return self.form.doubleSpinBoxWocLimit.value()
+        value = self.form.doubleSpinBoxWocLimit.value()
+        return convert(value, self.form.doubleSpinBoxWocLimit.unit, 'mm')[0]
 
     def update_state(self):
         self.form.errorBox.hide()

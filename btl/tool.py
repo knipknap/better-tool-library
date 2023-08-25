@@ -5,7 +5,7 @@ from copy import deepcopy
 from .feeds.util import cantilever_deflect_endload, cantilever_deflect_uniload
 from .feeds import operation
 from .shape import Shape
-from .params import Param
+from .params import Param, DistanceParam
 from .toolmaterial import ToolMaterial, HSS, Carbide
 from .toolpixmap import EndmillPixmap, \
                         BullnosePixmap, \
@@ -24,7 +24,7 @@ class Tool(object):
         self.pixmap = None  # for caching a ToolPixmap
 
         # Used for internal attributes, but also by the serializer to
-        # store attributes unknown to BTL. Maps name to value.
+        # store attributes unknown to BTL. Maps name to Param.
         self.attrs = {}
 
     def __str__(self):
@@ -50,21 +50,26 @@ class Tool(object):
             'label': self.label,
             'filename': self.filename,
             'shape': self.shape.to_dict(),
-            'attrs': self.attrs,
+            'attrs': [p.to_dict() for p in self.attrs.values()],
         }
 
     def set_attrib(self, name, value):
-        self.attrs[name] = value
+        if not isinstance(name, str):
+            paramtype = type(name)
+            raise AttributeError(f"name argument has invalid type {paramtype}")
+        if isinstance(value, Param):
+            self.attrs[name] = value
+        else:
+            self.attrs[name].v = value
 
     def get_non_btl_attribs(self):
         return {k:v for k, v in self.attrs.items() if not k.startswith('btl-')}
 
     def get_attrib(self, name, default=None):
+        if not isinstance(name, str):
+            paramtype = type(name)
+            raise AttributeError(f"name argument has invalid type {paramtype}")
         return self.attrs.get(name, default)
-
-    def get_attrib_as_param(self, name, default=None):
-        value = self.attrs[name]
-        return Param(name, v=value)
 
     def set_label(self, label):
         self.label = label
@@ -72,14 +77,12 @@ class Tool(object):
     def get_label(self):
         return self.label
 
-    def set_stickout(self, stickout):
-        self.set_attrib('btl-stickout', float(stickout))
+    def set_stickout(self, stickout, unit):
+        param = DistanceParam.from_value('btl-stickout', float(stickout), unit)
+        self.set_attrib('btl-stickout', param)
+        return param
 
-    def get_stickout(self):
-        stickout = self.get_attrib('btl-stickout')
-        if stickout is not None:
-            return float(stickout)
-
+    def get_default_stickout(self):
         diameter = self.shape.get_diameter() or 0
         shank = self.shape.get_shank_diameter() or 0
         ce = self.shape.get_cutting_edge()
@@ -88,23 +91,39 @@ class Tool(object):
         length = self.shape.get_length() or 50
         return math.floor(max(stickout, length*0.6))
 
+    def get_stickout(self):
+        stickout = self.get_attrib('btl-stickout')
+        if stickout is not None:
+            return stickout.value('mm')
+        return self.get_default_stickout()
+
+    def get_stickout_param(self):
+        param = self.get_attrib('btl-stickout')
+        if param:
+            return param
+        stickout = self.get_default_stickout()
+        return DistanceParam.from_value('btl-stickout', stickout, 'mm')
+
     def set_notes(self, notes):
-        self.attrs['btl-notes'] = notes
+        self.attrs['btl-notes'] = Param('btl-notes', v=notes)
 
     def get_notes(self):
-        return self.attrs.get('btl-notes', '')
+        notes = self.attrs.get('btl-notes')
+        return notes.v if notes else ''
 
     def set_coating(self, coating):
-        self.attrs['btl-coating'] = coating
+        self.attrs['btl-coating'] = Param('btl-coating', v=coating)
 
     def get_coating(self):
-        return self.attrs.get('btl-coating', '')
+        coating = self.attrs.get('btl-coating')
+        return coating.v if coating else ''
 
     def set_hardness(self, hardness):
-        self.attrs['btl-hardness'] = hardness
+        self.attrs['btl-hardness'] = Param('btl-hardness', v=hardness)
 
     def get_hardness(self):
-        return self.attrs.get('btl-hardness', '')
+        hardness = self.attrs.get('btl-hardness')
+        return hardness.v if hardness else ''
 
     def set_material(self, tool_material):
         """
@@ -135,16 +154,18 @@ class Tool(object):
         if self.shape.get_material() is not None:
             self.shape.set_material(tool_material)
             return
-        self.set_attrib('btl-material', tool_material.name)
+        self.attrs['btl-material'] = Param('btl-material', v=tool_material.name)
 
     def get_material(self):
         material = self.shape.get_material()
         if material is not None:
             return material
         material = self.get_attrib('btl-material')
-        if material.lower() == 'hss':
+        if not material:
+            return None
+        if material.v.lower() == 'hss':
             return HSS
-        elif material.lower() == 'carbide':
+        elif material.v.lower() == 'carbide':
             return Carbide
         return None
 
@@ -201,16 +222,18 @@ class Tool(object):
         return self.pixmap
 
     def set_materials(self, materials):
-        self.attrs['btl-materials'] = materials
+        self.attrs['btl-materials'] = Param('btl-materials', v=materials)
 
     def get_materials(self):
-        return self.attrs.get('btl-materials', '')
+        materials = self.attrs.get('btl-materials')
+        return materials.v if materials else ''
 
     def set_supplier(self, supplier):
-        self.attrs['btl-supplier'] = supplier
+        self.attrs['btl-supplier'] = Param('btl-supplier', v=supplier)
 
     def get_supplier(self):
-        return self.attrs.get('btl-supplier', '')
+        supplier = self.attrs.get('btl-supplier')
+        return supplier.v if supplier else ''
 
     def serialize(self, serializer):
         return serializer.serialize_tool(self)

@@ -13,7 +13,7 @@ import copy
 from textwrap import dedent
 from .. import Machine, Library, Shape, Tool
 from ..shape import builtin_shapes
-from ..params import Param, IntParam, FloatParam
+from ..params import Param, IntParam, FloatParam, DistanceParam
 from ..fcutil import *
 
 TOOL_DIR = 'Bit'
@@ -155,13 +155,13 @@ class FCSerializer():
         label = attrs.get('label', id)
         machine = Machine(label,
                           id=id,
-                          max_power=max_power.value('kW'),
-                          max_torque=max_torque.value('Nm'),
-                          peak_torque_rpm=peak_torque_rpm.v,
-                          min_rpm=min_rpm.v,
-                          max_rpm=max_rpm.v,
-                          min_feed=min_feed.value('mm/min'),
-                          max_feed=max_feed.value('mm/min'))
+                          max_power=max_power,
+                          max_torque=max_torque,
+                          peak_torque_rpm=peak_torque_rpm,
+                          min_rpm=min_rpm,
+                          max_rpm=max_rpm,
+                          min_feed=min_feed,
+                          max_feed=max_feed)
 
         return machine
 
@@ -271,7 +271,7 @@ class FCSerializer():
         attrs["version"] = tool.API_VERSION
         attrs["name"] = tool.label
         attrs["shape"] = tool.shape.name+self.SHAPE_EXT
-        attrs["attribute"] = {k: v for k, v in tool.attrs.items() if v}
+        attrs["attribute"] = {k: v.format() for k, v in tool.attrs.items()}
         attrs["parameter"] = {}
 
         # Get the list of parameters that are supported by the shape. This
@@ -320,7 +320,19 @@ class FCSerializer():
         shapename = self._shape_name_from_filename(attrs['shape'])
         shape = self.deserialize_shape(shapename)
         tool = Tool(attrs['name'], shape, id=id, filename=filename)
-        tool.attrs.update(attrs.get("attribute", {}))
+
+        # Load known attributes. Since the serialized file does not indicate
+        # param types, we need to explicitely load known non-str attributes.
+        tool_attrs = attrs.get("attribute", {})
+        stickout = tool_attrs.pop('btl-stickout', None)
+        if stickout:
+            param = DistanceParam.from_value('btl-stickout', stickout, 'mm')
+            tool.set_attrib('btl-stickout', param)
+
+        # Load remaining attributes as strings.
+        for key, value in tool_attrs.items():
+            param = Param(name=key, v=value)
+            tool.set_attrib(key, param)
 
         # Get the list of parameters that are supported by the shape. This
         # is used to find the type of each parameter.
