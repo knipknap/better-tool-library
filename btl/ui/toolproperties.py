@@ -160,7 +160,7 @@ class ToolAttributes(PropertyWidget):
         # Add entry fields per property.
         params = sorted(tool.get_non_btl_attribs())
         for name in params:
-            param = tool.get_attrib_as_param(name)
+            param = tool.get_attrib(name)
             self._add_property(param)
         if not params:
             row = self.grid.rowCount()
