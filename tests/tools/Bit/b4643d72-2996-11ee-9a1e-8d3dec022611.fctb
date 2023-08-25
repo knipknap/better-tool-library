@@ -1,6 +1,6 @@
 {
   "attribute": {
-    "btl-stickout": 25.0
+    "btl-stickout": "25 mm"
   },
   "name": "New Drill",
   "parameter": {

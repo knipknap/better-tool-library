@@ -1,7 +1,7 @@
 {
   "label": "Machine",
   "max-feed": "5000 mm/min",
-  "max-power": "2 HP",
+  "max-power": "2 kW",
   "max-rpm": "22000",
   "max-torque": "4 Nm",
   "min-feed": "1 mm/min",

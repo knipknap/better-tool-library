@@ -1,6 +1,6 @@
 {
   "attribute": {
-    "btl-stickout": 12.0
+    "btl-stickout": "12 mm"
   },
   "name": "New Endmill",
   "parameter": {

@@ -1,6 +1,6 @@
 {
   "attribute": {
-    "btl-stickout": 15.0
+    "btl-stickout": "15 mm"
   },
   "name": "New Chamfer",
   "parameter": {
