@@ -3,9 +3,10 @@ import FreeCAD, FreeCADGui
 from PySide import QtGui
 from PySide.QtCore import QT_TRANSLATE_NOOP
 from .. import ToolDB, serializers
-from ..const import icon_dir
+from ..const import icon_dir, translations_dir
 from .library import LibraryUI
 
+FreeCADGui.addLanguagePath(translations_dir)
 ICON_FILE = os.path.join(icon_dir, 'tool-library.svg')
 prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Path")
 
@@ -17,10 +18,10 @@ class OpenBTL:
             'Pixmap': 'Path_ToolTable',
             'Accel': "P, T",
             "MenuText": QT_TRANSLATE_NOOP(
-                "Path_ToolBitLibraryOpen", "ToolBit Library editor"
+                "btl", "ToolBit Library editor"
             ),
             "ToolTip": QT_TRANSLATE_NOOP(
-                "Path_ToolBitLibraryOpen", "Open an editor to manage ToolBit libraries"
+                "btl", "Open an editor to manage ToolBit libraries"
             ),
             "CmdType": "ForEdit",
         }
@@ -31,7 +32,7 @@ class OpenBTL:
     def Activated(self):
         on_library_open_clicked()
 
-class BitLibraryReplacer(object):
+class BitLibraryReplacer(object): # See hack below
     def open(self):
         on_library_open_clicked()
 

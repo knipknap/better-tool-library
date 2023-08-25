@@ -81,7 +81,7 @@
        <item>
         <widget class="QToolButton" name="toolButtonAddMachine">
          <property name="text">
-          <string>...</string>
+          <string notr="true">...</string>
          </property>
          <property name="icon">
           <iconset>
@@ -92,7 +92,7 @@
        <item>
         <widget class="QToolButton" name="toolButtonEditMachine">
          <property name="text">
-          <string>...</string>
+          <string notr="true">...</string>
          </property>
          <property name="icon">
           <iconset>
@@ -337,7 +337,7 @@
           <item>
            <widget class="QToolButton" name="toolButtonError">
             <property name="text">
-             <string>...</string>
+             <string notr="true">...</string>
             </property>
             <property name="icon">
              <iconset>
@@ -428,7 +428,7 @@
              <item>
               <widget class="QToolButton" name="toolButtonWarning">
                <property name="text">
-                <string>...</string>
+                <string notr="true">...</string>
                </property>
                <property name="icon">
                 <iconset>

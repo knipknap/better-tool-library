@@ -18,6 +18,7 @@ from .libraryproperties import LibraryProperties
 from .jobselector import JobSelector
 from .movetool import MoveToolDialog
 
+translate = FreeCAD.Qt.translate
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "library.ui")
 
@@ -131,7 +132,8 @@ class LibraryUI():
 
     def on_right_click(self, pos):
         menu = QtGui.QMenu(self.form.listWidgetTools)
-        action = QtGui.QAction("Move to library...", self.form.listWidgetTools)
+        label = translate("btl", "Move to library...")
+        action = QtGui.QAction(label, self.form.listWidgetTools)
         action.triggered.connect(self.on_move_tool_clicked)
         menu.addAction(action)
         menu.exec_(self.form.listWidgetTools.mapToGlobal(pos))
@@ -170,7 +172,8 @@ class LibraryUI():
         self.form.toolButtonExportLibrary.setEnabled(library is not None)
         self.form.pushButtonDeleteTool.setEnabled(tool_selected)
         self.form.pushButtonAddToJob.setEnabled(tool_selected and has_job)
-        tt = '' if has_job else 'No job found in main window'
+        text = translate('btl', 'No job found in main window')
+        tt = '' if has_job else text
         self.form.pushButtonAddToJob.setToolTip(tt)
 
     def load(self):
@@ -180,7 +183,7 @@ class LibraryUI():
         combo = self.form.comboBoxLibrary
         index = combo.currentIndex()
         combo.clear()
-        combo.addItem('Unused tools')
+        combo.addItem(translate('btl', 'Unused tools'))
         combo.insertSeparator(1)
         libraries = sorted(self.db.get_libraries(), key=lambda l: l.label)
         for library in libraries:
@@ -247,7 +250,7 @@ class LibraryUI():
         self.form.exec()
 
     def on_create_library_clicked(self):
-        library = Library('New Library')
+        library = Library(translate('btl', 'New Library'))
         dialog = LibraryProperties(library, new=True)
         if dialog.exec() != QtGui.QDialog.Accepted:
             return
@@ -273,13 +276,16 @@ class LibraryUI():
         if not library:
             return
 
-        msg = f'Are you sure you want to delete library <b>{library.label}</b>?' \
-            + ' This action cannot be reversed.'
+        libname = f'<b>{library.label}</b>'
+        msg = translate('btl',
+              'Are you sure you want to delete library {library}?' \
+            + ' This action cannot be reversed.').format(library=libname)
         msgBox = QtGui.QMessageBox()
-        msgBox.setWindowTitle('Confirm library deletion')
+        msgBox.setWindowTitle(translate('btl', 'Confirm library deletion'))
         msgBox.setText(msg)
         msgBox.addButton(QtGui.QMessageBox.Cancel)
-        msgBox.addButton('Delete', QtGui.QMessageBox.AcceptRole)
+        msgBox.addButton(translate('btl', 'Delete'),
+                         QtGui.QMessageBox.AcceptRole)
         response = msgBox.exec()
         if response != QtGui.QMessageBox.AcceptRole:
             return
@@ -303,7 +309,7 @@ class LibraryUI():
 
         filename, format = QtGui.QFileDialog.getSaveFileName(
             self.form,
-            "Export the tool library {}".format(library.label),
+            translate('btl', "Export the tool library {}").format(library.label),
             dir=str(Path.home()),
             filter=';;'.join(sorted(filters)),
             selectedFilter=selection)
@@ -338,7 +344,7 @@ class LibraryUI():
             return
 
         label = shape.get_label()
-        tool = Tool('New {}'.format(label), shape)
+        tool = Tool(translate('btl', 'New {}').format(label), shape)
         library = self.get_selected_library()
         pocket = library.get_next_pocket()
         editor = ToolEditor(self.db, self.serializer, tool, pocket, parent=self.form)
@@ -386,23 +392,31 @@ class LibraryUI():
             return
         elif len(items) == 1 and library:
             tool = items[0].data(QtCore.Qt.UserRole)
-            msg = 'Delete tool <b>{}</b> from library <b>{}</b>?'
-            msg = msg.format(tool.get_label(), library.label)
+            tool_lbl = f'<b>{tool.get_label()}</b>'
+            lib_lbl = f'<b>{library.label}</b>'
+            msg = translate('btl', 'Delete tool {tool} from library {library}?')
+            msg = msg.format(tool=tool_lbl, library=lib_lbl)
         elif len(items) == 1:
             tool = items[0].data(QtCore.Qt.UserRole)
-            msg = 'Delete unused tool <b>{}</b>?'.format(tool.get_label())
+            tool_lbl = f'<b>{tool.get_label()}</b>'
+            msg = translate('btl', 'Delete unused tool {tool}?')
+            msg = msg.format(tool=tool_lbl)
         elif len(items) > 1 and library:
             tool = items[0].data(QtCore.Qt.UserRole)
-            msg = 'Delete {} selected tools from library <b>{}</b>?'
-            msg = msg.format(len(items), library.label)
+            lib_lbl = f'<b>{library.label}</b>'
+            msg = translate('btl', 'Delete {n} selected tools from library {library}?')
+            msg = msg.format(n=len(items), library=lib_lbl)
         else:
-            msg = 'Delete {} unused tools from the library?'.format(len(items))
+            msg = translate('btl', 'Delete {} unused tools from the library?')
+            msg = msg.format(len(items))
 
         msgBox = QtGui.QMessageBox()
-        msgBox.setWindowTitle('Confirm tool deletion')
+        title = translate('btl', 'Confirm tool deletion')
+        msgBox.setWindowTitle(title)
         msgBox.setText(msg)
         msgBox.addButton(QtGui.QMessageBox.Cancel)
-        msgBox.addButton('Delete', QtGui.QMessageBox.AcceptRole)
+        label = translate('btl', 'Delete')
+        msgBox.addButton(label, QtGui.QMessageBox.AcceptRole)
         response = msgBox.exec()
         if response != QtGui.QMessageBox.AcceptRole:
             return
