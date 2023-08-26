@@ -150,7 +150,7 @@ class ToolProperties(PropertyWidget):
     def _add_property(self, param, abbreviation=None):
         setter = partial(self.tool.shape.set_param, param.name)
         widget = self._get_widget_from_param(param, setter)
-        self._add_property_from_widget(widget, param.label, abbreviation)
+        self._add_property_from_widget(widget, param.label, param.v, abbreviation)
 
 class ToolAttributes(PropertyWidget):
     def __init__ (self, tool, parent=None):
