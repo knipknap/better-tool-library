@@ -194,12 +194,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="165"/>
+        <location filename="../../ui/toolproperties.py" line="164"/>
         <source>Unknown tool attributes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="176"/>
+        <location filename="../../ui/toolproperties.py" line="175"/>
         <source>No unknown attributes found</source>
         <translation type="unfinished"></translation>
     </message>
