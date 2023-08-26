@@ -84,7 +84,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/tablecell.py" line="46"/>
+        <location filename="../../ui/toolproperties.py" line="118"/>
         <source>Pocket</source>
         <translation type="unfinished"></translation>
     </message>
@@ -179,27 +179,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="109"/>
+        <location filename="../../ui/toolproperties.py" line="110"/>
         <source>Tool location</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="122"/>
+        <location filename="../../ui/toolproperties.py" line="124"/>
         <source>Well-known properties</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="135"/>
+        <location filename="../../ui/toolproperties.py" line="137"/>
         <source>Tool-specific properties</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="161"/>
+        <location filename="../../ui/toolproperties.py" line="165"/>
         <source>Unknown tool attributes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="172"/>
+        <location filename="../../ui/toolproperties.py" line="176"/>
         <source>No unknown attributes found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -231,6 +231,126 @@
     <message>
         <location filename="../../feeds/operation.py" line="183"/>
         <source>Drilling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="34"/>
+        <source>Diameter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="35"/>
+        <source>Shaft diameter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="36"/>
+        <source>Shank diameter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="37"/>
+        <source>Flutes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="38"/>
+        <source>Length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="39"/>
+        <source>Cutting edge height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="40"/>
+        <source>Material</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="41"/>
+        <source>Chipload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="42"/>
+        <source>Spindle direction</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="43"/>
+        <source>Angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="49"/>
+        <source>Torus radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="52"/>
+        <source>Radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="55"/>
+        <source>Cap height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="56"/>
+        <source>Cap diameter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="57"/>
+        <source>Blade thickness</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="60"/>
+        <source>Dovetail height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="61"/>
+        <source>Cutting angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="62"/>
+        <source>Neck length</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="63"/>
+        <source>Neck diameter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="64"/>
+        <source>Crest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="67"/>
+        <source>Tip angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="70"/>
+        <source>Cutting edge angle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="71"/>
+        <source>Tip diameter</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../shape.py" line="46"/>
+        <source>Spindle power</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

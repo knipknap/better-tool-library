@@ -1,5 +1,6 @@
 from functools import partial
 from PySide import QtGui, QtSvg, QtCore
+from ..shape import get_property_label_from_name
 from ..i18n import translate
 from ..params import DistanceParam
 from .spinbox import DistanceSpinBox
@@ -151,7 +152,8 @@ class ToolProperties(PropertyWidget):
     def _add_property(self, param, abbreviation=None):
         setter = partial(self.tool.shape.set_param, param.name)
         widget = self._get_widget_from_param(param, setter)
-        self._add_property_from_widget(widget, param.label, param.v, abbreviation)
+        label = get_property_label_from_name(param.name, param.label)
+        self._add_property_from_widget(widget, label, param.v, abbreviation)
 
 class ToolAttributes(PropertyWidget):
     def __init__ (self, tool, parent=None):
@@ -181,4 +183,5 @@ class ToolAttributes(PropertyWidget):
     def _add_property(self, param):
         setter = partial(self.tool.set_attrib, param.name)
         widget = self._get_widget_from_param(param, setter)
-        self._add_property_from_widget(widget, param.label, param.v)
+        label = get_property_label_from_name(param.name, param.label)
+        self._add_property_from_widget(widget, label, param.v)

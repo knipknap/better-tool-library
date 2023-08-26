@@ -84,7 +84,7 @@
       <translation>Abrir um editor para gerenciar as bibliotecas de brocas</translation>
     </message>
     <message>
-      <location filename="../../ui/tablecell.py" line="46"/>
+      <location filename="../../ui/toolproperties.py" line="118"/>
       <source>Pocket</source>
       <translation>Bolsa</translation>
     </message>
@@ -179,27 +179,27 @@
       <translation>nenhum</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="109"/>
+      <location filename="../../ui/toolproperties.py" line="110"/>
       <source>Tool location</source>
       <translation>Localização da ferramenta</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="122"/>
+      <location filename="../../ui/toolproperties.py" line="124"/>
       <source>Well-known properties</source>
       <translation>Propriedades conhecidas</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="135"/>
+      <location filename="../../ui/toolproperties.py" line="137"/>
       <source>Tool-specific properties</source>
       <translation>Propriedades específicas ao tipo</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="161"/>
+      <location filename="../../ui/toolproperties.py" line="165"/>
       <source>Unknown tool attributes</source>
       <translation>Atributos da ferramenta desconhecidos</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="172"/>
+      <location filename="../../ui/toolproperties.py" line="176"/>
       <source>No unknown attributes found</source>
       <translation>Nenhum atributo desconhecido encontrado</translation>
     </message>
@@ -214,24 +214,144 @@
       <translation>Carboneto</translation>
     </message>
     <message>
-      <location filename="../../feeds/operation.py" line="47"/>
+      <location filename="../../feeds/operation.py" line="56"/>
       <source>Slotting</source>
       <translation>Alojamento</translation>
     </message>
     <message>
-      <location filename="../../feeds/operation.py" line="67"/>
+      <location filename="../../feeds/operation.py" line="76"/>
       <source>Profiling</source>
       <translation>Perfilagem</translation>
     </message>
     <message>
-      <location filename="../../feeds/operation.py" line="81"/>
+      <location filename="../../feeds/operation.py" line="95"/>
       <source>Adaptive (HSM)</source>
       <translation>Adaptável (HSM)</translation>
     </message>
     <message>
-      <location filename="../../feeds/operation.py" line="169"/>
+      <location filename="../../feeds/operation.py" line="183"/>
       <source>Drilling</source>
       <translation>Furação</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="34"/>
+      <source>Diameter</source>
+      <translation>Diâmetro</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="35"/>
+      <source>Shaft diameter</source>
+      <translation>Diâmetro do eixo</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="36"/>
+      <source>Shank diameter</source>
+      <translation>Diâmetro do eixo</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="37"/>
+      <source>Flutes</source>
+      <translation>Cortes</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="38"/>
+      <source>Length</source>
+      <translation>Comprimento</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="39"/>
+      <source>Cutting edge height</source>
+      <translation>Altura da aresta de corte</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="40"/>
+      <source>Material</source>
+      <translation>Material</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="41"/>
+      <source>Chipload</source>
+      <translation>Carga de cavacos</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="42"/>
+      <source>Spindle direction</source>
+      <translation>Direção do fuso</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="43"/>
+      <source>Angle</source>
+      <translation>Ângulo</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="49"/>
+      <source>Torus radius</source>
+      <translation>Raio do toro</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="52"/>
+      <source>Radius</source>
+      <translation>Raio</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="55"/>
+      <source>Cap height</source>
+      <translation>Altura da cápsula</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="56"/>
+      <source>Cap diameter</source>
+      <translation>Diâmetro da cápsula</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="57"/>
+      <source>Blade thickness</source>
+      <translation>Espessura da lâmina</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="60"/>
+      <source>Dovetail height</source>
+      <translation>Altura do rabo de andorinha</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="61"/>
+      <source>Cutting angle</source>
+      <translation>Ângulo de corte</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="62"/>
+      <source>Neck length</source>
+      <translation>Comprimento do pescoço</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="63"/>
+      <source>Neck diameter</source>
+      <translation>Diâmetro do pescoço</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="64"/>
+      <source>Crest</source>
+      <translation>Crista</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="67"/>
+      <source>Tip angle</source>
+      <translation>Ângulo da ponta</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="70"/>
+      <source>Cutting edge angle</source>
+      <translation>Ângulo da aresta de corte</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="71"/>
+      <source>Tip diameter</source>
+      <translation>Diâmetro da ponta</translation>
+    </message>
+    <message>
+      <location filename="../../shape.py" line="46"/>
+      <source>Spindle power</source>
+      <translation>Potência do fuso</translation>
     </message>
   </context>
   <context>

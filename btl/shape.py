@@ -4,6 +4,7 @@ import glob
 import shutil
 from . import const
 from .params import Param
+from .i18n import translate
 from .toolmaterial import ToolMaterial, HSS, Carbide
 from .util import file_is_newer, get_abbreviations_from_svg
 from .fcutil import load_shape_properties, \
@@ -20,6 +21,56 @@ def get_builtin_shape_file_from_name(name):
 
 def get_icon_filename_from_shape_filename(filename, icon_type):
     return os.path.splitext(filename)[0]+'.'+icon_type
+
+# Make some well-known strings that come from shape files translatable.
+# We cannot just make the map, as at the time of import the translator
+# is not yet initialized, so translate() would not yet do anything.
+property_labels = {}
+def get_property_label_from_name(name, default=None):
+    global property_labels
+    if not property_labels:
+        property_labels = {
+            # Common
+            'Diameter': translate('btl', 'Diameter'),
+            'ShaftDiameter': translate('btl', 'Shaft diameter'),
+            'ShankDiameter': translate('btl', 'Shank diameter'),
+            'Flutes': translate('btl', 'Flutes'),
+            'Length': translate('btl', 'Length'),
+            'CuttingEdgeHeight': translate('btl', 'Cutting edge height'),
+            'Material': translate('btl', 'Material'),
+            'Chipload': translate('btl', 'Chipload'),
+            'SpindleDirection': translate('btl', 'Spindle direction'),
+            'Angle': translate('btl', 'Angle'),
+
+            # Probe
+            'SpindlePower': translate('btl', 'Spindle power'),
+
+            # Torus
+            'TorusRadius': translate('btl', 'Torus radius'),
+
+            # Chamfer
+            'Radius': translate('btl', 'Radius'),
+
+            # Slitting saw
+            'CapHeight': translate('btl', 'Cap height'),
+            'CapDiameter': translate('btl', 'Cap diameter'),
+            'BladeThickness': translate('btl', 'Blade thickness'),
+
+            # Dovetail + Threadmill
+            'DovetailHeight': translate('btl', 'Dovetail height'),
+            'CuttingAngle': translate('btl', 'Cutting angle'),
+            'NeckLength': translate('btl', 'Neck length'),
+            'NeckDiameter': translate('btl', 'Neck diameter'),
+            'Crest': translate('btl', 'Crest'),
+
+            # Drill
+            'TipAngle': translate('btl', 'Tip angle'),
+
+            # V-Bit
+            'CuttingEdgeAngle': translate('btl', 'Cutting edge angle'),
+            'TipDiameter': translate('btl', 'Tip diameter'),
+        }
+    return property_labels.get(name, default)
 
 class Shape():
     aliases = {'bullnose': 'torus',
