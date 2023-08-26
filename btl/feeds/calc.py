@@ -1,4 +1,5 @@
 import math
+import warnings
 from scipy.optimize import minimize
 import numpy as np
 import random
@@ -292,14 +293,16 @@ class FeedCalc(object):
                   (self.woc.min, self.woc.limit),
                   (self.doc.min, self.doc.limit)]
         np.set_printoptions(formatter={'float': lambda x: "{0:0.10f}".format(x)})
-        result = minimize(self._evaluate_point,
-                          point,
-                          bounds=bounds,
-                          method='SLSQP',  # evaluated fastest
-                          #method='Powell',
-                          #method='Nelder-Mead',
-                          #method='TNC',
-                          tol=0.001)
+        with warnings.catch_warnings():  # ignore "out-of bounds" warning
+            warnings.simplefilter("ignore", category=RuntimeWarning)
+            result = minimize(self._evaluate_point,
+                              point,
+                              bounds=bounds,
+                              method='SLSQP',  # evaluated fastest
+                              #method='Powell',
+                              #method='Nelder-Mead',
+                              #method='TNC',
+                              tol=0.001)
 
         # Load & recalculate the best result.
         self.speed.v, self.chipload.v, self.woc.v, self.doc.v = result.x
