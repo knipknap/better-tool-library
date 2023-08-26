@@ -1,5 +1,5 @@
 import sys
-from PySide.QtCore import QTranslator, QLocale
+from PySide.QtCore import QTranslator, QLocale, QLibraryInfo
 from btl.const import translations_dir
 
 # Unfortunately FreeCAD does not follow the standard "pt_BR" format,
@@ -8,18 +8,25 @@ from btl.const import translations_dir
 # This makes it incompatible with the format expected by
 # pyside.load(), so we need to assemble our own filename and
 # reimplement the search.
-locale = QLocale().name()
-bcp47 = QLocale().bcp47Name()
+locale = QLocale()
+locale_name = locale.name()
+bcp47 = locale.bcp47Name()
 search_filenames = (
-    f"btl_{locale}.qm",
-    f"btl_{locale.replace('_', '-')}.qm",
+    f"btl_{locale_name}.qm",
+    f"btl_{locale_name.replace('_', '-')}.qm",
     f"btl_{bcp47}.qm",
 )
 
 def install_translator(app):
+    # First the translator for Qt built-in strings.
+    path = QLibraryInfo.location(QLibraryInfo.TranslationsPath)
+    translator = QTranslator(app)
+    if translator.load(locale, 'qtbase', '_', path):
+        app.installTranslator(translator)
+
+    # Now a translator for BTL strings.
     translator = QTranslator(app)
     for filename in search_filenames:
-        print(filename)
         if translator.load(filename, translations_dir):
             app.installTranslator(translator)
             return

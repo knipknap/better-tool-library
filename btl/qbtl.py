@@ -3,7 +3,6 @@ import os
 import sys
 import argparse
 from PySide import QtGui
-from PySide.QtCore import QTranslator, QLocale
 from btl import ToolDB, serializers
 from btl.const import resource_dir
 from btl.i18n import install_translator
