@@ -30,13 +30,13 @@ class FeedCalc(object):
 
         # Perform some sanity checks.
         if op not in operation.operations:
-            raise AttributeError(f"operation {op.label} is not supported")
+            raise AttributeError(f"operation {op.label()} is not supported")
 
         min_speed, max_speed = endmill.get_speed_for_material(material, op)
         if not min_speed or not max_speed:
             attrname = 'min_speed' if not min_speed else 'max_speed'
             matname = material.name
-            err = f'no {attrname} found for material {matname} and operation {op.label}'
+            err = f'no {attrname} found for material {matname} and operation {op.label()}'
             raise AttributeError(err)
 
         # The calculator has three groups of properties:

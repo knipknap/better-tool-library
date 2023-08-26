@@ -213,5 +213,25 @@
         <source>Carbide</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../../feeds/operation.py" line="56"/>
+        <source>Slotting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../feeds/operation.py" line="76"/>
+        <source>Profiling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../feeds/operation.py" line="95"/>
+        <source>Adaptive (HSM)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../feeds/operation.py" line="183"/>
+        <source>Drilling</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 </TS>

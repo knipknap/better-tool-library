@@ -213,6 +213,26 @@
         <source>Carbide</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <location filename="../../feeds/operation.py" line="56"/>
+        <source>Slotting</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../feeds/operation.py" line="76"/>
+        <source>Profiling</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../feeds/operation.py" line="95"/>
+        <source>Adaptive (HSM)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../feeds/operation.py" line="183"/>
+        <source>Drilling</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>Dialog</name>
@@ -354,104 +374,84 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="35"/>
-        <source>Adaptive (HSM)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="40"/>
-        <source>Profiling</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="45"/>
-        <source>Slotting</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="50"/>
-        <source>Drilling</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="58"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="38"/>
         <source>Tool stickout:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="65"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="45"/>
         <source>Depth of cut (DOC) limit:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="72"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="52"/>
         <source>Machine:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="111"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="91"/>
         <source>Width of cut (WOC) limit:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="118"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="98"/>
         <source>Material:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="129"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="109"/>
         <source>Operation</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="228"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="208"/>
         <source>&lt;h4&gt;Results&lt;/h4&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="243"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="223"/>
         <source>Please select a machine.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="327"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="307"/>
         <source>Calculation error.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="418"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="398"/>
         <source>Never trust these results blindly, check them. Start with half of the recommended depth of cut.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="460"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="440"/>
         <source>Stepover:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="481"/>
-        <location filename="../../ui/feedsandspeeds.ui" line="537"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="461"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="517"/>
         <source>&lt;i&gt;none&lt;/i&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="497"/>
-        <location filename="../../ui/feedsandspeeds.ui" line="513"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="477"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="493"/>
         <source>none</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="554"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="534"/>
         <source>Feed:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="568"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="548"/>
         <source>RPM:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/feedsandspeeds.ui" line="582"/>
+        <location filename="../../ui/feedsandspeeds.ui" line="562"/>
         <source>Stepdown:</source>
         <translation type="unfinished"></translation>
     </message>

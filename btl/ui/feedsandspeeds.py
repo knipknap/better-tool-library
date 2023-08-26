@@ -167,9 +167,9 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         combo = self.form.comboBoxOperation
         index = combo.currentIndex()
         combo.clear()
-        operation_list = sorted(operations, key=lambda o: o.label)
+        operation_list = sorted(operations, key=lambda o: o.label())
         for operation in operation_list:
-            combo.addItem(operation.label, operation)
+            combo.addItem(operation.label(), operation)
         combo.setCurrentIndex(index)
         if combo.currentIndex() == -1:
             combo.setCurrentIndex(0)

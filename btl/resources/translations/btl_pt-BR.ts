@@ -213,6 +213,26 @@
       <source>Carbide</source>
       <translation>Carboneto</translation>
     </message>
+    <message>
+      <location filename="../../feeds/operation.py" line="47"/>
+      <source>Slotting</source>
+      <translation>Alojamento</translation>
+    </message>
+    <message>
+      <location filename="../../feeds/operation.py" line="67"/>
+      <source>Profiling</source>
+      <translation>Perfilagem</translation>
+    </message>
+    <message>
+      <location filename="../../feeds/operation.py" line="81"/>
+      <source>Adaptive (HSM)</source>
+      <translation>Adaptável (HSM)</translation>
+    </message>
+    <message>
+      <location filename="../../feeds/operation.py" line="169"/>
+      <source>Drilling</source>
+      <translation>Furação</translation>
+    </message>
   </context>
   <context>
     <name>Dialog</name>
@@ -354,104 +374,84 @@
       <translation>Feeds &amp; Velocidades</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="35"/>
-      <source>Adaptive (HSM)</source>
-      <translation>Adaptável (HSM)</translation>
-    </message>
-    <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="40"/>
-      <source>Profiling</source>
-      <translation>Perfilagem</translation>
-    </message>
-    <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="45"/>
-      <source>Slotting</source>
-      <translation>Alojamento</translation>
-    </message>
-    <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="50"/>
-      <source>Drilling</source>
-      <translation>Furação</translation>
-    </message>
-    <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="58"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="38"/>
       <source>Tool stickout:</source>
       <translation>Projeção da ferramenta:</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="65"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="45"/>
       <source>Depth of cut (DOC) limit:</source>
       <translation>Profundidade do limite de corte (DOC):</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="72"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="52"/>
       <source>Machine:</source>
       <translation>Máquina:</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="111"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="91"/>
       <source>Width of cut (WOC) limit:</source>
       <translation>Largura do limite de corte (WOC):</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="118"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="98"/>
       <source>Material:</source>
       <translation>Material:</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="129"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="109"/>
       <source>Operation</source>
       <translation>Operação</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="228"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="208"/>
       <source>&lt;h4&gt;Results&lt;/h4&gt;</source>
       <translation>&lt;h4&gt;Resultados&lt;/h4&gt;</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="243"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="223"/>
       <source>Please select a machine.</source>
       <translation>Por favor, selecione uma máquina.</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="327"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="307"/>
       <source>Calculation error.</source>
       <translation>Erro de cálculo.</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="418"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="398"/>
       <source>Never trust these results blindly, check them. Start with half of the recommended depth of cut.</source>
       <translation>Nunca confie nesses resultados cegamente, verifique-os. Comece com metade da profundidade de corte recomendada.</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="460"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="440"/>
       <source>Stepover:</source>
       <translation>Avanço lateral:</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="481"/>
-      <location filename="../../ui/feedsandspeeds.ui" line="537"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="461"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="517"/>
       <source>&lt;i&gt;none&lt;/i&gt;</source>
       <translation>&lt;i&gt;nenhum&lt;/i&gt;</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="497"/>
-      <location filename="../../ui/feedsandspeeds.ui" line="513"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="477"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="493"/>
       <source>none</source>
       <translation>nenhum</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="554"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="534"/>
       <source>Feed:</source>
       <translation>Avanço:</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="568"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="548"/>
       <source>RPM:</source>
       <translation>RPM:</translation>
     </message>
     <message>
-      <location filename="../../ui/feedsandspeeds.ui" line="582"/>
+      <location filename="../../ui/feedsandspeeds.ui" line="562"/>
       <source>Stepdown:</source>
       <translation>Profundidade de corte:</translation>
     </message>

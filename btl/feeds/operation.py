@@ -1,10 +1,15 @@
 import math
 import inspect
+from ..i18n import translate
 from .util import get_tool_engagement_angle, get_lead_angle_deflection_factor
 
 class Operation(object):
     speed_multiplier = 1
     chip_multiplier = 1
+
+    @classmethod
+    def label(cls):
+        raise NotImplementedError
 
     @classmethod
     def prepare(cls, fc):
@@ -43,9 +48,12 @@ class Operation(object):
         return get_lead_angle_deflection_factor(doc, woc, diameter)
 
 class Slotting(Operation):
-    label = 'Slotting'
     speed_multiplier = 0.83 # WIDIA: 90% tooth cutting speed for slotting minus ~10% which is added back in our interpolation equation.
     chip_multiplier = 0.73 # WIDIA: 80% chipload for slotting minus ~10% which is added back in our interpolation equation.
+
+    @classmethod
+    def label(cls):
+        return translate('btl', 'Slotting')
 
     @classmethod
     def optimize_cut(cls, fc, endmill, material):
@@ -63,7 +71,9 @@ class Slotting(Operation):
         fc.engagement_angle.v = angle
 
 class Profiling(Operation):
-    label = 'Profiling'
+    @classmethod
+    def label(cls):
+        return translate('btl', 'Profiling')
 
     @classmethod
     def optimize_cut(cls, fc, endmill, material):
@@ -77,9 +87,12 @@ class Profiling(Operation):
         fc.engagement_angle.v = get_tool_engagement_angle(woc, effective_d)
 
 class HSM(Operation):
-    label = 'Adaptive (HSM)'
     speed_multiplier = 4.0  # WIDIA
     chip_multiplier = 4.4  # WIDIA
+
+    @classmethod
+    def label(cls):
+        return translate('btl', 'Adaptive (HSM)')
 
     @classmethod
     def optimize_cut(cls, fc, endmill, material):
@@ -165,7 +178,9 @@ class HSM(Operation):
         fc.chipload.set_limit(chipload*fc.chip_factor.v)
 
 class Drilling(Operation):
-    label = 'Drilling'
+    @classmethod
+    def label(cls):
+        return translate('btl', 'Drilling')
 
     @classmethod
     def optimize_cut(cls, fc, endmill, material):
@@ -196,7 +211,9 @@ class Drilling(Operation):
 
 """
 class Turning(Operation):   # unsupported for now
-    label = 'Turning'
+    @classmethod
+    def label(cls):
+        return translate('btl', 'Turning')
 
     @classmethod
     def optimize_cut(cls, fc, endmill, material):

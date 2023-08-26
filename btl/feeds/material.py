@@ -36,7 +36,7 @@ class Material(object):
             print(f"    Chipload divisor: {data['chipload_divisor']}")
             print( "    Speeds:")
             for op, (min_speed, max_speed) in data['speeds'].items():
-                print(f"      {op.label}: min {min_speed}, max {max_speed}")
+                print(f"      {op.label()}: min {min_speed}, max {max_speed}")
 
 class Aluminium6061(Material):
     name = 'Aluminium Alloy (6061)'

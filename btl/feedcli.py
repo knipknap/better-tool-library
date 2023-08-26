@@ -35,7 +35,7 @@ def run(op):
 
     fc = FeedCalc(machine, endmill, mat, op=op)
     #fc.doc.min = 8
-    print(f"Running {op.label} operation on {fc.material.name} using a {tool_material.name} tool")
+    print(f"Running {op.label()} operation on {fc.material.name} using a {tool_material.name} tool")
 
     error, best = fc.start()
     if error is not None:
