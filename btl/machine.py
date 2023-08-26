@@ -34,13 +34,15 @@ class Machine(object):
 
     def validate(self):
         if not self.label:
-            raise AttributeError(f"Machine name is required")
+            raise AttributeError('Machine name is required')
         if self.peak_torque_rpm > self.max_rpm:
-            raise AttributeError(f"Peak Torque RPM {self.peak_torque_rpm} must be less than max RPM {self.max_rpm}")
+            err = 'Peak Torque RPM {ptrpm} must be less than max RPM {max_rpm}'
+            err = err.format(ptrpm=self.peak_torque_rpm, max_rpm=self.max_rpm)
+            raise AttributeError(err)
         if self.max_rpm <= self.min_rpm:
-            raise AttributeError(f"Max rpm must be larger than min rpm")
+            raise AttributeError('Max RPM must be larger than min RPM')
         if self.max_feed <= self.min_feed:
-            raise AttributeError(f"Max feed must be larger than min feed")
+            raise AttributeError('Max feed must be larger than min feed')
 
     def get_torque_at_rpm(self, rpm):
         # TODO: More advanced torque curve: lookup table with linear approximation between entries

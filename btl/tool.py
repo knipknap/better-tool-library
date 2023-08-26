@@ -154,7 +154,7 @@ class Tool(object):
         if self.shape.get_material() is not None:
             self.shape.set_material(tool_material)
             return
-        self.attrs['btl-material'] = Param('btl-material', v=tool_material.name)
+        self.attrs['btl-material'] = Param('btl-material', v=tool_material.__name__)
 
     def get_material(self):
         material = self.shape.get_material()
@@ -163,9 +163,9 @@ class Tool(object):
         material = self.get_attrib('btl-material')
         if not material:
             return None
-        if material.v.lower() == 'hss':
+        if material.v == 'HSS':
             return HSS
-        elif material.v.lower() == 'carbide':
+        elif material.v == 'Carbide':
             return Carbide
         return None
 

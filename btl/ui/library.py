@@ -1,11 +1,10 @@
 import os
 import json
-import FreeCAD
-import FreeCADGui
 from pathlib import Path
 from PySide import QtGui, QtCore
 from PySide.QtCore import Qt, QMimeData
 from PySide.QtGui import QApplication, QShortcut
+from ..i18n import translate
 from .. import Library, Tool, serializers
 from ..serializers import serializers, FCSerializer, LinuxCNCSerializer
 from ..fcutil import add_tool_to_job, get_jobs, get_active_job
@@ -18,7 +17,6 @@ from .libraryproperties import LibraryProperties
 from .jobselector import JobSelector
 from .movetool import MoveToolDialog
 
-translate = FreeCAD.Qt.translate
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "library.ui")
 

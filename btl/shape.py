@@ -179,7 +179,7 @@ class Shape():
 
     def set_material(self, tool_material):
         assert issubclass(tool_material, ToolMaterial)
-        param = Param('Material', v=tool_material.name)
+        param = Param('Material', v=tool_material.__name__)
         self.set_param(param.name, param)
 
     def get_material(self):

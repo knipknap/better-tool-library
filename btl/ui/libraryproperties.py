@@ -1,5 +1,6 @@
 import os
 from PySide import QtGui, QtCore
+from ..i18n import translate
 from .util import load_ui
 
 __dir__ = os.path.dirname(__file__)
@@ -15,7 +16,8 @@ class LibraryProperties(QtGui.QWidget):
         self.form.lineEditLibraryName.textChanged.connect(self._on_name_changed)
 
         if new:
-            self.form.pushButtonSave.setText("Create Library")
+            label = translate('btl', 'Create Library')
+            self.form.pushButtonSave.setText(label)
 
         self.library = library
 

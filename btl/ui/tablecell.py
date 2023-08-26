@@ -1,5 +1,7 @@
 import re
+import FreeCAD
 from PySide import QtGui, QtSvg, QtCore
+from ..i18n import translate
 from .util import qpixmap_from_svg, qpixmap_from_png
 
 def isub(text, old, repl_pattern):
@@ -41,15 +43,16 @@ class TwoLineTableCell(QtGui.QWidget):
 
     def _update(self):
         text = self._highlight(self.right_text)
-        text = "Pocket\n<h3>{}</h3>".format(text) if text else ''
+        pocket_lbl = translate('btl', 'Pocket')
+        text = f"{pocket_lbl}\n<h3>{text}</h3>" if text else ''
         self.label_right.setText(text)
 
         text = self._highlight(self.upper_text)
-        self.label_upper.setText('<big><b>'+text+'</b></big>')
+        self.label_upper.setText(f'<big><b>{text}</b></big>')
 
         text = self._highlight(self.lower_text)
         self.label_lower.setText(text)
-        self.label_lower.setText('<font color="#444">'+text+'</font>')
+        self.label_lower.setText(f'<font color="#444">{text}</font>')
 
     def set_label(self, text):
         self.right_text = text

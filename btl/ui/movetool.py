@@ -1,5 +1,6 @@
 import os
 from PySide import QtGui, QtCore
+from ..i18n import translate
 from ..const import icon_dir
 from .util import load_ui
 
@@ -17,7 +18,8 @@ class MoveToolDialog(QtGui.QWidget):
         self.form.listWidget.itemDoubleClicked.connect(self._on_accept_clicked)
 
         if copy:
-            self.form.pushButton.setText("Copy Tool")
+            label = translate('btl', 'Copy Tool')
+            self.form.pushButton.setText(label)
 
         self.libraries = {l.label: l for l in self.tooldb.get_libraries()}
         self.form.listWidget.addItems(sorted(self.libraries.keys()))

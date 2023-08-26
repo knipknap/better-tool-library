@@ -1,5 +1,6 @@
 from functools import partial
 from PySide import QtGui, QtSvg, QtCore
+from ..i18n import translate
 from ..params import DistanceParam
 from .spinbox import DistanceSpinBox
 
@@ -105,7 +106,8 @@ class ToolProperties(PropertyWidget):
         # Add tool location properties.
         if self.pocket is not None:
             row = self.grid.rowCount()
-            label = QtGui.QLabel("<h4>Tool location</h4>")
+            lbl = translate('btl', 'Tool location')
+            label = QtGui.QLabel(f"<h4>{lbl}</h4>")
             # Note: Some PyQt versions do not support columnSpan
             self.grid.addWidget(label, row, 0)
             spinner = QtGui.QSpinBox()
@@ -117,7 +119,8 @@ class ToolProperties(PropertyWidget):
 
         # Add well-known properties under a separate title.
         row = self.grid.rowCount()
-        label = QtGui.QLabel("<h4>Well-known properties</h4>")
+        lbl = translate('btl', 'Well-known properties')
+        label = QtGui.QLabel(f"<h4>{lbl}</h4>")
         # Note: Some PyQt versions do not support columnSpan
         self.grid.addWidget(label, row, 0)
 
@@ -129,7 +132,8 @@ class ToolProperties(PropertyWidget):
 
         # Add remaining properties under a separate title.
         row = self.grid.rowCount()
-        label = QtGui.QLabel("<h4>Tool-specific properties</h4>")
+        lbl = translate('btl', 'Tool-specific properties')
+        label = QtGui.QLabel(f"<h4>{lbl}</h4>")
         self.grid.addWidget(label, row, 0)
 
         # Add entry fields per property.
@@ -154,7 +158,8 @@ class ToolAttributes(PropertyWidget):
         self.tool = tool
 
         row = self.grid.rowCount()
-        label = QtGui.QLabel("<h4>Unknown tool attributes</h4>")
+        lbl = translate('btl', 'Unknown tool attributes')
+        label = QtGui.QLabel(f"<h4>{lbl}</h4>")
         self.grid.addWidget(label, row, 0)
 
         # Add entry fields per property.
@@ -164,7 +169,8 @@ class ToolAttributes(PropertyWidget):
             self._add_property(param)
         if not params:
             row = self.grid.rowCount()
-            label = QtGui.QLabel("<i>No unknown attributes found</i>")
+            lbl = translate('btl', 'No unknown attributes found')
+            label = QtGui.QLabel(f"<i>{lbl}</i>")
             self.grid.addWidget(label, row, 0)
 
         self._makespacing(6)

@@ -2,6 +2,7 @@ import os
 from functools import partial
 from pathlib import Path
 from PySide import QtGui, QtCore
+from ..i18n import translate
 from .util import load_ui
 from .flowlayout import FlowLayout
 from .shapebutton import ShapeButton
@@ -53,11 +54,13 @@ class ShapeSelector():
         self.form.close()
 
     def on_import_clicked(self):
+        label = translate('btl', 'Choose a Shape File')
+        filter_label = translate('btl', 'FreeCAD files .fcstd (*.fcstd)')
         filename = QtGui.QFileDialog.getOpenFileName(
              self.form,
-             "Choose a Shape File",
+             label,
              dir=str(Path.home()),
-             filter='FreeCAD files .fcstd (*.fcstd)'
+             filter=filter_label
         )[0]
         if not filename:
             self.form.close()

@@ -4,72 +4,72 @@
   <context>
     <name>btl</name>
     <message>
-      <location filename="../../ui/library.py" line="135"/>
+      <location filename="../../ui/library.py" line="133"/>
       <source>Move to library...</source>
       <translation>Mover para biblioteca...</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="175"/>
+      <location filename="../../ui/library.py" line="173"/>
       <source>No job found in main window</source>
       <translation>Nenhum job encontrado na janela principal</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="186"/>
+      <location filename="../../ui/library.py" line="184"/>
       <source>Unused tools</source>
       <translation>Ferramentas não usadas</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="253"/>
+      <location filename="../../ui/library.py" line="251"/>
       <source>New Library</source>
       <translation>Nova biblioteca</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="284"/>
+      <location filename="../../ui/library.py" line="282"/>
       <source>Confirm library deletion</source>
       <translation>Confirmar exclusão de biblioteca</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="418"/>
+      <location filename="../../ui/library.py" line="416"/>
       <source>Delete</source>
       <translation>Excluir</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="280"/>
+      <location filename="../../ui/library.py" line="278"/>
       <source>Are you sure you want to delete library {library}? This action cannot be reversed.</source>
       <translation>Tem certeza que deseja apagar a biblioteca {library}? Esta ação não pode ser revertida.</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="310"/>
+      <location filename="../../ui/library.py" line="308"/>
       <source>Export the tool library {}</source>
       <translation>Exportar a biblioteca de ferramentas {}</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="347"/>
+      <location filename="../../ui/library.py" line="345"/>
       <source>New {}</source>
       <translation>Novo {}</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="397"/>
+      <location filename="../../ui/library.py" line="395"/>
       <source>Delete tool {tool} from library {library}?</source>
       <translation>Excluir ferramenta {tool} da biblioteca {library}?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="402"/>
+      <location filename="../../ui/library.py" line="400"/>
       <source>Delete unused tool {tool}?</source>
       <translation>Excluir ferramenta {tool} não utilizada?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="407"/>
+      <location filename="../../ui/library.py" line="405"/>
       <source>Delete {n} selected tools from library {library}?</source>
       <translation>Excluir {n} ferramentas selecionadas da biblioteca {library}?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="410"/>
+      <location filename="../../ui/library.py" line="408"/>
       <source>Delete {} unused tools from the library?</source>
       <translation>Excluir {} ferramentas não utilizadas da biblioteca?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="414"/>
+      <location filename="../../ui/library.py" line="412"/>
       <source>Confirm tool deletion</source>
       <translation>Confirmar exclusão de ferramenta</translation>
     </message>
@@ -82,6 +82,136 @@
       <location filename="../../ui/init.py" line="23"/>
       <source>Open an editor to manage ToolBit libraries</source>
       <translation>Abrir um editor para gerenciar as bibliotecas de brocas</translation>
+    </message>
+    <message>
+      <location filename="../../ui/tablecell.py" line="46"/>
+      <source>Pocket</source>
+      <translation>Bolsa</translation>
+    </message>
+    <message>
+      <location filename="../../ui/libraryproperties.py" line="19"/>
+      <source>Create Library</source>
+      <translation>Criar Biblioteca</translation>
+    </message>
+    <message>
+      <location filename="../../ui/tooleditor.py" line="24"/>
+      <source>Tool name</source>
+      <translation>Nome da ferramenta</translation>
+    </message>
+    <message>
+      <location filename="../../ui/tooleditor.py" line="38"/>
+      <source>Feeds &amp;&amp; Speeds</source>
+      <translation>Feeds &amp;&amp; Velocidades</translation>
+    </message>
+    <message>
+      <location filename="../../ui/tooleditor.py" line="45"/>
+      <source>Attributes</source>
+      <translation>Atributos</translation>
+    </message>
+    <message>
+      <location filename="../../ui/preferences.py" line="29"/>
+      <source>Choose a Library File</source>
+      <translation>Escolha um arquivo de biblioteca</translation>
+    </message>
+    <message>
+      <location filename="../../ui/preferences.py" line="30"/>
+      <source>FreeCAD library files .fctl (*.fctl)</source>
+      <translation>Arquivos de biblioteca FreeCAD .fctl (*.fctl)</translation>
+    </message>
+    <message>
+      <location filename="../../ui/movetool.py" line="21"/>
+      <source>Copy Tool</source>
+      <translation>Copiar Ferramenta</translation>
+    </message>
+    <message>
+      <location filename="../../ui/shapeselector.py" line="57"/>
+      <source>Choose a Shape File</source>
+      <translation>Escolha um arquivo de forma</translation>
+    </message>
+    <message>
+      <location filename="../../ui/shapeselector.py" line="58"/>
+      <source>FreeCAD files .fcstd (*.fcstd)</source>
+      <translation>Arquivos FreeCAD .fcstd (*.fcstd)</translation>
+    </message>
+    <message>
+      <location filename="../../ui/feedsandspeeds.py" line="134"/>
+      <source>Show internal properties</source>
+      <translation>Mostrar propriedades internas</translation>
+    </message>
+    <message>
+      <location filename="../../ui/feedsandspeeds.py" line="221"/>
+      <source>Please select a machine.</source>
+      <translation>Por favor, selecione uma máquina.</translation>
+    </message>
+    <message>
+      <location filename="../../ui/feedsandspeeds.py" line="224"/>
+      <source>Please select a material.</source>
+      <translation>Por favor, selecione um material.</translation>
+    </message>
+    <message>
+      <location filename="../../ui/feedsandspeeds.py" line="227"/>
+      <source>Please enter the stickout of the tool.</source>
+      <translation>Por favor, insira a projeção da ferramenta.</translation>
+    </message>
+    <message>
+      <location filename="../../ui/feedsandspeeds.py" line="230"/>
+      <source>Tool needs to have more than zero flutes.</source>
+      <translation>A ferramenta precisa de mais do que zero cortes.</translation>
+    </message>
+    <message>
+      <location filename="../../ui/feedsandspeeds.py" line="233"/>
+      <source>Tool shape not supported by the calculator.</source>
+      <translation>A forma da ferramenta não é suportada pela calculadora.</translation>
+    </message>
+    <message>
+      <location filename="../../ui/feedsandspeeds.py" line="241"/>
+      <source>Calculator error: {error}</source>
+      <translation>Erro de calculadora: {error}</translation>
+    </message>
+    <message>
+      <location filename="../../ui/feedsandspeeds.py" line="274"/>
+      <source>No valid result found. Best result has error: {error}</source>
+      <translation>Nenhum resultado válido encontrado. O melhor resultado tem erro: {error}</translation>
+    </message>
+    <message>
+      <location filename="../../ui/feedsandspeeds.py" line="284"/>
+      <source>none</source>
+      <translation>nenhum</translation>
+    </message>
+    <message>
+      <location filename="../../ui/toolproperties.py" line="109"/>
+      <source>Tool location</source>
+      <translation>Localização da ferramenta</translation>
+    </message>
+    <message>
+      <location filename="../../ui/toolproperties.py" line="122"/>
+      <source>Well-known properties</source>
+      <translation>Propriedades conhecidas</translation>
+    </message>
+    <message>
+      <location filename="../../ui/toolproperties.py" line="135"/>
+      <source>Tool-specific properties</source>
+      <translation>Propriedades específicas ao tipo</translation>
+    </message>
+    <message>
+      <location filename="../../ui/toolproperties.py" line="161"/>
+      <source>Unknown tool attributes</source>
+      <translation>Atributos da ferramenta desconhecidos</translation>
+    </message>
+    <message>
+      <location filename="../../ui/toolproperties.py" line="172"/>
+      <source>No unknown attributes found</source>
+      <translation>Nenhum atributo desconhecido encontrado</translation>
+    </message>
+    <message>
+      <location filename="../../toolmaterial.py" line="12"/>
+      <source>HSS</source>
+      <translation>HSS</translation>
+    </message>
+    <message>
+      <location filename="../../toolmaterial.py" line="20"/>
+      <source>Carbide</source>
+      <translation>Carboneto</translation>
     </message>
   </context>
   <context>

@@ -1,5 +1,6 @@
 import os
 from PySide import QtGui, QtCore
+from ..i18n import translate
 from .util import load_ui
 from .shapewidget import ShapeWidget
 from .toolproperties import ToolProperties, ToolAttributes
@@ -20,7 +21,8 @@ class ToolEditor(QtGui.QWidget):
         self.pocket = pocket
 
         nameWidget = QtGui.QLineEdit(tool.get_label())
-        nameWidget.setPlaceholderText("Tool name")
+        label = translate('btl', 'Tool name')
+        nameWidget.setPlaceholderText(label)
         self.form.vBox.insertWidget(0, nameWidget)
         nameWidget.setFocus()
         nameWidget.textChanged.connect(tool.set_label)
@@ -33,14 +35,16 @@ class ToolEditor(QtGui.QWidget):
         tool_tab_layout.addWidget(props)
 
         if tool.supports_feeds_and_speeds():
+            label = translate('btl', 'Feeds && Speeds')
             self.feeds = FeedsAndSpeedsWidget(db, serializer, tool, parent=self)
-            self.feeds_tab_idx = self.form.tabWidget.insertTab(1, self.feeds, "Feeds && Speeds")
+            self.feeds_tab_idx = self.form.tabWidget.insertTab(1, self.feeds, label)
         else:
             self.feeds = None
             self.feeds_tab_idx = None
 
+        label = translate('btl', 'Attributes')
         attrs = ToolAttributes(tool, parent=self.form)
-        attr_tab = self.form.tabWidget.addTab(attrs, "Attributes")
+        attr_tab = self.form.tabWidget.addTab(attrs, label)
 
         self.form.tabWidget.setCurrentIndex(0)
         self.form.tabWidget.currentChanged.connect(self._on_tab_switched)

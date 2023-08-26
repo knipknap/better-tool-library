@@ -17,6 +17,10 @@ search_filenames = (
     f"btl_{bcp47}.qm",
 )
 
+# Have to import AFTER getting the locale, as FreeCAD may change the locale.
+import FreeCAD
+translate = FreeCAD.Qt.translate
+
 def install_translator(app):
     # First the translator for Qt built-in strings.
     path = QLibraryInfo.location(QLibraryInfo.TranslationsPath)

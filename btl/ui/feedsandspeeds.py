@@ -1,10 +1,9 @@
 import os
-import FreeCAD
-import FreeCADGui
 from pathlib import Path
 from PySide.QtCore import Qt, QObject, QEvent
 from PySide.QtGui import QApplication
 from PySide import QtGui, QtCore
+from ..i18n import translate
 from ..machine import Machine
 from ..feeds import FeedCalc
 from ..feeds.operation import operations, Drilling, Slotting
@@ -132,7 +131,8 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
 
     def _on_result_right_click(self, pos):
         menu = QtGui.QMenu(self.form.tableWidget)
-        action = QtGui.QAction("Show internal properties", self.form.tableWidget, checkable=True)
+        label = translate('btl', 'Show internal properties')
+        action = QtGui.QAction(label, self.form.tableWidget, checkable=True)
         action.setChecked(self.show_internal_results)
         action.triggered.connect(self._on_internal_properties_toggled)
         menu.addAction(action)
@@ -218,22 +218,28 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         stickout = self.form.doubleSpinBoxStickout.value()
 
         if not machine:
-            return self.show_hint("Please select a machine.")
+            hint = translate('btl', 'Please select a machine.')
+            return self.show_hint(hint)
         elif not material:
-            return self.show_hint("Please select a material.")
+            hint = translate('btl', 'Please select a material.')
+            return self.show_hint(hint)
         elif not stickout:
-            return self.show_hint("Please enter the stickout of the tool.")
+            hint = translate('btl', 'Please enter the stickout of the tool.')
+            return self.show_hint(hint)
         elif not self.tool.shape.get_flutes():
-            return self.show_hint("Tool needs to have more than zero flutes.")
+            hint = translate('btl', 'Tool needs to have more than zero flutes.')
+            return self.show_hint(hint)
         elif not self.tool.supports_feeds_and_speeds():
-            return self.show_hint("Tool shape not supported by the calculator.")
+            hint = translate('btl', 'Tool shape not supported by the calculator.')
+            return self.show_hint(hint)
         self.form.hintLabel.hide()
 
         # Prepare the calculator.
         fc = FeedCalc(machine, self.tool, material, op=op)
         error = fc.get_error()
         if error:
-            return self.show_hint(f"Calculator error: {error}")
+            hint = translate('btl', 'Calculator error: {error}')
+            return self.show_hint(hint.format(error=error))
 
         # Apply limits, if any.
         doc_limit = self.get_doc_limit()
@@ -265,9 +271,8 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         self.form.progressBar.hide()
         error, params = worker.result
         if error is not None:
-            self.form.labelError.setText(
-                f"No valid result found. Best result has error: {error}"
-            )
+            text = translate('btl', 'No valid result found. Best result has error: {error}')
+            self.form.labelError.setText(text.format(error=error))
             self.form.errorBox.show()
         else:
             self.form.errorBox.hide()
@@ -276,15 +281,17 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         self.form.warningBox.setVisible(not warning_dismissed)
         self.form.resultWidget.show()
         rpm = params.get('rpm')
-        self.form.rpmResultLabel.setText(rpm.format() if rpm else "<i>none</i>")
+        none_text = translate('btl', 'none')
+        none_text = f'<i>{none_text}</i>'
+        self.form.rpmResultLabel.setText(rpm.format() if rpm else none_text)
         feed = params.get('feed')
-        self.form.feedResultLabel.setText(feed.format() if feed else "<i>none</i>")
+        self.form.feedResultLabel.setText(feed.format() if feed else none_text)
         diameter = self.tool.shape.get_diameter()
         woc = params.get('woc')
         woc_label = f'{woc.format()} ({woc.v/diameter*100:.3f}%)' if woc else None
-        self.form.stepoverResultLabel.setText(woc_label if woc else "<i>none</i>")
+        self.form.stepoverResultLabel.setText(woc_label if woc else none_text)
         doc = params.get('doc')
-        self.form.stepdownResultLabel.setText(doc.format() if doc else "<i>none</i>")
+        self.form.stepdownResultLabel.setText(doc.format() if doc else none_text)
 
         if not self.show_internal_results:
             params = {k: v for k, v in params.items() if not v.is_internal}

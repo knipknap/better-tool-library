@@ -1,7 +1,8 @@
 import os
+import FreeCAD
 from pathlib import Path
 from PySide import QtGui, QtCore
-import FreeCAD
+from ..i18n import translate
 from .util import load_ui
 
 __dir__ = os.path.dirname(__file__)
@@ -25,11 +26,13 @@ class PreferencesDialog(QtGui.QWidget):
         self.form.lineEditToolPath.setText(lib_path)
 
     def on_lib_path_select_clicked(self):
+        label = translate('btl', 'Choose a Library File')
+        filter_label = translate('btl', 'FreeCAD library files .fctl (*.fctl)')
         filename = QtGui.QFileDialog.getOpenFileName(
              self.form,
-             "Choose a Library file",
+             label,
              dir=str(Path.home()),
-             filter='FreeCAD library files .fctl (*.fctl)'
+             filter=filter_label
         )[0]
         if not filename:
             self.form.close()
