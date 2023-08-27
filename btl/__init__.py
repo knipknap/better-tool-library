@@ -3,13 +3,6 @@ from .library import Library
 from .shape import Shape
 from .tool import Tool
 from .machine import Machine
+from .version import get_version_from_git, get_version_from_pkg
 
-try:
-    from importlib.metadata import version, PackageNotFoundError
-except ImportError:
-    __version__ = "unknown; Python version too old"
-else:
-    try:
-        __version__ = version("btl")
-    except PackageNotFoundError:
-        __version__ = "unknown version"
+__version__ = get_version_from_git() or get_version_from_pkg()
