@@ -14,6 +14,12 @@
    <string>Tool Library</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
    <item>
     <widget class="QMenuBar" name="menubar">
      <widget class="QMenu" name="menuEdit">
@@ -56,8 +62,11 @@
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <layout class="QGridLayout" name="gridLayout">
+       <property name="verticalSpacing">
+        <number>3</number>
+       </property>
        <item row="6" column="0">
-        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0,1,0">
+        <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,1,0">
          <property name="sizeConstraint">
           <enum>QLayout::SetMinimumSize</enum>
          </property>
@@ -88,19 +97,6 @@
             <string>Library</string>
            </property>
           </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>12</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
          </item>
          <item>
           <widget class="QDialogButtonBox" name="buttonBox">
