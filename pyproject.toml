@@ -1,6 +1,6 @@
 [project]
 name = "btl"
-version = "0.9.5"
+dynamic = ["version"]
 authors = [
   { name="Samuel", email="knipknap@gmail.com" },
 ]
@@ -19,7 +19,7 @@ classifiers = [
 
 [build-system]
 requires = [
-  "setuptools >= 40.9.0",
+  "setuptools >= 40.9.0", "setuptools-git-versioning"
 ]
 build-backend = "setuptools.build_meta"
 
@@ -28,6 +28,9 @@ include-package-data = true
 
 [tool.setuptools.packages]
 find = {}
+
+[tool.setuptools-git-versioning]
+enabled = true
 
 [project.scripts]
 btl = "btl.cli:run"
