@@ -1,7 +1,7 @@
 import sys
 from PySide.QtGui import QApplication, QDoubleSpinBox
 from PySide.QtGui import QValidator, QAbstractSpinBox
-from ..units import unit_normalize, \
+from ..units import parse_value, \
                     distance_units, \
                     torque_units, \
                     power_units
@@ -31,20 +31,14 @@ class UnitSpinBox(QDoubleSpinBox):
         return fmt.format(value)
 
     def valueFromText(self, text):
-        parts = text.split()
-        if not parts:
-            return 0.0
-
         try:
-            value = float(parts[0])
-        except ValueError:
-            value = 0.0
+            value, unit = parse_value(text)
+        except AttributeError:
+            return .0
 
-        if len(parts) > 1:
-            unit = unit_normalize(parts[1])
-            if unit in self.allowed_units:
-                self.unit = unit
-                self.valueChanged.emit(value)
+        if unit in self.allowed_units:
+            self.unit = unit
+            self.valueChanged.emit(value)
 
         return value
 
