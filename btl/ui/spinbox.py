@@ -42,10 +42,6 @@ class UnitSpinBox(QDoubleSpinBox):
 
         return value
 
-    def fixup(self, text):
-        value = self.valueFromText(text)
-        return self.textFromValue(value)
-
     def validate(self, text, pos):
         return QValidator.Acceptable, text, pos
 
