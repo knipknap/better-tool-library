@@ -254,17 +254,17 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="87"/>
+        <location filename="../../ui/library.ui" line="88"/>
         <source>Library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="274"/>
+        <location filename="../../ui/library.ui" line="275"/>
         <source>+</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="120"/>
+        <location filename="../../ui/library.ui" line="121"/>
         <source>Add to Job</source>
         <translation type="unfinished"></translation>
     </message>
@@ -274,74 +274,79 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="149"/>
+        <location filename="../../ui/library.ui" line="150"/>
         <source>Find a tool</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="167"/>
+        <location filename="../../ui/library.ui" line="168"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="182"/>
+        <location filename="../../ui/library.ui" line="183"/>
         <source>Cut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="191"/>
+        <location filename="../../ui/library.ui" line="192"/>
         <source>Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="203"/>
+        <location filename="../../ui/library.ui" line="204"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="215"/>
+        <location filename="../../ui/library.ui" line="216"/>
         <source>Preferences</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="227"/>
+        <location filename="../../ui/library.ui" line="228"/>
         <source>Duplicate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="239"/>
+        <location filename="../../ui/library.ui" line="240"/>
         <source>About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="248"/>
+        <location filename="../../ui/library.ui" line="249"/>
         <source>Create a library...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="253"/>
-        <location filename="../../ui/library.ui" line="292"/>
+        <location filename="../../ui/library.ui" line="254"/>
+        <location filename="../../ui/library.ui" line="293"/>
         <source>Delete selected library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="262"/>
+        <location filename="../../ui/library.ui" line="263"/>
         <source>Library properties...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="271"/>
+        <location filename="../../ui/library.ui" line="272"/>
         <source>Create a tool...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="283"/>
+        <location filename="../../ui/library.ui" line="284"/>
         <source>Export selected library...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="301"/>
+        <location filename="../../ui/library.ui" line="302"/>
         <source>Import a shape...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../ui/library.ui" line="311"/>
+        <source>Import a tool...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

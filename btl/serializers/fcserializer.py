@@ -70,6 +70,15 @@ class FCSerializer():
     def _tool_filename_from_name(self, name):
         return os.path.join(self.tool_path, name+self.TOOL_EXT)
 
+    def import_tool_from_file(self, filename):
+        filename = os.path.abspath(filename)
+        dbpath = os.path.abspath(self.path)
+        parent = os.path.commonpath([dbpath])
+        child = os.path.commonpath([dbpath, filename])
+        if parent == child:
+            return # File is already in our path
+        shutil.copy(filename, self.tool_path)
+
     def _shape_filename_from_name(self, name):
         return os.path.join(self.shape_path, name+self.SHAPE_EXT)
 

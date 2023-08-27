@@ -43,6 +43,7 @@
       <addaction name="actionExportLibrary"/>
       <addaction name="separator"/>
       <addaction name="actionCreateTool"/>
+      <addaction name="actionImportTool"/>
       <addaction name="separator"/>
       <addaction name="actionImportShape"/>
      </widget>
@@ -299,6 +300,15 @@
    </property>
    <property name="text">
     <string>Import a shape...</string>
+   </property>
+  </action>
+  <action name="actionImportTool">
+   <property name="icon">
+    <iconset>
+     <normaloff>../resources/icons/import.svg</normaloff>../resources/icons/import.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Import a tool...</string>
    </property>
   </action>
  </widget>

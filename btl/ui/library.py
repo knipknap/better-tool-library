@@ -59,6 +59,7 @@ class LibraryUI():
         self.form.actionDeleteLibrary.triggered.connect(self.on_delete_library_clicked)
         self.form.actionExportLibrary.triggered.connect(self.on_export_library_clicked)
         self.form.actionCreateTool.triggered.connect(self.on_create_tool_clicked)
+        self.form.actionImportTool.triggered.connect(self.on_import_tool_clicked)
         self.form.actionImportShape.triggered.connect(self.on_import_shape_clicked)
 
         # Connect signals for Edit menu items.
@@ -364,9 +365,9 @@ class LibraryUI():
         self.load()
         self.select_tool(tool)
 
-    def on_import_shape_clicked(self):
-        label = translate('btl', 'Choose a Shape File')
-        filter_label = translate('btl', 'FreeCAD files .fcstd (*.fcstd)')
+    def on_import_tool_clicked(self):
+        label = translate('btl', 'Choose a Tool File')
+        filter_label = translate('btl', 'FreeCAD tool files .fctb (*.fctb)')
         filename = QtGui.QFileDialog.getOpenFileName(
              self.form,
              label,
@@ -374,11 +375,10 @@ class LibraryUI():
              filter=filter_label
         )[0]
         if not filename:
-            self.form.close()
             return
 
         try:
-            self.serializer.import_shape_from_file(filename)
+            self.serializer.import_tool_from_file(filename)
         except OSError as e:
             print("error opening file: {}".format(e))
         else:
@@ -453,6 +453,25 @@ class LibraryUI():
 
         self.db.serialize(self.serializer)
         self.load()
+
+    def on_import_shape_clicked(self):
+        label = translate('btl', 'Choose a Shape File')
+        filter_label = translate('btl', 'FreeCAD files .fcstd (*.fcstd)')
+        filename = QtGui.QFileDialog.getOpenFileName(
+             self.form,
+             label,
+             dir=str(Path.home()),
+             filter=filter_label
+        )[0]
+        if not filename:
+            return
+
+        try:
+            self.serializer.import_shape_from_file(filename)
+        except OSError as e:
+            print("error opening file: {}".format(e))
+        else:
+            self.load()
 
     def on_add_to_job_clicked(self):
         library = self.get_selected_library()
