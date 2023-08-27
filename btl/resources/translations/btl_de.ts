@@ -533,8 +533,8 @@
     </message>
     <message>
       <location filename="../../ui/feedsandspeeds.ui" line="109"/>
-      <source>Operation</source>
-      <translation>Vorgang</translation>
+      <source>Operation:</source>
+      <translation>Vorgang:</translation>
     </message>
     <message>
       <location filename="../../ui/feedsandspeeds.ui" line="208"/>

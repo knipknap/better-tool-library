@@ -180,7 +180,7 @@
     </message>
     <message>
         <location filename="../../ui/feedsandspeeds.ui" line="109"/>
-        <source>Operation</source>
+        <source>Operation:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

@@ -106,7 +106,7 @@
      <item row="3" column="0">
       <widget class="QLabel" name="label_11">
        <property name="text">
-        <string>Operation</string>
+        <string>Operation:</string>
        </property>
       </widget>
      </item>

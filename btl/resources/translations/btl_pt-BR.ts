@@ -533,8 +533,8 @@
     </message>
     <message>
       <location filename="../../ui/feedsandspeeds.ui" line="109"/>
-      <source>Operation</source>
-      <translation>Operação</translation>
+      <source>Operation:</source>
+      <translation>Operação:</translation>
     </message>
     <message>
       <location filename="../../ui/feedsandspeeds.ui" line="208"/>
@@ -649,7 +649,7 @@
     <message>
       <location filename="../../ui/library.ui" line="127"/>
       <source>Export Library</source>
-      <translation>Exportar Biblioteca</translation>
+      <translation>Exportar biblioteca</translation>
     </message>
     <message>
       <location filename="../../ui/library.ui" line="155"/>
@@ -659,7 +659,7 @@
     <message>
       <location filename="../../ui/library.ui" line="172"/>
       <source>Delete Tool</source>
-      <translation>Excluir Ferramenta</translation>
+      <translation>Excluir ferramenta</translation>
     </message>
     <message>
       <location filename="../../ui/library.ui" line="198"/>
