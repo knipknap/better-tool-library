@@ -1,6 +1,5 @@
 import os
 from functools import partial
-from pathlib import Path
 from PySide import QtGui, QtCore
 from ..i18n import translate
 from .util import load_ui
@@ -18,7 +17,6 @@ class ShapeSelector():
         self.form = load_ui(ui_path)
 
         self.form.buttonBox.clicked.connect(self.form.close)
-        self.form.pushButtonImport.clicked.connect(self.on_import_clicked)
 
         self.flows = {}
 
@@ -52,27 +50,6 @@ class ShapeSelector():
     def on_shape_button_clicked(self, shape):
         self.shape = shape
         self.form.close()
-
-    def on_import_clicked(self):
-        label = translate('btl', 'Choose a Shape File')
-        filter_label = translate('btl', 'FreeCAD files .fcstd (*.fcstd)')
-        filename = QtGui.QFileDialog.getOpenFileName(
-             self.form,
-             label,
-             dir=str(Path.home()),
-             filter=filter_label
-        )[0]
-        if not filename:
-            self.form.close()
-            return
-
-        try:
-            self.serializer.import_shape_from_file(filename)
-        except OSError as e:
-            print("error opening file: {}".format(e))
-        else:
-            self.tooldb.deserialize(self.serializer)
-            self.update_shapes()
 
     def show(self):
         return self.form.exec()

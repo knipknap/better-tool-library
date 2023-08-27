@@ -59,6 +59,7 @@ class LibraryUI():
         self.form.actionDeleteLibrary.triggered.connect(self.on_delete_library_clicked)
         self.form.actionExportLibrary.triggered.connect(self.on_export_library_clicked)
         self.form.actionCreateTool.triggered.connect(self.on_create_tool_clicked)
+        self.form.actionImportShape.triggered.connect(self.on_import_shape_clicked)
 
         # Connect signals for Edit menu items.
         self.form.actionCopy.triggered.connect(self._copy_tool)
@@ -361,6 +362,26 @@ class LibraryUI():
         self.db.serialize(self.serializer)
         self.load()
         self.select_tool(tool)
+
+    def on_import_shape_clicked(self):
+        label = translate('btl', 'Choose a Shape File')
+        filter_label = translate('btl', 'FreeCAD files .fcstd (*.fcstd)')
+        filename = QtGui.QFileDialog.getOpenFileName(
+             self.form,
+             label,
+             dir=str(Path.home()),
+             filter=filter_label
+        )[0]
+        if not filename:
+            self.form.close()
+            return
+
+        try:
+            self.serializer.import_shape_from_file(filename)
+        except OSError as e:
+            print("error opening file: {}".format(e))
+        else:
+            self.load()
 
     def on_edit_tool_clicked(self):
         items = self.form.listWidgetTools.selectedItems()
