@@ -4,72 +4,72 @@
   <context>
     <name>btl</name>
     <message>
-      <location filename="../../ui/library.py" line="133"/>
+      <location filename="../../ui/library.py" line="135"/>
       <source>Move to library...</source>
       <translation>Mover para biblioteca...</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="173"/>
+      <location filename="../../ui/library.py" line="175"/>
       <source>No job found in main window</source>
       <translation>Nenhum job encontrado na janela principal</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="184"/>
+      <location filename="../../ui/library.py" line="186"/>
       <source>Unused tools</source>
       <translation>Ferramentas não usadas</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="251"/>
+      <location filename="../../ui/library.py" line="253"/>
       <source>New Library</source>
       <translation>Nova biblioteca</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="282"/>
+      <location filename="../../ui/library.py" line="284"/>
       <source>Confirm library deletion</source>
       <translation>Confirmar exclusão de biblioteca</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="416"/>
+      <location filename="../../ui/library.py" line="418"/>
       <source>Delete</source>
       <translation>Excluir</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="278"/>
+      <location filename="../../ui/library.py" line="280"/>
       <source>Are you sure you want to delete library {library}? This action cannot be reversed.</source>
       <translation>Tem certeza que deseja apagar a biblioteca {library}? Esta ação não pode ser revertida.</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="308"/>
+      <location filename="../../ui/library.py" line="310"/>
       <source>Export the tool library {}</source>
       <translation>Exportar a biblioteca de ferramentas {}</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="345"/>
+      <location filename="../../ui/library.py" line="347"/>
       <source>New {}</source>
       <translation>Novo {}</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="395"/>
+      <location filename="../../ui/library.py" line="397"/>
       <source>Delete tool {tool} from library {library}?</source>
       <translation>Excluir ferramenta {tool} da biblioteca {library}?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="400"/>
+      <location filename="../../ui/library.py" line="402"/>
       <source>Delete unused tool {tool}?</source>
       <translation>Excluir ferramenta {tool} não utilizada?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="405"/>
+      <location filename="../../ui/library.py" line="407"/>
       <source>Delete {n} selected tools from library {library}?</source>
       <translation>Excluir {n} ferramentas selecionadas da biblioteca {library}?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="408"/>
+      <location filename="../../ui/library.py" line="410"/>
       <source>Delete {} unused tools from the library?</source>
       <translation>Excluir {} ferramentas não utilizadas da biblioteca?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="412"/>
+      <location filename="../../ui/library.py" line="414"/>
       <source>Confirm tool deletion</source>
       <translation>Confirmar exclusão de ferramenta</translation>
     </message>
@@ -194,12 +194,12 @@
       <translation>Propriedades específicas ao tipo</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="165"/>
+      <location filename="../../ui/toolproperties.py" line="164"/>
       <source>Unknown tool attributes</source>
       <translation>Atributos da ferramenta desconhecidos</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="176"/>
+      <location filename="../../ui/toolproperties.py" line="175"/>
       <source>No unknown attributes found</source>
       <translation>Nenhum atributo desconhecido encontrado</translation>
     </message>
@@ -352,6 +352,19 @@
       <location filename="../../shape.py" line="46"/>
       <source>Spindle power</source>
       <translation>Potência do fuso</translation>
+    </message>
+  </context>
+  <context>
+    <name>AboutDialog</name>
+    <message>
+      <location filename="../../ui/about.ui" line="50"/>
+      <source>Homepage:</source>
+      <translation>Site:</translation>
+    </message>
+    <message>
+      <location filename="../../ui/about.ui" line="57"/>
+      <source>Version:</source>
+      <translation>Versão:</translation>
     </message>
   </context>
   <context>
@@ -589,99 +602,109 @@
       <translation>&amp;Editar</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="68"/>
+      <location filename="../../ui/library.ui" line="32"/>
+      <source>&amp;Help</source>
+      <translation>&amp;Ajuda</translation>
+    </message>
+    <message>
+      <location filename="../../ui/library.ui" line="75"/>
       <source>Library</source>
       <translation>Biblioteca</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="75"/>
+      <location filename="../../ui/library.ui" line="82"/>
       <source>Add a library</source>
       <translation>Adicionar uma biblioteca</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="78"/>
+      <location filename="../../ui/library.ui" line="85"/>
       <source>+</source>
       <translation>+</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="89"/>
+      <location filename="../../ui/library.ui" line="96"/>
       <source>Delete the current library</source>
       <translation>Excluir a atual biblioteca</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="92"/>
+      <location filename="../../ui/library.ui" line="99"/>
       <source>-</source>
       <translation>-</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="103"/>
+      <location filename="../../ui/library.ui" line="110"/>
       <source>Edit library properties</source>
       <translation>Editar propriedades da biblioteca</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="106"/>
+      <location filename="../../ui/library.ui" line="113"/>
       <source>Edit Library</source>
       <translation>Editar biblioteca</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="117"/>
+      <location filename="../../ui/library.ui" line="124"/>
       <source>Export the current library</source>
       <translation>Exportar a biblioteca de ferramentas</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="120"/>
+      <location filename="../../ui/library.ui" line="127"/>
       <source>Export Library</source>
       <translation>Exportar Biblioteca</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="148"/>
+      <location filename="../../ui/library.ui" line="155"/>
       <source>Create Tool</source>
       <translation>Criar ferramenta</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="165"/>
+      <location filename="../../ui/library.ui" line="172"/>
       <source>Delete Tool</source>
       <translation>Excluir Ferramenta</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="191"/>
+      <location filename="../../ui/library.ui" line="198"/>
       <source>Add to Job</source>
       <translation>Adicionar ao job</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="220"/>
+      <location filename="../../ui/library.ui" line="227"/>
       <source>Find a tool</source>
       <translation>Encontre uma ferramenta</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="238"/>
+      <location filename="../../ui/library.ui" line="245"/>
       <source>Copy</source>
       <translation>Copiar</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="253"/>
+      <location filename="../../ui/library.ui" line="260"/>
       <source>Cut</source>
       <translation>Cortar</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="262"/>
+      <location filename="../../ui/library.ui" line="269"/>
       <source>Paste</source>
       <translation>Colar</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="274"/>
+      <location filename="../../ui/library.ui" line="281"/>
       <source>Delete</source>
       <translation>Excluir</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="286"/>
+      <location filename="../../ui/library.ui" line="293"/>
       <source>Preferences</source>
       <translation>Preferências</translation>
     </message>
     <message>
-      <location filename="../../ui/library.ui" line="298"/>
+      <location filename="../../ui/library.ui" line="305"/>
       <source>Duplicate</source>
       <translation>Duplicar</translation>
+    </message>
+    <message>
+      <location filename="../../ui/library.ui" line="317"/>
+      <source>About</source>
+      <translation>Sobre</translation>
     </message>
   </context>
   <context>

@@ -308,21 +308,6 @@
     <string notr="true">Ctrl+D</string>
    </property>
   </action>
-  <action name="actionCreate_Library">
-   <property name="text">
-    <string>Add a Library</string>
-   </property>
-  </action>
-  <action name="actionDelete_Library">
-   <property name="text">
-    <string>Delete Library</string>
-   </property>
-  </action>
-  <action name="actionCreate_Tool">
-   <property name="text">
-    <string>Create Tool</string>
-   </property>
-  </action>
   <action name="actionAbout">
    <property name="icon">
     <iconset>
