@@ -159,7 +159,8 @@ class LibraryUI():
         library = self.get_selected_library()
         for tool in tools:
             self.db.add_tool(tool, dialog.library)
-            library.remove_tool(tool)
+            if library:
+                library.remove_tool(tool)
 
         self.db.serialize(self.serializer)
         self.load()
