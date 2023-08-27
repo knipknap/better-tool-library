@@ -2,7 +2,7 @@ import os
 import FreeCAD, FreeCADGui
 from PySide import QtGui
 from PySide.QtCore import QT_TRANSLATE_NOOP
-from .. import ToolDB, serializers
+from .. import ToolDB, serializers, __version__
 from ..const import icon_dir, translations_dir
 from .library import LibraryUI
 
@@ -71,7 +71,7 @@ def on_workbench_activated(workbench):
     from Path.Tool.Gui import BitLibrary
     BitLibrary.ToolBitLibrary = BitLibraryReplacer
 
-    print('Better Tool Library loaded successfully.')
+    print(f'Better Tool Library {__version__} loaded successfully.')
 
 FreeCADGui.addCommand("Path_ToolBitLibraryOpen", OpenBTL())
 FreeCADGui.getMainWindow().workbenchActivated.connect(on_workbench_activated)
