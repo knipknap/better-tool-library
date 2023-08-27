@@ -4,72 +4,72 @@
 <context>
     <name>btl</name>
     <message>
-        <location filename="../../ui/library.py" line="135"/>
+        <location filename="../../ui/library.py" line="137"/>
         <source>Move to library...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="175"/>
+        <location filename="../../ui/library.py" line="179"/>
         <source>No job found in main window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="186"/>
+        <location filename="../../ui/library.py" line="190"/>
         <source>Unused tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="253"/>
+        <location filename="../../ui/library.py" line="257"/>
         <source>New Library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="284"/>
+        <location filename="../../ui/library.py" line="288"/>
         <source>Confirm library deletion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="418"/>
+        <location filename="../../ui/library.py" line="422"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="280"/>
+        <location filename="../../ui/library.py" line="284"/>
         <source>Are you sure you want to delete library {library}? This action cannot be reversed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="310"/>
+        <location filename="../../ui/library.py" line="314"/>
         <source>Export the tool library {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="347"/>
+        <location filename="../../ui/library.py" line="351"/>
         <source>New {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="397"/>
+        <location filename="../../ui/library.py" line="401"/>
         <source>Delete tool {tool} from library {library}?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="402"/>
+        <location filename="../../ui/library.py" line="406"/>
         <source>Delete unused tool {tool}?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="407"/>
+        <location filename="../../ui/library.py" line="411"/>
         <source>Delete {n} selected tools from library {library}?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="410"/>
+        <location filename="../../ui/library.py" line="414"/>
         <source>Delete {} unused tools from the library?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="414"/>
+        <location filename="../../ui/library.py" line="418"/>
         <source>Confirm tool deletion</source>
         <translation type="unfinished"></translation>
     </message>

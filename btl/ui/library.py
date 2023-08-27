@@ -41,13 +41,6 @@ class LibraryUI():
 
         # Connect signals for buttons at the bottom.
         self.form.comboBoxLibrary.currentIndexChanged.connect(self.library_selected)
-        self.form.toolButtonAddLibrary.clicked.connect(self.on_create_library_clicked)
-        self.form.toolButtonRemoveLibrary.clicked.connect(self.on_delete_library_clicked)
-        self.form.toolButtonEditLibrary.clicked.connect(self.on_edit_library_clicked)
-        self.form.toolButtonExportLibrary.clicked.connect(self.on_export_library_clicked)
-
-        self.form.pushButtonCreateTool.clicked.connect(self.on_create_tool_clicked)
-        self.form.pushButtonDeleteTool.clicked.connect(self.on_delete_tool_clicked)
         self.form.pushButtonAddToJob.clicked.connect(self.on_add_to_job_clicked)
 
         # Automatically connect shortcuts to their respective menu item signals.
@@ -60,12 +53,21 @@ class LibraryUI():
                     shortcut.setContext(context)
                     shortcut.activated.connect(action.trigger)
 
-        # Connect signals for menu items.
+        # Connect signals for File menu items.
+        self.form.actionAddLibrary.triggered.connect(self.on_create_library_clicked)
+        self.form.actionEditLibrary.triggered.connect(self.on_edit_library_clicked)
+        self.form.actionDeleteLibrary.triggered.connect(self.on_delete_library_clicked)
+        self.form.actionExportLibrary.triggered.connect(self.on_export_library_clicked)
+        self.form.actionCreateTool.triggered.connect(self.on_create_tool_clicked)
+
+        # Connect signals for Edit menu items.
         self.form.actionCopy.triggered.connect(self._copy_tool)
         self.form.actionPaste.triggered.connect(self._paste_tool)
         self.form.actionDelete.triggered.connect(self.on_delete_tool_clicked)
         self.form.actionDuplicate.triggered.connect(self._duplicate_tool)
         self.form.actionPreferences.triggered.connect(self.on_preferences_clicked)
+
+        # Connect signals for About menu items.
         self.form.actionAbout.triggered.connect(self.on_action_about_clicked)
 
         if standalone:
@@ -167,10 +169,12 @@ class LibraryUI():
         has_job = self.standalone or bool(get_jobs())
         library = self.get_selected_library()
         tool_selected = bool(self.form.listWidgetTools.selectedItems())
-        self.form.toolButtonRemoveLibrary.setEnabled(library is not None)
-        self.form.toolButtonEditLibrary.setEnabled(library is not None)
-        self.form.toolButtonExportLibrary.setEnabled(library is not None)
-        self.form.pushButtonDeleteTool.setEnabled(tool_selected)
+        self.form.actionDeleteLibrary.setEnabled(library is not None)
+        self.form.actionEditLibrary.setEnabled(library is not None)
+        self.form.actionExportLibrary.setEnabled(library is not None)
+        self.form.actionCopy.setEnabled(tool_selected)
+        self.form.actionDelete.setEnabled(tool_selected)
+        self.form.actionDuplicate.setEnabled(tool_selected)
         self.form.pushButtonAddToJob.setEnabled(tool_selected and has_job)
         text = translate('btl', 'No job found in main window')
         tt = '' if has_job else text

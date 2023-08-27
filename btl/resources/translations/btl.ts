@@ -4,72 +4,72 @@
 <context>
     <name>btl</name>
     <message>
-        <location filename="../../ui/library.py" line="135"/>
+        <location filename="../../ui/library.py" line="137"/>
         <source>Move to library...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="175"/>
+        <location filename="../../ui/library.py" line="179"/>
         <source>No job found in main window</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="186"/>
+        <location filename="../../ui/library.py" line="190"/>
         <source>Unused tools</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="253"/>
+        <location filename="../../ui/library.py" line="257"/>
         <source>New Library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="284"/>
+        <location filename="../../ui/library.py" line="288"/>
         <source>Confirm library deletion</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="418"/>
+        <location filename="../../ui/library.py" line="422"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="280"/>
+        <location filename="../../ui/library.py" line="284"/>
         <source>Are you sure you want to delete library {library}? This action cannot be reversed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="310"/>
+        <location filename="../../ui/library.py" line="314"/>
         <source>Export the tool library {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="347"/>
+        <location filename="../../ui/library.py" line="351"/>
         <source>New {}</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="397"/>
+        <location filename="../../ui/library.py" line="401"/>
         <source>Delete tool {tool} from library {library}?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="402"/>
+        <location filename="../../ui/library.py" line="406"/>
         <source>Delete unused tool {tool}?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="407"/>
+        <location filename="../../ui/library.py" line="411"/>
         <source>Delete {n} selected tools from library {library}?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="410"/>
+        <location filename="../../ui/library.py" line="414"/>
         <source>Delete {} unused tools from the library?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.py" line="414"/>
+        <location filename="../../ui/library.py" line="418"/>
         <source>Confirm tool deletion</source>
         <translation type="unfinished"></translation>
     </message>
@@ -607,103 +607,89 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="75"/>
+        <location filename="../../ui/library.ui" line="38"/>
+        <source>&amp;File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../ui/library.ui" line="86"/>
         <source>Library</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="82"/>
-        <source>Add a library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/library.ui" line="85"/>
-        <source>+</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/library.ui" line="96"/>
-        <source>Delete the current library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/library.ui" line="99"/>
-        <source>-</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/library.ui" line="110"/>
-        <source>Edit library properties</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/library.ui" line="113"/>
-        <source>Edit Library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/library.ui" line="124"/>
-        <source>Export the current library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/library.ui" line="127"/>
-        <source>Export Library</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/library.ui" line="155"/>
-        <source>Create Tool</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/library.ui" line="172"/>
-        <source>Delete Tool</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/library.ui" line="198"/>
+        <location filename="../../ui/library.ui" line="119"/>
         <source>Add to Job</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="227"/>
+        <location filename="../../ui/library.ui" line="148"/>
         <source>Find a tool</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="245"/>
+        <location filename="../../ui/library.ui" line="166"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="260"/>
+        <location filename="../../ui/library.ui" line="181"/>
         <source>Cut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="269"/>
+        <location filename="../../ui/library.ui" line="190"/>
         <source>Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="281"/>
+        <location filename="../../ui/library.ui" line="202"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="293"/>
+        <location filename="../../ui/library.ui" line="214"/>
         <source>Preferences</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="305"/>
+        <location filename="../../ui/library.ui" line="226"/>
         <source>Duplicate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/library.ui" line="317"/>
+        <location filename="../../ui/library.ui" line="238"/>
         <source>About</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../ui/library.ui" line="247"/>
+        <source>Create a library...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../ui/library.ui" line="252"/>
+        <location filename="../../ui/library.ui" line="291"/>
+        <source>Delete selected library</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../ui/library.ui" line="261"/>
+        <source>Library properties...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../ui/library.ui" line="270"/>
+        <source>Create a tool...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../ui/library.ui" line="273"/>
+        <source>+</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../ui/library.ui" line="282"/>
+        <source>Export selected library...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
