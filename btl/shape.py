@@ -145,7 +145,7 @@ class Shape():
 
         for name in self.well_known:
             param = self.get_param(name)
-            if not param:
+            if not param or not param.v:
                 continue
             abbr = self.get_abbr(param)
 
@@ -154,7 +154,8 @@ class Shape():
             elif param.choices is not None:
                 summary += ' '+param.format()
             else:
-                summary += ' {} {}'.format(param.label, param.format())
+                label = get_property_label_from_name(param.name, param.label)
+                summary += ' {} {}'.format(label, param.format())
 
         return summary.strip()
 
