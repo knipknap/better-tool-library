@@ -27,7 +27,14 @@
       <addaction name="separator"/>
       <addaction name="actionPreferences"/>
      </widget>
+     <widget class="QMenu" name="menuAbout">
+      <property name="title">
+       <string>&amp;Help</string>
+      </property>
+      <addaction name="actionAbout"/>
+     </widget>
      <addaction name="menuEdit"/>
+     <addaction name="menuAbout"/>
     </widget>
    </item>
    <item>
@@ -299,6 +306,30 @@
    </property>
    <property name="shortcut">
     <string notr="true">Ctrl+D</string>
+   </property>
+  </action>
+  <action name="actionCreate_Library">
+   <property name="text">
+    <string>Add a Library</string>
+   </property>
+  </action>
+  <action name="actionDelete_Library">
+   <property name="text">
+    <string>Delete Library</string>
+   </property>
+  </action>
+  <action name="actionCreate_Tool">
+   <property name="text">
+    <string>Create Tool</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset>
+     <normaloff>../resources/icons/info.svg</normaloff>../resources/icons/info.svg</iconset>
+   </property>
+   <property name="text">
+    <string>About</string>
    </property>
   </action>
  </widget>

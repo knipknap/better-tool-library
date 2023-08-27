@@ -10,6 +10,7 @@ from ..serializers import serializers, FCSerializer, LinuxCNCSerializer
 from ..fcutil import add_tool_to_job, get_jobs, get_active_job
 from .util import load_ui
 from .preferences import PreferencesDialog
+from .about import AboutDialog
 from .tablecell import TwoLineTableCell
 from .shapeselector import ShapeSelector
 from .tooleditor import ToolEditor
@@ -65,6 +66,7 @@ class LibraryUI():
         self.form.actionDelete.triggered.connect(self.on_delete_tool_clicked)
         self.form.actionDuplicate.triggered.connect(self._duplicate_tool)
         self.form.actionPreferences.triggered.connect(self.on_preferences_clicked)
+        self.form.actionAbout.triggered.connect(self.on_action_about_clicked)
 
         if standalone:
             self.form.pushButtonAddToJob.hide()
@@ -450,3 +452,7 @@ class LibraryUI():
         if not dialog.exec():
             return
         self.load()
+
+    def on_action_about_clicked(self):
+        dialog = AboutDialog()
+        dialog.exec()
