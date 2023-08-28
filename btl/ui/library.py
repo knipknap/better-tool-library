@@ -61,6 +61,7 @@ class LibraryUI():
         self.form.actionCreateTool.triggered.connect(self.on_create_tool_clicked)
         self.form.actionImportTool.triggered.connect(self.on_import_tool_clicked)
         self.form.actionImportShape.triggered.connect(self.on_import_shape_clicked)
+        self.form.actionExit.triggered.connect(self.form.close)
 
         # Connect signals for Edit menu items.
         self.form.actionCopy.triggered.connect(self._copy_tool)

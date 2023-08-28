@@ -58,6 +58,8 @@
       <addaction name="actionImportTool"/>
       <addaction name="separator"/>
       <addaction name="actionImportShape"/>
+      <addaction name="separator"/>
+      <addaction name="actionExit"/>
      </widget>
      <addaction name="menu_Library"/>
      <addaction name="menuEdit"/>
@@ -314,6 +316,15 @@
    </property>
    <property name="text">
     <string>Import a tool...</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset>
+     <normaloff>../resources/icons/exit.svg</normaloff>../resources/icons/exit.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>
