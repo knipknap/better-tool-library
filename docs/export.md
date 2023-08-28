@@ -1,8 +1,8 @@
-# BTL export formats
+# BTL import/export formats
 
 ## LinuxCNC
 
-BTL can export tools in the LinuxCNC .tbl format:
+BTL can **export** tools in the LinuxCNC .tbl format:
 
 ```
 T1 P1 D1.0 ;2,5mm uncoated aluminium dual flute HRC50
@@ -12,6 +12,8 @@ T23 P23 D1.5 ;HM TiAln coated endmill 1,5mm 4 flute
 T24 P24 D3.17 ;3,175mm single flute DLC coated Hozly
 T38 P38 D1.0 ;2,5mm uncoated aluminium dual flute HRC50
 ```
+
+### CLI support
 
 You can also use the CLI tool to make these files.
 The following command exports all libraries into a folder:
@@ -24,6 +26,14 @@ This folder will contain one .tbl file per library.
 
 
 ## Camotics
+
+Camotics files can be **exported** and also **imported**.
+
+To import, go to **File -> Import library...**, choose Camotics in the file
+filter, and click **Open**. All tools from the selected Camotics file will
+be imported into the currently selected library.
+
+### CLI support
 
 The following command exports all libraries into a folder
 in Camotics format:
