@@ -16,6 +16,9 @@ class Library(object):
     def __eq__(self, other):
         return self.id == other.id
 
+    def __iter__(self):
+        return self.tools.__iter__()
+
     def get_next_pocket(self):
         pocketlist = sorted(self.pockets, reverse=True)
         return pocketlist[0]+1 if pocketlist else 1

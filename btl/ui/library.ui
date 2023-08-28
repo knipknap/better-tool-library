@@ -52,6 +52,7 @@
       <addaction name="actionAddLibrary"/>
       <addaction name="actionEditLibrary"/>
       <addaction name="actionDeleteLibrary"/>
+      <addaction name="actionImportLibrary"/>
       <addaction name="actionExportLibrary"/>
       <addaction name="separator"/>
       <addaction name="actionCreateTool"/>
@@ -325,6 +326,15 @@
    </property>
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionImportLibrary">
+   <property name="icon">
+    <iconset>
+     <normaloff>../resources/icons/import.svg</normaloff>../resources/icons/import.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Import a library...</string>
    </property>
   </action>
  </widget>

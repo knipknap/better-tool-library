@@ -57,6 +57,7 @@ class LibraryUI():
         self.form.actionAddLibrary.triggered.connect(self.on_create_library_clicked)
         self.form.actionEditLibrary.triggered.connect(self.on_edit_library_clicked)
         self.form.actionDeleteLibrary.triggered.connect(self.on_delete_library_clicked)
+        self.form.actionImportLibrary.triggered.connect(self.on_import_library_clicked)
         self.form.actionExportLibrary.triggered.connect(self.on_export_library_clicked)
         self.form.actionCreateTool.triggered.connect(self.on_create_tool_clicked)
         self.form.actionImportTool.triggered.connect(self.on_import_tool_clicked)
@@ -304,15 +305,59 @@ class LibraryUI():
         self.load()
 
     def _get_pattern_for_serializer(self, serializer):
-        return '{} (*{})'.format(serializer.NAME, serializer.LIBRARY_EXT)
+        return '{} {} (*{})'.format(
+            serializer.NAME,
+            serializer.LIBRARY_EXT,
+            serializer.LIBRARY_EXT,
+        )
+
+    def _get_library_deserializer_filters(self):
+        return {self._get_pattern_for_serializer(s): s
+                for s in serializers.values()
+                if s != FCSerializer and s.can_deserialize_library()}
+
+    def on_import_library_clicked(self):
+        # Let the user choose a file.
+        label = translate('btl', 'Choose a Library File')
+        filters = self._get_library_deserializer_filters()
+        filename, format = QtGui.QFileDialog.getOpenFileName(
+            self.form,
+            label,
+            dir=str(Path.home()),
+            filter=';;'.join(sorted(filters))
+        )
+        if not filename:
+            return
+
+        # Create an instance of the serializer.
+        dirname = os.path.dirname(filename)
+        serializer = filters[format](dirname)
+
+        # Try to read the file.
+        try:
+            library = serializer.deserialize_library_from_file(filename)
+        except (OSError, KeyError) as e:
+            print("error importing file: {}".format(e))
+            return
+
+        # Append every tool to the currently selected library.
+        cur_library = self.get_selected_library()
+        for tool in library:
+            self.db.add_tool(tool, cur_library)
+        self.db.serialize(self.serializer)
+        self.load()
+
+    def _get_library_serializer_filters(self):
+        return {self._get_pattern_for_serializer(s): s
+                for s in serializers.values()
+                if s != FCSerializer and s.can_serialize_library()}
 
     def on_export_library_clicked(self):
         library = self.get_selected_library()
         if not library:
             return
 
-        filters = {self._get_pattern_for_serializer(s): s
-                   for s in serializers.values() if s != FCSerializer}
+        filters = self._get_library_serializer_filters()
         selection = self._get_pattern_for_serializer(LinuxCNCSerializer)
 
         filename, format = QtGui.QFileDialog.getSaveFileName(

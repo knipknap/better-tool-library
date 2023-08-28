@@ -39,6 +39,10 @@ class LinuxCNCSerializer(Serializer):
         for id in existing:
             self._remove_library_by_id(id)
 
+    @classmethod
+    def can_serialize_library(cls):
+        return True
+
     def serialize_library(self, library, filename=None):
         if not filename:
             filename = self._library_filename_from_id(library.id)

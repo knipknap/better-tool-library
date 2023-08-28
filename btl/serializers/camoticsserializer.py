@@ -38,12 +38,15 @@ class CamoticsSerializer(Serializer):
     def _library_filename_from_id(self, id):
         return os.path.join(self.path, id+self.LIBRARY_EXT)
 
+    def _library_id_from_filename(self, filename):
+        return os.path.basename(os.path.splitext(f)[0])
+
     def _library_filename_from_library(self, library):
         return self._library_filename_from_id(library.id)
 
     def _get_library_ids(self):
         files = glob.glob(os.path.join(self.path, '*'+self.LIBRARY_EXT))
-        return sorted(os.path.basename(os.path.splitext(f)[0])
+        return sorted(self._library_id_from_filename(f)
                       for f in files if os.path.isfile(f))
 
     def _remove_library_by_id(self, id):
@@ -63,6 +66,10 @@ class CamoticsSerializer(Serializer):
         return [self.deserialize_library(id)
                 for id in self._get_library_ids()]
 
+    @classmethod
+    def can_serialize_library(cls):
+        return True
+
     def serialize_library(self, library, filename=None):
         toollist = {}
 
@@ -79,15 +86,22 @@ class CamoticsSerializer(Serializer):
         with open(filename, 'w') as fp:
             fp.write(json.dumps(toollist, indent=2))
 
+    @classmethod
+    def can_deserialize_library(cls):
+        return True
+
     def deserialize_library(self, id):
         lib_filename = self._library_filename_from_id(id)
-        with open(lib_filename, "r") as fp:
+        return self.deserialize_library_from_file(lib_filename)
+
+    def deserialize_library_from_file(self, filename):
+        with open(filename, "r") as fp:
             data = json.load(fp)
 
         library = Library(id, id=id)
         for pocket, toolitem in data.items():
             shape = SHAPEMAP_REVERSE.get(toolitem["shape"], 'endmill')
-            tool = Tool(toolitem["description"], shape, filename=lib_filename)
+            tool = Tool(toolitem["description"], shape, filename=filename)
             tool.shape.set_diameter(float(toolitem["diameter"]))
             tool.shape.set_length(float(toolitem["length"]))
             library.add_tool(tool, int(pocket))

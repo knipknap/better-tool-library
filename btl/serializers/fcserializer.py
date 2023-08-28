@@ -188,6 +188,10 @@ class FCSerializer(Serializer):
         return [self.deserialize_library(id)
                 for id in self._get_library_ids()]
 
+    @classmethod
+    def can_serialize_library(cls):
+        return True
+
     def serialize_library(self, library, filename=None):
         attrs = {}
         attrs["version"] = library.API_VERSION
@@ -209,11 +213,19 @@ class FCSerializer(Serializer):
             json.dump(attrs, fp, sort_keys=True, indent=2)
         return attrs
 
+    @classmethod
+    def can_deserialize_library(cls):
+        return True
+
     def deserialize_library(self, id):
         filename = self._library_filename_from_name(id)
+        return self.deserialize_library_from_file(filename)
+
+    def deserialize_library_from_file(self, filename):
         with open(filename, "r") as fp:
             attrs = json.load(fp)
 
+        id = self._name_from_filename(filename)
         label = attrs.get('label', id)
         library = Library(label, id=id)
         for tool_obj in attrs['tools']:

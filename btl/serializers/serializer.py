@@ -32,12 +32,23 @@ class Serializer():
         # Should return nothing if not supported.
         return []
 
+    @classmethod
+    def can_serialize_library(cls):
+        return False
+
     def serialize_library(self, library, filename=None):
         # Should do nothing if not supported.
         return
 
+    @classmethod
+    def can_deserialize_library(cls):
+        return False
+
     def deserialize_library(self, id):
         raise NotImplemented
+
+    def deserialize_library_from_file(self, filename):
+        return NotImplemented
 
     def deserialize_shapes(self):
         # Should return nothing if not supported.
