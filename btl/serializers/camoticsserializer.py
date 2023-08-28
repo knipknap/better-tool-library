@@ -88,8 +88,8 @@ class CamoticsSerializer(Serializer):
         for pocket, toolitem in data.items():
             shape = SHAPEMAP_REVERSE.get(toolitem["shape"], 'endmill')
             tool = Tool(toolitem["description"], shape, filename=lib_filename)
-            tool.diameter = float(toolitem["diameter"])
-            tool.length = float(toolitem["length"])
+            tool.shape.set_diameter(float(toolitem["diameter"]))
+            tool.shape.set_length(float(toolitem["length"]))
             library.add_tool(tool, int(pocket))
 
         return library

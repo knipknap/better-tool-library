@@ -3,7 +3,7 @@ import sys
 import glob
 import shutil
 from . import const
-from .params import Param
+from .params import Param, DistanceParam
 from .i18n import translate
 from .toolmaterial import ToolMaterial, HSS, Carbide
 from .util import file_is_newer, get_abbreviations_from_svg
@@ -131,6 +131,13 @@ class Shape():
         else:
             self.params[name].v = value
 
+    def add_param(self, param):
+        if not isinstance(param, Param):
+            paramtype = type(param)
+            raise AttributeError(f"param argument has invalid type {paramtype}")
+        self.params[param.name] = param
+        return param
+
     def get_param(self, name, default=None):
         if not isinstance(name, str):
             paramtype = type(name)
@@ -191,6 +198,10 @@ class Shape():
         item = self.params.get('Diameter')
         return item.value('mm') if item else None
 
+    def set_diameter(self, diameter, unit='mm'):
+        param = DistanceParam(name='Diameter', unit=unit, v=diameter)
+        self.add_param(param)
+
     def get_cutting_edge(self):
         item = self.params.get('CuttingEdgeHeight')
         return item.value('mm') if item else None
@@ -198,6 +209,10 @@ class Shape():
     def get_length(self):
         item = self.params.get('Length')
         return item.value('mm') if item else None
+
+    def set_length(self, length, unit='mm'):
+        param = DistanceParam(name='Length', unit=unit, v=length)
+        self.add_param(param)
 
     def get_flutes(self):
         item = self.params.get('Flutes')
