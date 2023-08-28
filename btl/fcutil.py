@@ -48,7 +48,7 @@ def type_from_prop(propname, prop):
             'error: param {} with type {} is unsupported'.format(
                  propname, prop.Unit.Type))
 
-def shape_property_to_param(propname, prop, enums):
+def shape_property_to_param(groupname, propname, prop, enums):
     # Default can be overwritten by more specific known types.
     param_type = type_from_prop(propname, prop)
     if not param_type:
@@ -57,6 +57,7 @@ def shape_property_to_param(propname, prop, enums):
                  propname, prop))
 
     param = param_type(name=propname)
+    param.group = groupname
     if hasattr(prop, 'Unit'):
         param.v = prop.Value
         param.unit = prop.getUserPreferred()[2]
@@ -71,17 +72,17 @@ def shape_property_to_param(propname, prop, enums):
     return param
 
 def shape_properties_to_shape(properties, shape):
-    for propname, prop, enums in properties:
-        param = shape_property_to_param(propname, prop, enums)
+    for groupname, propname, prop, enums in properties:
+        param = shape_property_to_param(groupname, propname, prop, enums)
         shape.set_param(param.name, param)
 
-def tool_property_to_param(propname, prop, enums, value):
+def tool_property_to_param(groupname, propname, prop, enums, value):
     """
     Using the given prop (=a property coming from a FreeCAD shape file) as
     a type hint, this function converts the given value to our internal
     parameter type (as defined in the params module).
     """
-    param = shape_property_to_param(propname, prop, enums)
+    param = shape_property_to_param(groupname, propname, prop, enums)
     value = value if value is not None else prop.Value
     if issubclass(param.type, bool):
         param.v = bool(value or False)
@@ -138,7 +139,7 @@ def load_shape_properties(filename):
         if groupname in ('', 'Base'):
             continue
         enums = attrs.getEnumerationsOfProperty(propname)
-        properties.append((propname, prop, enums))
+        properties.append((groupname, propname, prop, enums))
 
     # Note that .closeDocument() is extremely slow; it takes
     # almost 400ms per document - much longer than opening!

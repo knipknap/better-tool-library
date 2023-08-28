@@ -9,6 +9,7 @@ class Param(object):
     fmt = '{}'
     type = str
     choices = None
+    group = None
 
     def __init__(self, name=None, unit=None, v=None):
         label = re.sub(r'([A-Z])', r' \1', name or '').strip().capitalize()

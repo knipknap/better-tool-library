@@ -121,29 +121,30 @@ class ToolProperties(PropertyWidget):
 
         # Add well-known properties under a separate title.
         row = self.grid.rowCount()
-        lbl = translate('btl', 'Well-known properties')
+        lbl = translate('btl', 'Dimensions')
         label = QtGui.QLabel(f"<h4>{lbl}</h4>")
         # Note: Some PyQt versions do not support columnSpan
         self.grid.addWidget(label, row, 0)
 
         # Add entry fields per property.
-        for param in self.tool.shape.get_well_known_params():
-            abbr = self.tool.shape.get_abbr(param)
-            self._add_property(param, abbr)
+        params = self.tool.shape.params.values()
+        for param in params:
+            if param.group == 'Shape':
+                abbr = self.tool.shape.get_abbr(param)
+                self._add_property(param, abbr)
         self._makespacing(6)
 
         # Add remaining properties under a separate title.
         row = self.grid.rowCount()
-        lbl = translate('btl', 'Tool-specific properties')
+        lbl = translate('btl', 'Other properties')
         label = QtGui.QLabel(f"<h4>{lbl}</h4>")
         self.grid.addWidget(label, row, 0)
 
         # Add entry fields per property.
-        params = sorted(self.tool.shape.get_non_well_known_params(),
-                        key=lambda x: x.name)
         for param in params:
-            abbr = self.tool.shape.get_abbr(param)
-            self._add_property(param, abbr)
+            if param.group != 'Shape':
+                abbr = self.tool.shape.get_abbr(param)
+                self._add_property(param, abbr)
 
         self._makespacing(6)
         row = self.grid.rowCount()

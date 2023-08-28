@@ -166,6 +166,9 @@ class Shape():
 
         return summary.strip()
 
+    def get_params_by_group(self, group):
+        return [p for p in self.params.values() if param.group == group]
+
     def get_well_known_params(self):
         for name in self.well_known:
             if name in self.params:

@@ -302,7 +302,7 @@ class FCSerializer(Serializer):
 
         # Walk through the supported properties, and copy them from the internal
         # model to the tool file representation.
-        for propname, prop, enums in properties:
+        for groupname, propname, prop, enums in properties:
             param = tool.shape.get_param(propname)
 
             if isinstance(prop, bool):
@@ -362,10 +362,10 @@ class FCSerializer(Serializer):
 
         # Walk through the supported properties, and copy them from the tool
         # to the internal representation.
-        for propname, prop, enums in properties:
+        for groupname, propname, prop, enums in properties:
             value = attrs['parameter'].pop(propname, None)
             try:
-                param = tool_property_to_param(propname, prop, enums, value)
+                param = tool_property_to_param(groupname, propname, prop, enums, value)
             except (AttributeError, ValueError) as e:
                 print(f"Ouch! Unsupported attribute '{propname}' with value '{value}' in {filename}")
                 continue
