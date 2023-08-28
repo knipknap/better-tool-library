@@ -127,7 +127,8 @@ class ToolProperties(PropertyWidget):
         self.grid.addWidget(label, row, 0)
 
         # Add entry fields per property.
-        params = self.tool.shape.params.values()
+        params = sorted(self.tool.shape.params.values(),
+                        key=lambda p: get_property_label_from_name(p.name, p.label))
         for param in params:
             if param.group == 'Shape':
                 abbr = self.tool.shape.get_abbr(param)
