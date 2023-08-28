@@ -19,57 +19,57 @@
       <translation>Unbenutzte Werkzeuge</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="262"/>
+      <location filename="../../ui/library.py" line="263"/>
       <source>New Library</source>
       <translation>Neue Biblliothek</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="293"/>
+      <location filename="../../ui/library.py" line="294"/>
       <source>Confirm library deletion</source>
       <translation>Löschen der Bibliothek bestätigen</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="490"/>
+      <location filename="../../ui/library.py" line="491"/>
       <source>Delete</source>
       <translation>Löschen</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="289"/>
+      <location filename="../../ui/library.py" line="290"/>
       <source>Are you sure you want to delete library {library}? This action cannot be reversed.</source>
       <translation>Bist du sicher, dass du die Bibliothek {library} löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden.</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="363"/>
+      <location filename="../../ui/library.py" line="364"/>
       <source>Export the tool library {}</source>
       <translation>Werkzeugbibliothek {} exportieren</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="400"/>
+      <location filename="../../ui/library.py" line="401"/>
       <source>New {}</source>
       <translation>{} neu</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="469"/>
+      <location filename="../../ui/library.py" line="470"/>
       <source>Delete tool {tool} from library {library}?</source>
       <translation>Werkzeug {tool} aus Bibliothek {library} löschen?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="474"/>
+      <location filename="../../ui/library.py" line="475"/>
       <source>Delete unused tool {tool}?</source>
       <translation>Unbenutztes Werkzeug {tool} löschen?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="479"/>
+      <location filename="../../ui/library.py" line="480"/>
       <source>Delete {n} selected tools from library {library}?</source>
       <translation>{n} ausgewählte Werkzeuge aus Bibliothek {library} löschen?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="482"/>
+      <location filename="../../ui/library.py" line="483"/>
       <source>Delete {} unused tools from the library?</source>
       <translation>{n} ausgewählte Werkzeuge aus der Bibliothek löschen?</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="486"/>
+      <location filename="../../ui/library.py" line="487"/>
       <source>Confirm tool deletion</source>
       <translation>Löschen der Bibliothek bestätigen</translation>
     </message>
@@ -84,7 +84,7 @@
       <translation>Editor zur Verwaltung von ToolBit-Bibliotheken öffnen</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="118"/>
+      <location filename="../../ui/tablecell.py" line="60"/>
       <source>Pocket</source>
       <translation>Pocket</translation>
     </message>
@@ -124,12 +124,12 @@
       <translation>Werkzeug kopieren</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="504"/>
+      <location filename="../../ui/library.py" line="505"/>
       <source>Choose a Shape File</source>
       <translation>Werkzeugtyp-Datei auswählen</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="505"/>
+      <location filename="../../ui/library.py" line="506"/>
       <source>FreeCAD files .fcstd (*.fcstd)</source>
       <translation>FreeCAD-Dateien .fcstd (*.fcstd)</translation>
     </message>
@@ -179,17 +179,17 @@
       <translation>-</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="110"/>
+      <location filename="../../ui/toolproperties.py" line="109"/>
       <source>Tool location</source>
       <translation>Werkzeug-Position</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="165"/>
+      <location filename="../../ui/toolproperties.py" line="184"/>
       <source>Unknown tool attributes</source>
       <translation>Unbekannte Werkzeugattribute</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="176"/>
+      <location filename="../../ui/toolproperties.py" line="195"/>
       <source>No unknown attributes found</source>
       <translation>Keine unbekannten Attribute gefunden</translation>
     </message>
@@ -344,24 +344,39 @@
       <translation>Spindel-Leistung</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="415"/>
+      <location filename="../../ui/library.py" line="416"/>
       <source>Choose a Tool File</source>
       <translation>Werkzeugdatei auswählen</translation>
     </message>
     <message>
-      <location filename="../../ui/library.py" line="416"/>
+      <location filename="../../ui/library.py" line="417"/>
       <source>FreeCAD tool files .fctb (*.fctb)</source>
       <translation>FreeCAD Werkzeugdateien .fctb (*.fctb)</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="124"/>
+      <location filename="../../ui/toolproperties.py" line="142"/>
       <source>Dimensions</source>
       <translation>Maße</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="139"/>
+      <location filename="../../ui/toolproperties.py" line="158"/>
       <source>Other properties</source>
       <translation>Andere Eigenschaften</translation>
+    </message>
+    <message>
+      <location filename="../../ui/toolproperties.py" line="115"/>
+      <source>Tool ID:</source>
+      <translation>Werkzeug-ID:</translation>
+    </message>
+    <message>
+      <location filename="../../ui/toolproperties.py" line="129"/>
+      <source>Tool Number:</source>
+      <translation>Werkzeugnummer:</translation>
+    </message>
+    <message>
+      <location filename="../../ui/toolproperties.py" line="136"/>
+      <source>Pocket:</source>
+      <translation>Pocket:</translation>
     </message>
   </context>
   <context>
