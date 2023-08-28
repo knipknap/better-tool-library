@@ -184,22 +184,12 @@
       <translation>Werkzeug-Position</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="124"/>
-      <source>Well-known properties</source>
-      <translation>Bekannte Eigenschaften</translation>
-    </message>
-    <message>
-      <location filename="../../ui/toolproperties.py" line="137"/>
-      <source>Tool-specific properties</source>
-      <translation>Werkzeugspezifische Eigenschaften</translation>
-    </message>
-    <message>
-      <location filename="../../ui/toolproperties.py" line="164"/>
+      <location filename="../../ui/toolproperties.py" line="165"/>
       <source>Unknown tool attributes</source>
       <translation>Unbekannte Werkzeugattribute</translation>
     </message>
     <message>
-      <location filename="../../ui/toolproperties.py" line="175"/>
+      <location filename="../../ui/toolproperties.py" line="176"/>
       <source>No unknown attributes found</source>
       <translation>Keine unbekannten Attribute gefunden</translation>
     </message>
@@ -362,6 +352,16 @@
       <location filename="../../ui/library.py" line="416"/>
       <source>FreeCAD tool files .fctb (*.fctb)</source>
       <translation>FreeCAD Werkzeugdateien .fctb (*.fctb)</translation>
+    </message>
+    <message>
+      <location filename="../../ui/toolproperties.py" line="124"/>
+      <source>Dimensions</source>
+      <translation>Maße</translation>
+    </message>
+    <message>
+      <location filename="../../ui/toolproperties.py" line="139"/>
+      <source>Other properties</source>
+      <translation>Andere Eigenschaften</translation>
     </message>
   </context>
   <context>
