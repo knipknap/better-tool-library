@@ -69,7 +69,7 @@ class LinuxCNCSerializer():
                 fp.write("T{} P{} D{} ;{}\n".format(
                     pocket,
                     pocket,
-                    tool.shape.get_param('Diameter') or 2,
+                    tool.shape.get_diameter() or 2,
                     tool.label
                 ).encode("ascii","ignore"))
 

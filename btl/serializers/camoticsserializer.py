@@ -83,9 +83,9 @@ class CamoticsSerializer():
 
         for pocket, tool in library.pockets.items():
             toolitem = tooltemplate.copy()
-            toolitem["diameter"] = tool.shape.get_param('Diameter') or 2
+            toolitem["diameter"] = tool.shape.get_diameter() or 2
             toolitem["description"] = tool.label
-            toolitem["length"] = tool.shape.get_param('length') or 10
+            toolitem["length"] = tool.shape.get_length() or 10
             toolitem["shape"] = SHAPEMAP.get(tool.shape.name, "Cylindrical")
             toollist[pocket] = toolitem
 
