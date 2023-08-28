@@ -2,6 +2,7 @@ import os
 import glob
 import json
 from .. import Library, Tool
+from .serializer import Serializer
 
 SHAPEMAP = {
     "ballend": "Ballnose",
@@ -19,7 +20,7 @@ tooltemplate = {
     "description": "",
 }
 
-class CamoticsSerializer():
+class CamoticsSerializer(Serializer):
     NAME = 'Camotics'
     LIBRARY_EXT='.ctbl'
 
@@ -44,22 +45,6 @@ class CamoticsSerializer():
         files = glob.glob(os.path.join(self.path, '*'+self.LIBRARY_EXT))
         return sorted(os.path.basename(os.path.splitext(f)[0])
                       for f in files if os.path.isfile(f))
-
-    def serialize_machines(self, machines):
-        # Camotics has no concept of a machine. So nothing to be done here.
-        return
-
-    def deserialize_machines(self):
-        # Camotics has no concept of a machine. So nothing to be done here.
-        return []
-
-    def serialize_machine(self, machine):
-        # Camotics has no concept of a machine. So nothing to be done here.
-        return
-
-    def deserialize_machine(self, attrs):
-        # Camotics has no concept of a machine. So nothing to be done here.
-        raise NotImplemented
 
     def _remove_library_by_id(self, id):
         filename = self._library_filename_from_id(id)
@@ -108,38 +93,3 @@ class CamoticsSerializer():
             library.add_tool(tool, int(pocket))
 
         return library
-
-    def deserialize_shapes(self):
-        # In Camotics, shapes cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return []
-
-    def serialize_shape(self, shape):
-        # In Camotics, shapes cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return
-
-    def deserialize_shape(self, attrs):
-        # In Camotics, shapes cannot exist on their own outside a library.
-        # So nothing to be done here.
-        raise NotImplemented
-
-    def serialize_tools(self, tools):
-        # In Camotics, tools cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return
-
-    def deserialize_tools(self):
-        # In Camotics, tools cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return []
-
-    def serialize_tool(self, tool):
-        # In Camotics, tools cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return
-
-    def deserialize_tool(self, attrs):
-        # In Camotics, tools cannot exist on their own outside a library.
-        # So nothing to be done here.
-        raise NotImplemented

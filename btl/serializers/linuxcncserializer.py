@@ -1,8 +1,9 @@
 import os
 import glob
 from .. import Library, Tool
+from .serializer import Serializer
 
-class LinuxCNCSerializer():
+class LinuxCNCSerializer(Serializer):
     NAME = 'LinuxCNC'
     LIBRARY_EXT='.tbl'
 
@@ -25,26 +26,6 @@ class LinuxCNCSerializer():
         return sorted(os.path.basename(os.path.splitext(f)[0])
                       for f in files if os.path.isfile(f))
 
-    def serialize_machines(self, machines):
-        # LinuxCNC has no machine files that could be imported, so nothing
-        # to be done here.
-        return
-
-    def deserialize_machines(self):
-        # LinuxCNC has no machine files that could be imported, so nothing
-        # to be done here.
-        return []
-
-    def serialize_machine(self, machine):
-        # LinuxCNC has no machine files that could be imported, so nothing
-        # to be done here.
-        return
-
-    def deserialize_machine(self, attrs):
-        # LinuxCNC has no machine files that could be imported, so nothing
-        # to be done here.
-        raise NotImplemented
-
     def _remove_library_by_id(self, id):
         filename = self._library_filename_from_id(id)
         os.remove(filename)
@@ -58,9 +39,6 @@ class LinuxCNCSerializer():
         for id in existing:
             self._remove_library_by_id(id)
 
-    def deserialize_libraries(self):
-        return [] # Not implemented
-
     def serialize_library(self, library, filename=None):
         if not filename:
             filename = self._library_filename_from_id(library.id)
@@ -72,41 +50,3 @@ class LinuxCNCSerializer():
                     tool.shape.get_diameter() or 2,
                     tool.label
                 ).encode("ascii","ignore"))
-
-    def deserialize_library(self, id):
-        raise NotImplemented
-
-    def deserialize_shapes(self):
-        # In LinuxCNC, shapes cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return []
-
-    def serialize_shape(self, shape):
-        # In LinuxCNC, shapes cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return
-
-    def deserialize_shape(self, attrs):
-        # In LinuxCNC, shapes cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return
-
-    def serialize_tools(self, tools):
-        # In LinuxCNC, tools cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return
-
-    def deserialize_tools(self):
-        # In LinuxCNC, tools cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return []
-
-    def serialize_tool(self, tool):
-        # In LinuxCNC, tools cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return
-
-    def deserialize_tool(self, attrs):
-        # In LinuxCNC, tools cannot exist on their own outside a library.
-        # So nothing to be done here.
-        return

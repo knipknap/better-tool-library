@@ -15,6 +15,7 @@ from .. import Machine, Library, Shape, Tool
 from ..shape import builtin_shapes
 from ..params import Param, IntParam, FloatParam, DistanceParam
 from ..fcutil import *
+from .serializer import Serializer
 
 TOOL_DIR = 'Bit'
 LIBRARY_DIR = 'Library'
@@ -22,7 +23,7 @@ SHAPE_DIR = 'Shape'
 MACHINE_DIR = 'Machine'
 BUILTIN_SHAPE_DIR = 'resources/shapes'
 
-class FCSerializer():
+class FCSerializer(Serializer):
     NAME = 'FreeCAD'
     TOOL_EXT = '.fctb'
     LIBRARY_EXT = '.fctl'
