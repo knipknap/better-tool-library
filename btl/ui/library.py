@@ -233,8 +233,9 @@ class LibraryUI():
             cell.set_icon_from_shape(tool.shape)
 
             if library:
-                pocket = library.get_pocket_from_tool(tool)
-                cell.set_label(str(pocket))
+                tool_no = library.get_tool_no_from_tool(tool)
+                cell.set_tool_no(tool_no)
+                cell.set_pocket(tool.pocket)
 
             widget_item = QtGui.QListWidgetItem(listwidget)
             widget_item.setSizeHint(cell.sizeHint())
@@ -399,14 +400,14 @@ class LibraryUI():
         label = shape.get_label()
         tool = Tool(translate('btl', 'New {}').format(label), shape)
         library = self.get_selected_library()
-        pocket = library.get_next_pocket()
-        editor = ToolEditor(self.db, self.serializer, tool, pocket, parent=self.form)
+        tool_no = library.get_next_tool_no()
+        editor = ToolEditor(self.db, self.serializer, tool, tool_no, parent=self.form)
         if not editor.show():
             return
 
         self.db.add_tool(tool, library)
         if library:
-            library.assign_new_pocket(tool, editor.pocket)
+            library.assign_new_tool_no(tool, editor.tool_no)
         self.db.serialize(self.serializer)
         self.load()
         self.select_tool(tool)
@@ -438,8 +439,8 @@ class LibraryUI():
         tool = items[0].data(QtCore.Qt.UserRole)
         library = self.get_selected_library()
         if library:
-            pocket = library.get_pocket_from_tool(tool)
-            editor = ToolEditor(self.db, self.serializer, tool, pocket)
+            tool_no = library.get_tool_no_from_tool(tool)
+            editor = ToolEditor(self.db, self.serializer, tool, tool_no)
         else:
             editor = ToolEditor(self.db, self.serializer, tool)
 
@@ -451,7 +452,7 @@ class LibraryUI():
 
         self.db.add_tool(tool)
         if library:
-            library.assign_new_pocket(tool, editor.pocket)
+            library.assign_new_tool_no(tool, editor.tool_no)
 
         self.db.serialize(self.serializer)
         self.load()
@@ -534,9 +535,9 @@ class LibraryUI():
         for job in jobs:
             for item in items:
                 tool = item.data(QtCore.Qt.UserRole)
-                pocket = library.get_pocket_from_tool(tool)
-                assert pocket is not None
-                add_tool_to_job(job, tool, pocket)
+                tool_no = library.get_tool_no_from_tool(tool)
+                assert tool_no is not None
+                add_tool_to_job(job, tool, tool_no)
 
     def on_preferences_clicked(self):
         dialog = PreferencesDialog(self.serializer, parent=self.form)

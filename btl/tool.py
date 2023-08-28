@@ -22,6 +22,7 @@ class Tool(object):
         self.filename = filename # Keep in mind: Not every tool is file-based
         self.shape = Shape(shape) if isinstance(shape, str) else shape
         self.pixmap = None  # for caching a ToolPixmap
+        self.pocket = None
 
         # Used for internal attributes, but also by the serializer to
         # store attributes unknown to BTL. Maps name to Param.
@@ -76,6 +77,9 @@ class Tool(object):
 
     def get_label(self):
         return self.label
+
+    def set_pocket(self, pocket):
+        self.pocket = pocket
 
     def set_stickout(self, stickout, unit):
         param = DistanceParam.from_value('btl-stickout', float(stickout), unit)

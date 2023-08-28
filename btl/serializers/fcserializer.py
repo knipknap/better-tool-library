@@ -198,12 +198,14 @@ class FCSerializer(Serializer):
         attrs["label"] = library.label
 
         tools = []
-        for pocket, tool in library.pockets.items():
+        for tool_no, tool in library.tool_nos.items():
             tool_filename = self._tool_filename_from_name(tool.id)
             tool_ref = {
-                'nr': pocket,
+                'nr': tool_no,
                 'path': os.path.basename(tool_filename),
             }
+            if tool.pocket:
+                tool_ref['pocket'] = tool.pocket
             tools.append(tool_ref)
         attrs["tools"] = tools
 
@@ -229,16 +231,17 @@ class FCSerializer(Serializer):
         label = attrs.get('label', id)
         library = Library(label, id=id)
         for tool_obj in attrs['tools']:
-            pocket = tool_obj['nr']
+            tool_no = tool_obj['nr']
             path = tool_obj['path']
             name = self._name_from_filename(path)
             try:
                 tool = self.deserialize_tool(name)
             except OSError as e:
                 sys.stderr.write('WARN: skipping {}: {}\n'.format(path, e))
-            else:
-                pocket = int(pocket) if pocket else library.get_next_pocket()
-                library.add_tool(tool, pocket)
+                continue
+            tool.pocket = tool_obj.get('pocket')
+            tool_no = int(tool_no) if tool_no else library.get_next_tool_no()
+            library.add_tool(tool, tool_no)
 
         return library
 

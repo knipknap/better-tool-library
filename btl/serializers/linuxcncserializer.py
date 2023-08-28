@@ -47,10 +47,10 @@ class LinuxCNCSerializer(Serializer):
         if not filename:
             filename = self._library_filename_from_id(library.id)
         with open(filename, 'wb') as fp:
-            for pocket, tool in sorted(library.pockets.items()):
-                fp.write("T{} P{} D{} ;{}\n".format(
-                    pocket,
-                    pocket,
+            for tool_no, tool in sorted(library.tool_nos.items()):
+                fp.write("T{} {} D{} ;{}\n".format(
+                    tool_no,
+                    'P{}'.format(tool.pocket or ''),
                     tool.shape.get_diameter() or 2,
                     tool.label
                 ).encode("ascii","ignore"))

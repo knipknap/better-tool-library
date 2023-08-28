@@ -10,7 +10,7 @@ __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "tooleditor.ui")
 
 class ToolEditor(QtGui.QWidget):
-    def __init__(self, db, serializer, tool, pocket=None, parent=None):
+    def __init__(self, db, serializer, tool, tool_no=None, parent=None):
         super(ToolEditor, self).__init__(parent)
         self.form = load_ui(ui_path)
         self.form.buttonBox.clicked.connect(self.form.close)
@@ -18,7 +18,7 @@ class ToolEditor(QtGui.QWidget):
         self.db = db
         self.serializer = serializer
         self.tool = tool
-        self.pocket = pocket
+        self.tool_no = tool_no
 
         nameWidget = QtGui.QLineEdit(tool.get_label())
         label = translate('btl', 'Tool name')
@@ -30,8 +30,8 @@ class ToolEditor(QtGui.QWidget):
         tool_tab_layout = self.form.toolTabLayout
         widget = ShapeWidget(tool.shape)
         tool_tab_layout.addWidget(widget)
-        props = ToolProperties(tool, pocket, parent=self.form)
-        props.pocketChanged.connect(self._on_pocket_changed)
+        props = ToolProperties(tool, tool_no, parent=self.form)
+        props.toolNoChanged.connect(self._on_tool_no_changed)
         tool_tab_layout.addWidget(props)
 
         if tool.supports_feeds_and_speeds():
@@ -67,8 +67,8 @@ class ToolEditor(QtGui.QWidget):
     def _on_notes_changed(self):
         self.tool.set_notes(self.form.plainTextEditNotes.toPlainText())
 
-    def _on_pocket_changed(self, value):
-        self.pocket = value
+    def _on_tool_no_changed(self, value):
+        self.tool_no = value
 
     def show(self):
         return self.form.exec_()

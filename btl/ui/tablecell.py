@@ -11,7 +11,8 @@ def isub(text, old, repl_pattern):
 class TwoLineTableCell(QtGui.QWidget):
     def __init__ (self, parent=None):
         super(TwoLineTableCell, self).__init__(parent)
-        self.right_text = ''
+        self.tool_no = ''
+        self.pocket = ''
         self.upper_text = ''
         self.lower_text = ''
         self.search_highlight = ''
@@ -24,15 +25,24 @@ class TwoLineTableCell(QtGui.QWidget):
         self.vbox.addWidget(self.label_upper)
         self.vbox.addWidget(self.label_lower)
 
-        self.hbox = QtGui.QHBoxLayout()
+        self.label_left = QtGui.QLabel()
+        self.label_left.setMinimumWidth(40)
+        self.label_left.setTextFormat(QtCore.Qt.RichText)
+        self.label_left.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
+
         self.icon_widget = QtGui.QLabel()
-        self.hbox.addWidget(self.icon_widget, 0)
-        self.hbox.addLayout(self.vbox, 1)
+
         self.label_right = QtGui.QLabel()
         self.label_right.setMinimumWidth(40)
         self.label_right.setTextFormat(QtCore.Qt.RichText)
         self.label_right.setAlignment(QtCore.Qt.AlignCenter)
+
+        self.hbox = QtGui.QHBoxLayout()
+        self.hbox.addWidget(self.label_left, 0)
+        self.hbox.addWidget(self.icon_widget, 0)
+        self.hbox.addLayout(self.vbox, 1)
         self.hbox.addWidget(self.label_right, 0)
+
         self.setLayout(self.hbox)
 
     def _highlight(self, text):
@@ -42,9 +52,13 @@ class TwoLineTableCell(QtGui.QWidget):
         return isub(text, self.search_highlight.split(' '), highlight_fmt)
 
     def _update(self):
-        text = self._highlight(self.right_text)
-        pocket_lbl = translate('btl', 'Pocket')
-        text = f"{pocket_lbl}\n<h3>{text}</h3>" if text else ''
+        text = self._highlight(self.tool_no)
+        text = f"<b>{text}</b>" if text else ''
+        self.label_left.setText(text)
+
+        text = self._highlight(self.pocket)
+        lbl = translate('btl', 'Pocket')
+        text = f"{lbl}\n<h3>{text}</h3>" if text else ''
         self.label_right.setText(text)
 
         text = self._highlight(self.upper_text)
@@ -54,8 +68,12 @@ class TwoLineTableCell(QtGui.QWidget):
         self.label_lower.setText(text)
         self.label_lower.setText(f'<font color="#444">{text}</font>')
 
-    def set_label(self, text):
-        self.right_text = text
+    def set_tool_no(self, no):
+        self.tool_no = str(no)
+        self._update()
+
+    def set_pocket(self, pocket):
+        self.pocket = str(pocket) if pocket else ''
         self._update()
 
     def set_upper_text(self, text):
@@ -70,7 +88,7 @@ class TwoLineTableCell(QtGui.QWidget):
         self.hbox.removeWidget(self.icon_widget)
         self.icon_widget = QtGui.QLabel()
         self.icon_widget.setPixmap(pixmap)
-        self.hbox.insertWidget(0, self.icon_widget, 0)
+        self.hbox.insertWidget(1, self.icon_widget, 0)
 
     def set_icon_from_shape(self, shape):
         icon_type, icon_bytes = shape.get_icon()

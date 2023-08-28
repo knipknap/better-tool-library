@@ -97,27 +97,45 @@ class PropertyWidget(QtGui.QWidget):
         self.grid.addWidget(label, row, 0)
 
 class ToolProperties(PropertyWidget):
-    pocketChanged = QtCore.Signal(int)
+    toolNoChanged = QtCore.Signal(int)
 
-    def __init__ (self, tool, pocket=None, parent=None):
+    def __init__ (self, tool, tool_no=None, parent=None):
         super(ToolProperties, self).__init__(parent)
         self.tool = tool
-        self.pocket = pocket
+        self.tool_no = tool_no
 
         # Add tool location properties.
-        if self.pocket is not None:
-            row = self.grid.rowCount()
-            lbl = translate('btl', 'Tool location')
-            label = QtGui.QLabel(f"<h4>{lbl}</h4>")
-            # Note: Some PyQt versions do not support columnSpan
-            self.grid.addWidget(label, row, 0)
+        row = self.grid.rowCount()
+        lbl = translate('btl', 'Tool location')
+        label = QtGui.QLabel(f"<h4>{lbl}</h4>")
+        # Note: Some PyQt versions do not support columnSpan
+        self.grid.addWidget(label, row, 0)
+
+        row = self.grid.rowCount()
+        lbl = translate('btl', 'Tool ID:')
+        label = QtGui.QLabel(lbl)
+        self.grid.addWidget(label, row, 0)
+        label = QtGui.QLabel(tool.id)
+        label.setTextInteractionFlags(QtGui.Qt.TextSelectableByKeyboard \
+                                     |QtGui.Qt.TextSelectableByMouse \
+                                     |QtGui.Qt.StrongFocus)
+        self.grid.addWidget(label, row, 1)
+
+        if self.tool_no is not None:
             spinner = QtGui.QSpinBox()
-            spinner.setValue(self.pocket or 0)
+            spinner.setValue(self.tool_no or 0)
             spinner.setMaximum(99999999)
-            spinner.valueChanged.connect(self.pocketChanged.emit)
-            lbl = translate('btl', 'Pocket')
-            self._add_property_from_widget(spinner, lbl, self.pocket)
-            self._makespacing(6)
+            spinner.valueChanged.connect(self.toolNoChanged.emit)
+            lbl = translate('btl', 'Tool Number:')
+            self._add_property_from_widget(spinner, lbl, self.tool_no)
+
+        spinner = QtGui.QSpinBox()
+        spinner.setValue(tool.pocket or 0)
+        spinner.setMaximum(99999999)
+        spinner.valueChanged.connect(tool.set_pocket)
+        lbl = translate('btl', 'Pocket:')
+        self._add_property_from_widget(spinner, lbl, self.tool.pocket)
+        self._makespacing(6)
 
         # Add well-known properties under a separate title.
         row = self.grid.rowCount()

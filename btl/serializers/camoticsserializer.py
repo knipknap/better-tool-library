@@ -73,13 +73,13 @@ class CamoticsSerializer(Serializer):
     def serialize_library(self, library, filename=None):
         toollist = {}
 
-        for pocket, tool in library.pockets.items():
+        for tool_no, tool in library.tool_nos.items():
             toolitem = tooltemplate.copy()
             toolitem["diameter"] = tool.shape.get_diameter() or 2
             toolitem["description"] = tool.label
             toolitem["length"] = tool.shape.get_length() or 10
             toolitem["shape"] = SHAPEMAP.get(tool.shape.name, "Cylindrical")
-            toollist[pocket] = toolitem
+            toollist[tool_no] = toolitem
 
         if not filename:
             filename = self._library_filename_from_library(library)
@@ -99,11 +99,11 @@ class CamoticsSerializer(Serializer):
             data = json.load(fp)
 
         library = Library(id, id=id)
-        for pocket, toolitem in data.items():
+        for tool_no, toolitem in data.items():
             shape = SHAPEMAP_REVERSE.get(toolitem["shape"], 'endmill')
             tool = Tool(toolitem["description"], shape, filename=filename)
             tool.shape.set_diameter(float(toolitem["diameter"]))
             tool.shape.set_length(float(toolitem["length"]))
-            library.add_tool(tool, int(pocket))
+            library.add_tool(tool, int(tool_no))
 
         return library
