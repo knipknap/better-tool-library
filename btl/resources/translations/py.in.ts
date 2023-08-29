@@ -84,7 +84,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/tablecell.py" line="60"/>
+        <location filename="../../ui/toolproperties.py" line="136"/>
         <source>Pocket</source>
         <translation type="unfinished"></translation>
     </message>
@@ -370,12 +370,7 @@
     </message>
     <message>
         <location filename="../../ui/toolproperties.py" line="129"/>
-        <source>Tool Number:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../ui/toolproperties.py" line="136"/>
-        <source>Pocket:</source>
+        <source>Tool Number</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

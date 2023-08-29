@@ -84,7 +84,7 @@
       <translation>Editor zur Verwaltung von ToolBit-Bibliotheken öffnen</translation>
     </message>
     <message>
-      <location filename="../../ui/tablecell.py" line="60"/>
+      <location filename="../../ui/toolproperties.py" line="136"/>
       <source>Pocket</source>
       <translation>Pocket</translation>
     </message>
@@ -370,13 +370,8 @@
     </message>
     <message>
       <location filename="../../ui/toolproperties.py" line="129"/>
-      <source>Tool Number:</source>
-      <translation>Werkzeugnummer:</translation>
-    </message>
-    <message>
-      <location filename="../../ui/toolproperties.py" line="136"/>
-      <source>Pocket:</source>
-      <translation>Pocket:</translation>
+      <source>Tool Number</source>
+      <translation>Werkzeugnummer</translation>
     </message>
   </context>
   <context>

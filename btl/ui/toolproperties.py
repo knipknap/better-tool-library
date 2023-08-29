@@ -126,14 +126,14 @@ class ToolProperties(PropertyWidget):
             spinner.setValue(self.tool_no or 0)
             spinner.setMaximum(99999999)
             spinner.valueChanged.connect(self.toolNoChanged.emit)
-            lbl = translate('btl', 'Tool Number:')
+            lbl = translate('btl', 'Tool Number')
             self._add_property_from_widget(spinner, lbl, self.tool_no)
 
         spinner = QtGui.QSpinBox()
         spinner.setValue(tool.pocket or 0)
         spinner.setMaximum(99999999)
         spinner.valueChanged.connect(tool.set_pocket)
-        lbl = translate('btl', 'Pocket:')
+        lbl = translate('btl', 'Pocket')
         self._add_property_from_widget(spinner, lbl, self.tool.pocket)
         self._makespacing(6)
 

@@ -84,7 +84,7 @@
       <translation>Abrir um editor para gerenciar as bibliotecas de brocas</translation>
     </message>
     <message>
-      <location filename="../../ui/tablecell.py" line="60"/>
+      <location filename="../../ui/toolproperties.py" line="136"/>
       <source>Pocket</source>
       <translation>Bolsa</translation>
     </message>
@@ -370,13 +370,8 @@
     </message>
     <message>
       <location filename="../../ui/toolproperties.py" line="129"/>
-      <source>Tool Number:</source>
-      <translation>Número da ferramenta:</translation>
-    </message>
-    <message>
-      <location filename="../../ui/toolproperties.py" line="136"/>
-      <source>Pocket:</source>
-      <translation>Bolsa:</translation>
+      <source>Tool Number</source>
+      <translation>Número da ferramenta</translation>
     </message>
   </context>
   <context>
