@@ -5,11 +5,6 @@ for the Path workbench.
 It also provides a standalone tool if you want to use your library outside of FreeCAD.
 
 > **Warning**
-> If you decide to switch back from BTL to the FreeCAD internal tool library,
-> you may lose any extra information that was entered using Better Tool Library,
-> like tool notes and hardness.
-
-> **Warning**
 > I advise you make a backup of your tool library. I guarantee for nothing,
 > there may be bugs.
 
