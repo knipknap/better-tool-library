@@ -132,6 +132,7 @@ class ToolProperties(PropertyWidget):
         spinner = QtGui.QSpinBox()
         spinner.setValue(tool.pocket or 0)
         spinner.setMaximum(99999999)
+        spinner.setSpecialValueText(translate('btl', 'None'))
         spinner.valueChanged.connect(tool.set_pocket)
         lbl = translate('btl', 'Pocket')
         self._add_property_from_widget(spinner, lbl, self.tool.pocket)

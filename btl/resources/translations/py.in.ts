@@ -84,7 +84,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="136"/>
+        <location filename="../../ui/toolproperties.py" line="137"/>
         <source>Pocket</source>
         <translation type="unfinished"></translation>
     </message>
@@ -184,12 +184,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="184"/>
+        <location filename="../../ui/toolproperties.py" line="185"/>
         <source>Unknown tool attributes</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="195"/>
+        <location filename="../../ui/toolproperties.py" line="196"/>
         <source>No unknown attributes found</source>
         <translation type="unfinished"></translation>
     </message>
@@ -354,12 +354,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="142"/>
+        <location filename="../../ui/toolproperties.py" line="143"/>
         <source>Dimensions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../ui/toolproperties.py" line="158"/>
+        <location filename="../../ui/toolproperties.py" line="159"/>
         <source>Other properties</source>
         <translation type="unfinished"></translation>
     </message>
@@ -371,6 +371,11 @@
     <message>
         <location filename="../../ui/toolproperties.py" line="129"/>
         <source>Tool Number</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../ui/toolproperties.py" line="135"/>
+        <source>None</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
