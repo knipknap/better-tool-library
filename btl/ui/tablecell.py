@@ -106,9 +106,9 @@ class TwoLineTableCell(QtGui.QWidget):
 
     def contains_text(self, text):
         for term in text.lower().split(' '):
-            if term not in self.upper_text.lower() \
-                and term not in self.lower_text.lower() \
-                and term not in self.right_text.lower():
+            if term not in self.tool_no.lower() \
+                and term not in self.upper_text.lower() \
+                and term not in self.lower_text.lower():
                 return False
         return True
 
