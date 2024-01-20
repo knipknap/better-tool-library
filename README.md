@@ -26,6 +26,7 @@ It also provides a standalone tool if you want to use your library outside of Fr
 | Provides CLI tool for import/export        | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Read BTL files                             | ![X](media/check.svg) | ![X](media/check.svg)     |
 | Write BTL files                            | ![X](media/check.svg) |  Deletes BTL extra data!  |
+| Import Fusion 360 tool library             | ![X](media/check.svg) | ![-](media/no.svg)        |
 | [Import from Camotics](docs/export.md)     | ![X](media/check.svg) | ![-](media/no.svg)        |
 | [Export to Camotics](docs/export.md)       | ![X](media/check.svg) | ![X](media/check.svg)     |
 | [Export to LinuxCNC](docs/export.md)       | ![X](media/check.svg) | ![X](media/check.svg)     |
