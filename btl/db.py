@@ -3,7 +3,7 @@ import os
 import shutil
 import uuid as UUID
 from itertools import chain
-from .shape import Shape, builtin_shapes
+from .shape import Shape, builtin_shapes, hidden_builtin_shapes
 
 
 class ToolDB(object):
@@ -48,8 +48,12 @@ class ToolDB(object):
                          self.shapes.values())
         return self.shapes.values()
 
-    def get_builtin_shapes(self):
-        return builtin_shapes.values()
+    def get_builtin_shapes(self, show_hidden=False):
+        if show_hidden:
+            return builtin_shapes.values()
+        else:
+            return {k: v for k, v in builtin_shapes.items()
+                    if k not in hidden_builtin_shapes.keys()}.values()
 
     def get_custom_shapes(self):
         return self.shapes.values()

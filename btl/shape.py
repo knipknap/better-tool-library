@@ -15,6 +15,18 @@ from .fcutil import load_shape_properties, \
 builtin_shape_dir = os.path.join(const.resource_dir, 'shapes')
 builtin_shape_ext = '.fcstd'
 builtin_shape_pattern = os.path.join(builtin_shape_dir, '*.fcstd')
+builtin_shape_list = [
+    os.path.splitext(os.path.basename(f))[0]
+    for f in glob.glob(os.path.join(builtin_shape_pattern))
+]
+# allow hiding shape files that start with an underscore
+# this is useful if a shape file should only be used for import purposes, for example
+hidden_builtin_shape_pattern = os.path.join(builtin_shape_dir, '_*.fcstd')
+hidden_builtin_shape_list = [
+    os.path.splitext(os.path.basename(f))[0]
+    for f in glob.glob(os.path.join(hidden_builtin_shape_pattern))
+]
+
 
 def get_builtin_shape_file_from_name(name):
     return os.path.join(builtin_shape_dir, name+builtin_shape_ext)
@@ -76,8 +88,8 @@ class Shape():
     aliases = {'bullnose': 'torus',
                'thread-mill': 'threadmill',
                'v-bit': 'vbit'}
-    builtin = [os.path.splitext(os.path.basename(f))[0]
-               for f in glob.glob(os.path.join(builtin_shape_pattern))]
+    builtin = builtin_shape_list
+    hidden_builtin = hidden_builtin_shape_list
     well_known = (
         'Diameter',
         'ShaftDiameter',
@@ -337,6 +349,9 @@ class Shape():
 # Loading shapes on import doesn't work; FreeCAD as not finished initializing.
 # This proxy delays loading the builtin shapes until they are accessed.
 class DictProxy(dict):
+    def __init__(self, shapelist):
+        self._shapelist = shapelist
+
     def __getitem__(self, key):
         self.prepare()
         return super().__getitem__(key)
@@ -345,9 +360,18 @@ class DictProxy(dict):
         self.prepare()
         return super().values()
 
+    def keys(self):
+        self.prepare()
+        return super().keys()
+
+    def items(self):
+        self.prepare()
+        return super().items()
+
     def prepare(self):
         if len(self) == 0:
-            for shape in Shape.builtin:
+            for shape in self._shapelist:
                 self[shape] = Shape(shape)
 
-builtin_shapes = DictProxy()
+builtin_shapes = DictProxy(Shape.builtin)
+hidden_builtin_shapes = DictProxy(Shape.hidden_builtin)
