@@ -58,6 +58,7 @@ def on_workbench_activated(workbench):
     # Create a toolbar.
     mw = FreeCADGui.getMainWindow()
     toolbar = QtGui.QToolBar(mw)
+    toolbar.setObjectName("btl_toolbar")
     mw.addToolBar(toolbar)
 
     # Add the library editor button.
