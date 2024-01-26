@@ -138,129 +138,130 @@ class FusionSerializer(Serializer):
                 DistanceParam(name="ShankDiameter", unit=lunit, v=geom["SFDM"]),
             )
             # fill in the remaining properties based on the tool type
-            match toolitem["type"]:
-                case "ball end mill" | "flat end mill" | "reamer" | "boring bar" | "counter bore" | "lollipop mill":
-                    pass
-                case "bull nose end mill":
-                    tool.shape.set_param(
-                        "TorusRadius",
-                        DistanceParam(name="TorusRadius", unit=lunit, v=geom["RE"]),
-                    )
-                case "chamfer mill":
-                    tool.shape.set_param(
-                        "TipDiameter",
-                        DistanceParam(
-                            name="TipDiameter", unit=lunit, v=geom["tip-diameter"]
-                        ),
-                    )
-                    tool.shape.set_param(
-                        "TipAngle", Param(name="TipAngle", unit="deg", v=geom["TA"] * 2)
-                    )
-                case "spot drill":
-                    tool.shape.set_param(
-                        "TipDiameter",
-                        DistanceParam(
-                            name="TipDiameter", unit=lunit, v=geom["tip-diameter"]
-                        ),
-                    )
-                    tool.shape.set_param(
-                        "TipAngle", Param(name="TipAngle", unit="deg", v=geom["SIG"])
-                    )
-                case "drill":
-                    tool.shape.set_param(
-                        "TipAngle", Param(name="TipAngle", unit="deg", v=geom["SIG"])
-                    )
-                case "dovetail mill":
-                    tool.shape.set_param(
-                        "TorusRadius",
-                        DistanceParam(name="TorusRadius", unit=lunit, v=geom["RE"]),
-                    )
-                    tool.shape.set_param(
-                        "CuttingAngle",
-                        Param(name="CuttingAngle", unit="deg", v=geom["TA"]),
-                    )
-                case "face mill":
-                    tool.shape.set_param(
-                        "TorusRadius",
-                        DistanceParam(name="TorusRadius", unit=lunit, v=geom["RE"]),
-                    )
-                    tool.shape.set_param(
-                        "TaperAngle", Param(name="TaperAngle", unit="deg", v=geom["TA"])
-                    )
-                case "radius mill":
-                    tool.shape.set_param(
-                        "TipLength",
-                        DistanceParam(
-                            name="TipLength", unit=lunit, v=geom["tip-length"]
-                        ),
-                    )
-                    tool.shape.set_param(
-                        "CornerRadius",
-                        DistanceParam(name="CornerRadius", unit=lunit, v=geom["RE"]),
-                    )
-                case "slot mill":
-                    tool.shape.set_param(
-                        "CornerRadius",
-                        DistanceParam(name="CornerRadius", unit=lunit, v=geom["RE"]),
-                    )
-                case "tapered mill":
-                    tool.shape.set_param(
-                        "TorusRadius",
-                        DistanceParam(name="TorusRadius", unit=lunit, v=geom["RE"]),
-                    )
-                    tool.shape.set_param(
-                        "TaperAngle", Param(name="TaperAngle", unit="deg", v=geom["TA"])
-                    )
-                case "center drill":
-                    tool.shape.set_param(
-                        "TaperAngle", Param(name="TaperAngle", unit="deg", v=geom["TA"])
-                    )
-                    tool.shape.set_param(
-                        "TipAngle", Param(name="TipAngle", unit="deg", v=geom["SIG"])
-                    )
-                    tool.shape.set_param(
-                        "TipLength",
-                        DistanceParam(
-                            name="TipLength", unit=lunit, v=geom["tip-length"]
-                        ),
-                    )
-                    tool.shape.set_param(
-                        "TipDiameter",
-                        DistanceParam(
-                            name="TipDiameter", unit=lunit, v=geom["tip-diameter"]
-                        ),
-                    )
-                case "tap right hand":
-                    tool.shape.set_param(
-                        "RightHanded",
-                        BoolParam(name="RightHanded", v=True),
-                    )
-                    tool.shape.set_param(
-                        "ThreadPitch",
-                        DistanceParam(name="ThreadPitch", unit=lunit, v=geom["TP"]),
-                    )
-                case "tap left hand":
-                    tool.shape.set_param(
-                        "RightHanded",
-                        BoolParam(name="RightHanded", v=False),
-                    )
-                    tool.shape.set_param(
-                        "ThreadPitch",
-                        DistanceParam(name="ThreadPitch", unit=lunit, v=geom["TP"]),
-                    )
-                case "counter sink":
-                    tool.shape.set_param(
-                        "TipDiameter",
-                        DistanceParam(
-                            name="TipDiameter", unit=lunit, v=geom["tip-diameter"]
-                        ),
-                    )
-                    tool.shape.set_param(
-                        "TipAngle",
-                        Param(name="TipAngle", unit="deg", v=geom["SIG"] * 2),
-                    )
-                case _ as unknown_tool_type:
-                    raise ValueError(f"Unknown tool type: {unknown_tool_type}")
+            tool_type = toolitem["type"]
+            if tool_type in ("ball end mill", "flat end mill", "reamer", "boring bar", "counter bore", "lollipop mill"):
+                pass
+            if tool_type == "bull nose end mill":
+                tool.shape.set_param(
+                    "TorusRadius",
+                    DistanceParam(name="TorusRadius", unit=lunit, v=geom["RE"]),
+                )
+            elif tool_type == "chamfer mill":
+                tool.shape.set_param(
+                    "TipDiameter",
+                    DistanceParam(
+                        name="TipDiameter", unit=lunit, v=geom["tip-diameter"]
+                    ),
+                )
+                tool.shape.set_param(
+                    "TipAngle", Param(name="TipAngle", unit="deg", v=geom["TA"] * 2)
+                )
+            elif tool_type == "spot drill":
+                tool.shape.set_param(
+                    "TipDiameter",
+                    DistanceParam(
+                        name="TipDiameter", unit=lunit, v=geom["tip-diameter"]
+                    ),
+                )
+                tool.shape.set_param(
+                    "TipAngle", Param(name="TipAngle", unit="deg", v=geom["SIG"])
+                )
+            elif tool_type == "drill":
+                tool.shape.set_param(
+                    "TipAngle", Param(name="TipAngle", unit="deg", v=geom["SIG"])
+                )
+            elif tool_type == "dovetail mill":
+                tool.shape.set_param(
+                    "TorusRadius",
+                    DistanceParam(name="TorusRadius", unit=lunit, v=geom["RE"]),
+                )
+                tool.shape.set_param(
+                    "CuttingAngle",
+                    Param(name="CuttingAngle", unit="deg", v=geom["TA"]),
+                )
+            elif tool_type == "face mill":
+                tool.shape.set_param(
+                    "TorusRadius",
+                    DistanceParam(name="TorusRadius", unit=lunit, v=geom["RE"]),
+                )
+                tool.shape.set_param(
+                    "TaperAngle", Param(name="TaperAngle", unit="deg", v=geom["TA"])
+                )
+            elif tool_type == "radius mill":
+                tool.shape.set_param(
+                    "TipLength",
+                    DistanceParam(
+                        name="TipLength", unit=lunit, v=geom["tip-length"]
+                    ),
+                )
+                tool.shape.set_param(
+                    "CornerRadius",
+                    DistanceParam(name="CornerRadius", unit=lunit, v=geom["RE"]),
+                )
+            elif tool_type == "slot mill":
+                tool.shape.set_param(
+                    "CornerRadius",
+                    DistanceParam(name="CornerRadius", unit=lunit, v=geom["RE"]),
+                )
+            elif tool_type == "tapered mill":
+                tool.shape.set_param(
+                    "TorusRadius",
+                    DistanceParam(name="TorusRadius", unit=lunit, v=geom["RE"]),
+                )
+                tool.shape.set_param(
+                    "TaperAngle", Param(name="TaperAngle", unit="deg", v=geom["TA"])
+                )
+            elif tool_type == "center drill":
+                tool.shape.set_param(
+                    "TaperAngle", Param(name="TaperAngle", unit="deg", v=geom["TA"])
+                )
+                tool.shape.set_param(
+                    "TipAngle", Param(name="TipAngle", unit="deg", v=geom["SIG"])
+                )
+                tool.shape.set_param(
+                    "TipLength",
+                    DistanceParam(
+                        name="TipLength", unit=lunit, v=geom["tip-length"]
+                    ),
+                )
+                tool.shape.set_param(
+                    "TipDiameter",
+                    DistanceParam(
+                        name="TipDiameter", unit=lunit, v=geom["tip-diameter"]
+                    ),
+                )
+            elif tool_type == "tap right hand":
+                tool.shape.set_param(
+                    "RightHanded",
+                    BoolParam(name="RightHanded", v=True),
+                )
+                tool.shape.set_param(
+                    "ThreadPitch",
+                    DistanceParam(name="ThreadPitch", unit=lunit, v=geom["TP"]),
+                )
+            elif tool_type == "tap left hand":
+                tool.shape.set_param(
+                    "RightHanded",
+                    BoolParam(name="RightHanded", v=False),
+                )
+                tool.shape.set_param(
+                    "ThreadPitch",
+                    DistanceParam(name="ThreadPitch", unit=lunit, v=geom["TP"]),
+                )
+            elif tool_type == "counter sink":
+                tool.shape.set_param(
+                    "TipDiameter",
+                    DistanceParam(
+                        name="TipDiameter", unit=lunit, v=geom["tip-diameter"]
+                    ),
+                )
+                tool.shape.set_param(
+                    "TipAngle",
+                    Param(name="TipAngle", unit="deg", v=geom["SIG"] * 2),
+                )
+            else:
+                raise ValueError(f"Unknown tool type: {tool_type}")
+
             # Finally, set material and cutting parameters
             if tool_mat := toolitem["BMC"] == "hss":
                 tool.shape.set_material(HSS)
@@ -270,7 +271,9 @@ class FusionSerializer(Serializer):
                 # default to hss. fusion allows for ceramics or unspecified
                 # tool materials, while we currently only allow for carbide and HSS
                 tool.shape.set_material(HSS)
+
             tool.shape.set_param("Flutes", IntParam(name="Flutes", v=geom["NOF"]))
+
             # fusion encodes a complex set of start values for different
             # operations and workpiece materials, but FreeCAD stores this
             # data in the ToolController objects, not directly in tools.
@@ -278,6 +281,7 @@ class FusionSerializer(Serializer):
             tool.shape.set_param(
                 "Chipload", DistanceParam(name="Chipload", unit="mm", v=0.01)
             )
+
             # notes and vendor info may be blank, but the dictionary keys are always present
             tool.set_supplier(toolitem["vendor"])
             tool.set_notes(toolitem["post-process"]["comment"])
