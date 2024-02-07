@@ -144,9 +144,10 @@ class FusionSerializer(Serializer):
             )
             # fill in the remaining properties based on the tool type
             tool_type = toolitem["type"]
+            tool_type = tool_type.lower() if tool_type else tool_type
             if tool_type in ("ball end mill", "flat end mill", "reamer", "boring bar", "counter bore", "lollipop mill"):
                 pass
-            if tool_type == "bull nose end mill":
+            elif tool_type == "bull nose end mill":
                 tool.shape.set_param(
                     "TorusRadius",
                     DistanceParam(name="TorusRadius", unit=lunit, v=geom["RE"]),
