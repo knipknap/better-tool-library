@@ -16,6 +16,11 @@ UNIT_MAP = {
     "inches": "in",
 }
 
+MATERIAL_MAP = {
+    "hss": HSS,
+    "carbide": Carbide,
+}
+
 # map the type of the tool in a .tools database to a shape file.
 # some user visible tool types in fusion have identical internal representation
 #  I.E.: chamfer mills & spot_drills
@@ -263,14 +268,10 @@ class FusionSerializer(Serializer):
                 raise ValueError(f"Unknown tool type: {tool_type}")
 
             # Finally, set material and cutting parameters
-            if tool_mat := toolitem["BMC"] == "hss":
-                tool.shape.set_material(HSS)
-            elif tool_mat == "carbide":
-                tool.shape.set_material(Carbide)
-            else:
-                # default to hss. fusion allows for ceramics or unspecified
-                # tool materials, while we currently only allow for carbide and HSS
-                tool.shape.set_material(HSS)
+            # default to hss. fusion allows for ceramics or unspecified
+            # tool materials, while we currently only allow for carbide and HSS
+            tool_mat = toolitem["BMC"].lower()
+            tool.set_material(MATERIAL_MAP.get(tool_mat, HSS))
 
             tool.shape.set_param("Flutes", IntParam(name="Flutes", v=geom["NOF"]))
 
