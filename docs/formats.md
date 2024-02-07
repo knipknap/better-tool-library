@@ -56,3 +56,26 @@ Example output:
   }
 }
 ```
+
+### Importing Vendor Catalogs
+   
+BTL can import machine tool vendor catalogs stored in Fusion 360 format.
+These files are either:
+
+- `*.json`
+- `*.tools` (a zipped json file)
+
+To help manage catalogs we suggest the following steps:
+
+1. Create a new library from the BTL pop up, basing the library name off of the
+   vendor name.
+   (File -> Create a library -> Enter new library name.... -> Create library)
+
+2. Select the library you just created from the drop down in the lower left hand
+   corner. (The default value in this field is "unused tools") 
+
+3. Import a vendor catalog into your empty library.
+   (File -> Import Library -> Select library to import)
+
+It may take a moment for the tools to load, but they should appear in
+the BTL window.

@@ -64,6 +64,24 @@ It takes into account a dozen of factors:
 
 ## Instructions
 
+### One time set-up: Creating a machine
+
+Before using the Feeds & Speeds calculator, you have to let BTL know your machine parameters.
+This is done as follows:
+
+- Open BTL by clicking the icon in the task bar.
+- If not done already, create your tool bit first (File -> Create Tool)
+- Once the tool is created, open the tool editor by double-clicking on the tool in the BTL main window.
+- Switch to the "Feeds & Speeds" tab.
+- At the top, press "+" to create your machine.
+
+Note about machine parameters: The torque is important and has a big impact on
+the calculator. If in doubt, aim low. For reference, my 2.2 kW China spindle
+provides realistic results at around 4 Nm max torque.
+
+
+### Running the calculator
+
 - First, make sure your tool is all set up and all parameters are correct. The tool
   material is especially important (HSS, Carbide).
 
@@ -73,11 +91,8 @@ It takes into account a dozen of factors:
 
 - Then, switch to the Feeds / Speeds tab. For the initial setup, you will have to
   define a machine by pressing the "+"  button. This is a one-time activity, BTL
-  will remember your machine.
-
-- Note about machine parameters: The torque is important and has a big impact on
-  the calculator. If in doubt, aim low. For reference, my 2.2 kW China spindle
-  provides realistic results at around 4 Nm max torque.
+  will remember your machine. See the instructions in the previous chapter of
+  this document.
 
 - The stickout is also very, very important. By default, BTL estimates the stickout
   to be the Flute Length + 3mm. Try to minimize stickout for a better result.
