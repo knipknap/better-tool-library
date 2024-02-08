@@ -8,3 +8,5 @@ package.xml.dev
 *.pyo
 *.db
 .venv
+*.FCBak
+*.FCStd1
