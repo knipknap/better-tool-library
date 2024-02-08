@@ -2,6 +2,7 @@ import os
 import re
 from . import params
 from .util import sha256sum
+from functools import lru_cache
 
 def parse_float_with_unit(distance, default_unit='mm'):
     if not distance:
@@ -99,20 +100,12 @@ def tool_property_to_param(groupname, propname, prop, enums, value):
           f'whoops - param {propname} with type {param.type} not implemented')
     return param
 
-shape_cache = {}
-
+@lru_cache
 def load_shape_properties(filename):
     # Loading those is quite slow - well, actually it is CLOSING a FreeCAD
     # file that is slow, see .closeDocument() below.
-    # In any case, we cache shapes as a workaround.
-    global shape_cache
-    filehash = sha256sum(filename)
-    cache = shape_cache.get(filename)
-
-    if cache:
-        cachehash, properties = cache
-        if cachehash == filehash:
-            return properties
+    # In any case, we cache shapes as a workaround, hence the @lru_cache
+    # decorator above.
 
     # Load the shape file using FreeCad. Unfortunately this causes everything
     # in the current document to be unselected, so we need to restore the
@@ -150,7 +143,6 @@ def load_shape_properties(filename):
         for sel in oldselection:
             FreeCADGui.Selection.addSelection(olddoc.Name, sel.Name)
 
-    shape_cache[filename] = filehash, properties
     return properties
 
 def get_selected_job():
