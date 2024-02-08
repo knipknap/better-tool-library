@@ -44,7 +44,7 @@ It also provides a standalone tool if you want to use your library outside of Fr
 
 ### Prerequisites
 
-Better Tool Library (BTL) is compatible with FreeCAD 0.19 and 0.21.
+Better Tool Library (BTL) is compatible with FreeCAD 0.19, 0.21, and 0.22.
 
 ### Installation via the FreeCAD addon manager
 
