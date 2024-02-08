@@ -2,6 +2,8 @@ import re
 import random
 from .units import convert, get_default_unit_conversion, parse_value
 
+label_re = re.compile(r'([A-Z])')
+
 class Param(object):
     name = None
     label = None
@@ -12,7 +14,7 @@ class Param(object):
     group = None
 
     def __init__(self, name=None, unit=None, v=None):
-        label = re.sub(r'([A-Z])', r' \1', name or '').strip().capitalize()
+        label = label_re.sub(r' \1', name or '').strip().capitalize()
         self.name = self.name if name is None else name
         self.label = self.label if name is None else label
         self.unit = self.unit if unit is None else unit
