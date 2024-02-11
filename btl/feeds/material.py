@@ -294,7 +294,7 @@ class Softwood(Material):
     }
 
 class Hardwood(Material):
-    name = 'Hardwood'
+    name = 'Wood (hard)'
     power_factor = 0.30*METRIC_POWER_FACTOR # Guess based on softwood
 
     cutting_data = {
