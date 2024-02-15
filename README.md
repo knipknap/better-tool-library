@@ -75,10 +75,10 @@ Instructions for running BTL that way are [here](docs/standalone.md).
 
 Some instructions can be found here:
 
-- [Feeds & Speeds calculator](docs/feeds-and-speeds.md).
-- [Import/export function](docs/formats.md).
-- [Running BTL outside of FreeCAD](docs/standalone.md).
-- [CLI tool](docs/cli.md).
+- [Feeds & Speeds calculator](docs/feeds-and-speeds.md)
+- [Import/export function](docs/formats.md)
+- [Running BTL outside of FreeCAD](docs/standalone.md)
+- [CLI tool](docs/cli.md)
 
 
 ## Links
