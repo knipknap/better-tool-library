@@ -23,7 +23,7 @@ It also provides a standalone tool if you want to use your library outside of Fr
 | Store tool notes and additional info              | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Auto-generates tool icons                         | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Can be used with no document open                 | ![X](media/check.svg) | ![-](media/no.svg)        |
-| [CLI tool for import/export](cli.md)              | ![X](media/check.svg) | ![-](media/no.svg)        |
+| [CLI tool for import/export](docs/cli.md)         | ![X](media/check.svg) | ![-](media/no.svg)        |
 | Read BTL files                                    | ![X](media/check.svg) | ![X](media/check.svg)     |
 | Write BTL files                                   | ![X](media/check.svg) |  Deletes BTL extra data!  |
 | [Import Fusion 360 tool library](docs/formats.md) | ![X](media/check.svg) | ![-](media/no.svg)        |
