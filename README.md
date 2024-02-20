@@ -11,25 +11,25 @@ It also provides a standalone tool if you want to use your library outside of Fr
 
 ## Feature Comparison
 
-| Feature                                           | Better Tool Library   | FreeCAD internal library  |
-| :--                                               |        :--:           |          :--:             |
-| Modern UI                                         | ![X](media/check.svg) | ![-](media/no.svg)        |
-| Provides a shape browser                          | ![X](media/check.svg) | ![-](media/no.svg)        |
-| Tool search                                       | ![X](media/check.svg) | ![-](media/no.svg)        |
+| Feature                                            | Better Tool Library   | FreeCAD internal library  |
+| :--                                                |        :--:           |          :--:             |
+| Modern UI                                          | ![X](media/check.svg) | ![-](media/no.svg)        |
+| Provides a shape browser                           | ![X](media/check.svg) | ![-](media/no.svg)        |
+| Tool search                                        | ![X](media/check.svg) | ![-](media/no.svg)        |
 | [Powerful Feeds & Speeds calculator](docs/feeds-and-speeds.md) | ![X](media/check.svg) | ![-](media/no.svg)        |
-| Tool dimension sketch for built-in tools          | ![X](media/check.svg) | ![-](media/no.svg)        |
-| [Use outside of FreeCAD](docs/standalone.md)      | ![X](media/check.svg) | ![-](media/no.svg)        |
-| Provides built-in common shapes                   | ![X](media/check.svg) | ![-](media/no.svg)        |
-| Store tool notes and additional info              | ![X](media/check.svg) | ![-](media/no.svg)        |
-| Auto-generates tool icons                         | ![X](media/check.svg) | ![-](media/no.svg)        |
-| Can be used with no document open                 | ![X](media/check.svg) | ![-](media/no.svg)        |
-| [CLI tool for import/export](docs/cli.md)         | ![X](media/check.svg) | ![-](media/no.svg)        |
-| Read BTL files                                    | ![X](media/check.svg) | ![X](media/check.svg)     |
-| Write BTL files                                   | ![X](media/check.svg) |  Deletes BTL extra data!  |
-| [Import Fusion 360 tool library](docs/formats.md) | ![X](media/check.svg) | ![-](media/no.svg)        |
-| [Import from Camotics](docs/formats.md)           | ![X](media/check.svg) | ![-](media/no.svg)        |
-| [Export to Camotics](docs/formats.md)             | ![X](media/check.svg) | ![X](media/check.svg)     |
-| [Export to LinuxCNC](docs/formats.md)             | ![X](media/check.svg) | ![X](media/check.svg)     |
+| [Tool sketch for supported shapes](docs/shape.md)  | ![X](media/check.svg) | ![-](media/no.svg)        |
+| [Use outside of FreeCAD](docs/standalone.md)       | ![X](media/check.svg) | ![-](media/no.svg)        |
+| Provides built-in common shapes                    | ![X](media/check.svg) | ![-](media/no.svg)        |
+| Store tool notes and additional info               | ![X](media/check.svg) | ![-](media/no.svg)        |
+| Auto-generates tool icons                          | ![X](media/check.svg) | ![-](media/no.svg)        |
+| Can be used with no document open                  | ![X](media/check.svg) | ![-](media/no.svg)        |
+| [CLI tool for import/export](docs/cli.md)          | ![X](media/check.svg) | ![-](media/no.svg)        |
+| Read BTL files                                     | ![X](media/check.svg) | ![X](media/check.svg)     |
+| Write BTL files                                    | ![X](media/check.svg) |  Deletes BTL extra data!  |
+| [Import Fusion 360 tool library](docs/formats.md)  | ![X](media/check.svg) | ![-](media/no.svg)        |
+| [Import from Camotics](docs/formats.md)            | ![X](media/check.svg) | ![-](media/no.svg)        |
+| [Export to Camotics](docs/formats.md)              | ![X](media/check.svg) | ![X](media/check.svg)     |
+| [Export to LinuxCNC](docs/formats.md)              | ![X](media/check.svg) | ![X](media/check.svg)     |
 
 
 ## Screenshots
