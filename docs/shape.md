@@ -31,19 +31,28 @@ On this page, we explain how to create your own tool shapes.
    
    ![Shape labels in BTL](shape-labels.png)
    
-   Start by clicking the label.
+   To do this in Inkscape, start by clicking the label (text element) in the
+   Inkscape canvas.
+   
+   > **Warning**
+   > Make sure that you have actually selected the label and not just a group that
+   > contains the label.
 
-1. Open the object properties by pressing Shift+Ctrl+o.
+1. Open the object properties by pressing `Shift+Ctrl+o`.
 
 1. In the ID field, enter the FreeCAD attribute name. However, you have
    to translate the attribute name as follows:
     * Before every capital letter, insert an underscore.
     * Lowercase everything.
-    * For example, CuttingEdgeHeight in FreeCAD becomes `cutting_edge_height`
+    * For example, `CuttingEdgeHeight` in FreeCAD becomes `cutting_edge_height`
       in Inkscape.
       
       ![Inkscape object properties](inkscape-properties.png)
 
 That's it. Now you can place both files in your tool library path into
-the `shapes/` subfolder. You may also consider contributing your new tool
-to BTL - just send a pull request or open an issue with the files attached.
+the `shapes/` subfolder. Once you re-open BTL and press "+" to add a new
+tool, the Shape Browser opens. Your new shape should show up under the
+"My Tools" section in that window (on the bottom).
+
+Also consider contributing your new tool to BTL - just send a pull request or
+open an issue with the files attached.
