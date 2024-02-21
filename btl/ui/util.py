@@ -17,16 +17,19 @@ def qpixmap_from_png(byte_array, icon_size):
     pixmap = QtGui.QPixmap(icon_size)
     pixmap.fill(QtGui.Qt.transparent)
     pixmap.loadFromData(byte_array)
-    return pixmap.scaled(icon_size)
+    return pixmap.scaled(icon_size, QtCore.Qt.KeepAspectRatio)
 
-def qpixmap_from_svg(byte_array, icon_size):
-    svg_widget = QtSvg.QSvgWidget()
-    svg_widget.setFixedSize(icon_size)
-    svg_widget.load(byte_array)
-    svg_widget.setStyleSheet("background-color: rgba(0,0,0,0)")
+def qpixmap_from_svg(byte_array, icon_size, ratio=1.0):
+    render_size = QtCore.QSize(icon_size.width()*ratio, icon_size.height()*ratio)
 
-    # Convert the QSvgWidget to QPixmap
-    pixmap = QtGui.QPixmap(icon_size)
-    pixmap.fill(QtGui.Qt.transparent)
-    svg_widget.render(pixmap)
-    return pixmap
+    image = QtGui.QImage(render_size, QtGui.QImage.Format_ARGB32)
+    image.fill(QtGui.Qt.transparent)
+    painter = QtGui.QPainter(image)
+
+    data = QtCore.QXmlStreamReader(byte_array)
+    renderer = QtSvg.QSvgRenderer(data)
+    renderer.setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
+    renderer.render(painter)
+    painter.end()
+
+    return QtGui.QPixmap.fromImage(image)

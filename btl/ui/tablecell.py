@@ -49,6 +49,7 @@ class TwoLineTableCell(QtGui.QWidget):
         self.label_left.setAlignment(QtCore.Qt.AlignCenter|QtCore.Qt.AlignVCenter)
         self.label_left.setStyleSheet(style)
 
+        self.icon_size = QtCore.QSize(50, 60)
         self.icon_widget = QtGui.QLabel()
 
         style = "color: {}".format(fg_color.name())
@@ -116,12 +117,11 @@ class TwoLineTableCell(QtGui.QWidget):
         if not icon_type:
             return
         icon_ba = QtCore.QByteArray(icon_bytes)
-        icon_size = QtCore.QSize(50, 60)
 
         if icon_type == 'svg':
-            icon = qpixmap_from_svg(icon_ba, icon_size)
+            icon = qpixmap_from_svg(icon_ba, self.icon_size, self.devicePixelRatio())
         elif icon_type == 'png':
-            icon = qpixmap_from_png(icon_ba, icon_size)
+            icon = qpixmap_from_png(icon_ba, self.icon_size)
 
         self.set_icon(icon)
 

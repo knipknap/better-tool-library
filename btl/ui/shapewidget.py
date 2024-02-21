@@ -21,7 +21,7 @@ class ShapeWidget(QtGui.QWidget):
         icon_ba = QtCore.QByteArray(icon_bytes)
 
         if icon_type == 'svg':
-            icon = qpixmap_from_svg(icon_ba, self.icon_size)
+            icon = qpixmap_from_svg(icon_ba, self.icon_size, self.devicePixelRatio())
         elif icon_type == 'png':
             icon = qpixmap_from_png(icon_ba, self.icon_size)
 
