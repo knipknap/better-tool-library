@@ -2,7 +2,7 @@
 import os
 import sys
 import argparse
-from PySide import QtGui
+from PySide import QtCore, QtGui
 from btl import ToolDB, serializers
 from btl.const import resource_dir
 from btl.i18n import install_translator
@@ -34,6 +34,9 @@ def run():
     serializer_cls = serializers.serializers[args.format]
     serializer = serializer_cls(args.name)
 
+    QtGui.QApplication.setAttribute(QtCore.Qt.AA_ShareOpenGLContexts, True)
+    QtGui.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
+    QtGui.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
     app = QtGui.QApplication([])
     install_translator(app)
     window = LibraryUI(tool_db, serializer, standalone=True, parent=app)

@@ -13,8 +13,9 @@ def load_ui(ui_path, parent=None, custom_widgets=None):
     ui_file.close()
     return form
 
-def qpixmap_from_png(byte_array, icon_size):
-    pixmap = QtGui.QPixmap(icon_size)
+def qpixmap_from_png(byte_array, icon_size, ratio=1.0):
+    render_size = QtCore.QSize(icon_size.width()*ratio, icon_size.height()*ratio)
+    pixmap = QtGui.QPixmap(render_size)
     pixmap.fill(QtGui.Qt.transparent)
     pixmap.loadFromData(byte_array)
     return pixmap.scaled(icon_size, QtCore.Qt.KeepAspectRatio)
@@ -33,3 +34,16 @@ def qpixmap_from_svg(byte_array, icon_size, ratio=1.0):
     painter.end()
 
     return QtGui.QPixmap.fromImage(image)
+
+def get_pixmap_from_shape(shape, size, ratio):
+    icon_type, icon_bytes = shape.get_icon()
+    if not icon_type:
+        return None
+    icon_ba = QtCore.QByteArray(icon_bytes)
+
+    if icon_type == 'svg':
+        return qpixmap_from_svg(icon_ba, size, ratio)
+    elif icon_type == 'png':
+        return qpixmap_from_png(icon_ba, size, ratio)
+
+    return None

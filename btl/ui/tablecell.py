@@ -2,7 +2,7 @@ import re
 import FreeCAD
 from PySide import QtGui, QtSvg, QtCore
 from ..i18n import translate
-from .util import qpixmap_from_svg, qpixmap_from_png
+from .util import get_pixmap_from_shape
 
 def isub(text, old, repl_pattern):
     pattern = '|'.join(re.escape(o) for o in old)
@@ -113,17 +113,10 @@ class TwoLineTableCell(QtGui.QWidget):
         self.hbox.insertWidget(1, self.icon_widget, 0)
 
     def set_icon_from_shape(self, shape):
-        icon_type, icon_bytes = shape.get_icon()
-        if not icon_type:
-            return
-        icon_ba = QtCore.QByteArray(icon_bytes)
-
-        if icon_type == 'svg':
-            icon = qpixmap_from_svg(icon_ba, self.icon_size, self.devicePixelRatio())
-        elif icon_type == 'png':
-            icon = qpixmap_from_png(icon_ba, self.icon_size)
-
-        self.set_icon(icon)
+        ratio = self.devicePixelRatioF()
+        pixmap = get_pixmap_from_shape(shape, self.icon_size, ratio)
+        if pixmap:
+            self.set_icon(pixmap)
 
     def contains_text(self, text):
         for term in text.lower().split(' '):
