@@ -5,17 +5,19 @@ from PySide.QtCore import QT_TRANSLATE_NOOP
 from .. import ToolDB, serializers, __version__
 from ..const import icon_dir, translations_dir
 from .library import LibraryUI
+from .util import get_library_path, set_library_path
 
 FreeCADGui.addLanguagePath(translations_dir)
 ICON_FILE = os.path.join(icon_dir, 'tool-library.svg')
-prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Path")
+HAS_CAM = 'CAMWorkbench' in FreeCADGui.listWorkbenches()
 
 class OpenBTL:
     """Opens the Better Tool Library dialog."""
 
     def GetResources(self):
+        wb = 'CAM' if HAS_CAM else 'Path'
         return {
-            'Pixmap': 'Path_ToolTable',
+            'Pixmap': f'{wb}_ToolTable',
             'Accel': "P, T",
             "MenuText": QT_TRANSLATE_NOOP(
                 "btl", "ToolBit Library editor"
@@ -38,7 +40,7 @@ class BitLibraryReplacer(object): # See hack below
 
 def on_library_open_clicked():
     # Ensure that a library dir is defined in the preferences.
-    lib_dir = prefs.GetString("LastPathToolLibrary", "~/.btl/Library")
+    lib_dir = get_library_path()
     lib_base_dir = os.path.dirname(lib_dir)
     #FreeCAD.Console.PrintMessage("Library path is {}\n".format(lib_base_dir))
 
@@ -52,7 +54,7 @@ def on_library_open_clicked():
     dialog.show()
 
 def on_workbench_activated(workbench):
-    if workbench != 'PathWorkbench':
+    if workbench not in ('PathWorkbench', 'CAMWorkbench'):
         return
 
     # Create a toolbar.
@@ -75,4 +77,5 @@ def on_workbench_activated(workbench):
     print(f'Better Tool Library {__version__} loaded successfully.')
 
 FreeCADGui.addCommand("Path_ToolBitLibraryOpen", OpenBTL())
+FreeCADGui.addCommand("CAM_ToolBitLibraryOpen", OpenBTL())
 FreeCADGui.getMainWindow().workbenchActivated.connect(on_workbench_activated)

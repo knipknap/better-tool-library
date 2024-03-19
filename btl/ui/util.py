@@ -1,5 +1,22 @@
 import os
+import FreeCAD
 from PySide import QtCore, QtGui, QtUiTools, QtSvg
+
+default_lib_path = os.path.join("~", ".btl", "Library")
+
+def get_library_path():
+    prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/CAM")
+    if not prefs.IsEmpty():
+        return prefs.GetString("LastPathToolLibrary", default_lib_path)
+    prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Path")
+    return prefs.GetString("LastPathToolLibrary", default_lib_path)
+
+def set_library_path(path):
+    prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/CAM")
+    if not prefs.IsEmpty():
+        return prefs.SetString("LastPathToolLibrary", path)
+    prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Path")
+    return prefs.SetString("LastPathToolLibrary", path)
 
 def load_ui(ui_path, parent=None, custom_widgets=None):
     loader = QtUiTools.QUiLoader(parent)
