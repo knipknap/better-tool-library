@@ -8,8 +8,18 @@ def get_library_path():
     prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/CAM")
     if not prefs.IsEmpty():
         return prefs.GetString("LastPathToolLibrary", default_lib_path)
+    return get_old_library_path()
+
+def get_old_library_path():
     prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/Path")
     return prefs.GetString("LastPathToolLibrary", default_lib_path)
+
+def get_library_path_list():
+    """
+    Returns a list of possible paths in order of priority.
+    """
+    paths = [get_library_path(), get_old_library_path(), default_lib_path]
+    return list(dict.fromkeys(paths)) # Remove duplicates while preserving priority order
 
 def set_library_path(path):
     prefs = FreeCAD.ParamGet("User parameter:BaseApp/Preferences/Mod/CAM")

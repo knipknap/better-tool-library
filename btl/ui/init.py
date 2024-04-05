@@ -5,7 +5,7 @@ from PySide.QtCore import QT_TRANSLATE_NOOP
 from .. import ToolDB, serializers, __version__
 from ..const import icon_dir, translations_dir
 from .library import LibraryUI
-from .util import get_library_path, set_library_path
+from .util import get_library_path_list, set_library_path
 
 FreeCADGui.addLanguagePath(translations_dir)
 ICON_FILE = os.path.join(icon_dir, 'tool-library.svg')
@@ -39,16 +39,28 @@ class BitLibraryReplacer(object): # See hack below
         on_library_open_clicked()
 
 def on_library_open_clicked():
-    # Ensure that a library dir is defined in the preferences.
-    lib_dir = get_library_path()
-    lib_base_dir = os.path.dirname(lib_dir)
-    #FreeCAD.Console.PrintMessage("Library path is {}\n".format(lib_base_dir))
-
-    # Note: Creating the serializer automatically initializes the library
-    # directory.
     tool_db = ToolDB()
-    lib_base_dir = os.path.expanduser(lib_base_dir)
-    serializer = serializers.FCSerializer(lib_base_dir)
+
+    # Ensure that a library dir is defined in the preferences.
+    serializer = None
+    for lib_dir in get_library_path_list():
+        lib_base_dir = os.path.dirname(lib_dir)
+        lib_base_dir = os.path.expanduser(lib_base_dir)
+        #FreeCAD.Console.PrintMessage("Trying to use library path {}\n".format(lib_base_dir))
+
+        # Note: Creating the serializer automatically initializes the library
+        # directory.
+        try:
+            serializer = serializers.FCSerializer(lib_base_dir)
+            break
+        except OSError as err:
+            msg = f'Error writing to tool directory {lib_base_dir}: {err}.\n'
+            FreeCAD.Console.PrintUserError(msg)
+
+    if serializer is None:
+        FreeCAD.Console.PrintUserError(
+            "Unable to open Better Tool Library, because no writable tool directory was found.")
+        return
 
     dialog = LibraryUI(tool_db, serializer, parent=FreeCADGui.getMainWindow())
     dialog.show()
