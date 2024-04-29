@@ -69,10 +69,14 @@ def on_workbench_activated(workbench):
     if workbench not in ('PathWorkbench', 'CAMWorkbench'):
         return
 
-    # Create a toolbar.
+    # Create a toolbar if it does not yet exist.
+    tb_name = "btl_toolbar"
     mw = FreeCADGui.getMainWindow()
+    toolbar = mw.findChild(QtGui.QToolBar, tb_name)
+    if toolbar:
+        return
     toolbar = QtGui.QToolBar(mw)
-    toolbar.setObjectName("btl_toolbar")
+    toolbar.setObjectName(tb_name)
     mw.addToolBar(toolbar)
 
     # Add the library editor button.
