@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from PySide.QtCore import Qt, QObject, QEvent
 from PySide.QtGui import QApplication
-from PySide import QtGui, QtCore
+from PySide import QtGui, QtCore, __version__ as pyside_version
 from ..i18n import translate
 from ..machine import Machine
 from ..feeds import FeedCalc
@@ -12,6 +12,7 @@ from ..units import convert
 from .util import load_ui
 from .spinbox import DistanceSpinBox
 from .machineeditor import MachineEditor
+from pip._internal.metadata import pkg_resources
 
 __dir__ = os.path.dirname(__file__)
 ui_path = os.path.join(__dir__, "feedsandspeeds.ui")
@@ -302,7 +303,10 @@ class FeedsAndSpeedsWidget(QtGui.QWidget):
         params = sorted(params.items(), key=lambda x: x[0].lower())
         font = QtGui.QFont()
         font.setBold(True)
-        font.setWeight(75)
+        if pkg_resources.parse_version(pyside_version) >= pkg_resources.parse_version("6.0.0"):  # PySide6
+            font.setWeight(QtGui.QFont.Weight.Bold)
+        else: # PySide5
+            font.setWeight(75)
         for row, (name, param) in enumerate(params):
             # First column: Name.
             label = name.replace('_', ' ').title()
