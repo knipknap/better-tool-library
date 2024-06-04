@@ -1,6 +1,7 @@
 import os
 import FreeCAD
-from PySide import QtCore, QtGui, QtUiTools, QtSvg
+from PySide import QtCore, QtGui, QtUiTools, QtSvg, __version__ as pyside_version
+from pip._internal.metadata import pkg_resources
 
 default_lib_path = os.path.join("~", ".btl", "Library")
 
@@ -30,7 +31,11 @@ def set_library_path(path):
 
 def load_ui(ui_path, parent=None, custom_widgets=None):
     loader = QtUiTools.QUiLoader(parent)
-    loader.setWorkingDirectory(os.path.dirname(__file__))
+    dir_path = os.path.dirname(__file__)
+    if pkg_resources.parse_version(pyside_version) >= pkg_resources.parse_version("6.0.0"):
+        loader.setWorkingDirectory(QtCore.QDir(dir_path))  # PySide6
+    else:
+        loader.setWorkingDirectory(dir_path)  # PySide5
     if custom_widgets:
         for widget in custom_widgets:
             loader.registerCustomWidget(widget)
@@ -54,7 +59,12 @@ def qpixmap_from_svg(byte_array, icon_size, ratio=1.0):
     image.fill(QtGui.Qt.transparent)
     painter = QtGui.QPainter(image)
 
-    data = QtCore.QXmlStreamReader(byte_array)
+    if pkg_resources.parse_version(pyside_version) >= pkg_resources.parse_version("6.0.0"):
+        buffer = QtCore.QBuffer(byte_array)  # PySide6
+        buffer.open(QtCore.QIODevice.ReadOnly)
+        data = QtCore.QXmlStreamReader(buffer)
+    else:
+        data = QtCore.QXmlStreamReader(byte_array.data())  # PySide5
     renderer = QtSvg.QSvgRenderer(data)
     renderer.setAspectRatioMode(QtCore.Qt.KeepAspectRatio)
     renderer.render(painter)

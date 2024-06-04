@@ -1,5 +1,7 @@
 from functools import partial
-from PySide import QtGui, QtSvg, QtCore
+from PySide import QtGui, QtSvg, QtCore, __version__ as pyside_version
+from pip._internal.metadata import pkg_resources
+
 from ..shape import get_property_label_from_name
 from ..i18n import translate
 from ..params import DistanceParam
@@ -116,7 +118,12 @@ class ToolProperties(PropertyWidget):
         label = QtGui.QLabel(lbl)
         self.grid.addWidget(label, row, 0)
         label = QtGui.QLabel(tool.id)
-        label.setTextInteractionFlags(QtGui.Qt.TextSelectableByKeyboard \
+        if pkg_resources.parse_version(pyside_version) >= pkg_resources.parse_version("6.0.0"):  # PySide6
+            label.setTextInteractionFlags(QtCore.Qt.TextSelectableByKeyboard \
+                                         |QtCore.Qt.TextSelectableByMouse)
+            label.setFocusPolicy(QtCore.Qt.StrongFocus)
+        else:  # PySide5
+            label.setTextInteractionFlags(QtGui.Qt.TextSelectableByKeyboard \
                                      |QtGui.Qt.TextSelectableByMouse \
                                      |QtGui.Qt.StrongFocus)
         self.grid.addWidget(label, row, 1)
