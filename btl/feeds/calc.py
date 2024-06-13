@@ -298,7 +298,8 @@ class FeedCalc(object):
             result = minimize(self._evaluate_point,
                               point,
                               bounds=bounds,
-                              method='SLSQP',  # evaluated fastest
+                              method='L-BFGS-B', # evaluated best with constraints with Issue https://github.com/knipknap/better-tool-library/issues/29
+                              #method='SLSQP',  # evaluated fastest but not always the best with constraints
                               #method='Powell',
                               #method='Nelder-Mead',
                               #method='TNC',
