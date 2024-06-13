@@ -295,15 +295,27 @@ class FeedCalc(object):
         np.set_printoptions(formatter={'float': lambda x: "{0:0.10f}".format(x)})
         with warnings.catch_warnings():  # ignore "out-of bounds" warning
             warnings.simplefilter("ignore", category=RuntimeWarning)
-            result = minimize(self._evaluate_point,
-                              point,
-                              bounds=bounds,
-                              method='L-BFGS-B', # evaluated best with constraints with Issue https://github.com/knipknap/better-tool-library/issues/29
-                              #method='SLSQP',  # evaluated fastest but not always the best with constraints
-                              #method='Powell',
-                              #method='Nelder-Mead',
-                              #method='TNC',
-                              tol=0.001)
+            methods = [ 'SLSQP', 'L-BFGS-B', 'Powell', 'Nelder-Mead', 'TNC'] # Added multiple methods to fallback on if one fails See issue https://github.com/knipknap/better-tool-library/issues/29
+            result = None
+
+            for method in methods:
+                try:
+                    result = minimize(self._evaluate_point,
+                                      point,
+                                      bounds=bounds,
+                                      method=method,
+                                      tol=0.001)
+                    if result.success:
+                        break
+                except Exception as e:
+                    print(f"Optimization failed with method {method}. Error: {str(e)}")
+                    continue
+
+            if result is None or not result.success:
+                print("Optimization failed with all methods.")
+            else:
+                print(f"Optimization succeeded with method {method}.")
+
 
         # Load & recalculate the best result.
         self.speed.v, self.chipload.v, self.woc.v, self.doc.v = result.x
