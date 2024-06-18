@@ -130,8 +130,8 @@ class ToolProperties(PropertyWidget):
 
         if self.tool_no is not None:
             spinner = QtGui.QSpinBox()
-            spinner.setValue(self.tool_no or 0)
             spinner.setMaximum(99999999)
+            spinner.setValue(self.tool_no or 0)
             spinner.valueChanged.connect(self.toolNoChanged.emit)
             lbl = translate('btl', 'Tool Number')
             self._add_property_from_widget(spinner, lbl, self.tool_no)
