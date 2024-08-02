@@ -74,7 +74,7 @@ def on_workbench_activated(workbench):
     mw = FreeCADGui.getMainWindow()
     toolbar = mw.findChild(QtGui.QToolBar, tb_name)
     if toolbar:
-        return
+        toolbar.parent = None
     toolbar = QtGui.QToolBar(mw)
     toolbar.setObjectName(tb_name)
     mw.addToolBar(toolbar)
