@@ -19,6 +19,7 @@ class ToolEditor(QtGui.QWidget):
         self.serializer = serializer
         self.tool = tool
         self.tool_no = tool_no
+        self.default_title = self.form.windowTitle()
 
         nameWidget = QtGui.QLineEdit(tool.get_label())
         label = translate('btl', 'Tool name')
@@ -26,6 +27,8 @@ class ToolEditor(QtGui.QWidget):
         self.form.vBox.insertWidget(0, nameWidget)
         nameWidget.setFocus()
         nameWidget.textChanged.connect(tool.set_label)
+        nameWidget.textChanged.connect(self._update)
+        self._update()
 
         tool_tab_layout = self.form.toolTabLayout
         widget = ShapeWidget(tool.shape)
@@ -59,6 +62,13 @@ class ToolEditor(QtGui.QWidget):
 
         self.form.plainTextEditNotes.setPlainText(tool.get_notes())
         self.form.plainTextEditNotes.textChanged.connect(self._on_notes_changed)
+
+    def _update(self):
+        title = self.default_title
+        tool_name = self.tool.get_label()
+        if tool_name:
+            title = '{} - {}'.format(tool_name, title)
+        self.form.setWindowTitle(title)
 
     def _on_tab_switched(self, index):
         if index == self.feeds_tab_idx:
