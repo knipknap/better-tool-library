@@ -10,6 +10,7 @@ from .util import get_library_path_list, set_library_path
 FreeCADGui.addLanguagePath(translations_dir)
 ICON_FILE = os.path.join(icon_dir, 'tool-library.svg')
 HAS_CAM = 'CAMWorkbench' in FreeCADGui.listWorkbenches()
+TOOLBAR_NAME = "btl_toolbar"
 
 class OpenBTL:
     """Opens the Better Tool Library dialog."""
@@ -65,18 +66,24 @@ def on_library_open_clicked():
     dialog = LibraryUI(tool_db, serializer, parent=FreeCADGui.getMainWindow())
     dialog.show()
 
+def _remove_toolbars(mw):
+    while True:
+        toolbar = mw.findChild(QtGui.QToolBar, TOOLBAR_NAME)
+        if not toolbar:
+            break
+        mw.removeToolBar(toolbar)
+        toolbar.setObjectName("")
+        toolbar.deleteLater()
+
 def on_workbench_activated(workbench):
+    mw = FreeCADGui.getMainWindow()
     if workbench not in ('PathWorkbench', 'CAMWorkbench'):
+        _remove_toolbars(mw)
         return
 
     # Create a toolbar if it does not yet exist.
-    tb_name = "btl_toolbar"
-    mw = FreeCADGui.getMainWindow()
-    toolbar = mw.findChild(QtGui.QToolBar, tb_name)
-    if toolbar:
-        toolbar.parent = None
     toolbar = QtGui.QToolBar(mw)
-    toolbar.setObjectName(tb_name)
+    toolbar.setObjectName(TOOLBAR_NAME)
     mw.addToolBar(toolbar)
 
     # Add the library editor button.
