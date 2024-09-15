@@ -70,7 +70,8 @@ Before using the Feeds & Speeds calculator, you have to let BTL know your machin
 This is done as follows:
 
 - Open BTL by clicking the icon in the task bar:
-  ![Toolbar](media/toolbar.png)
+
+![Toolbar](../media/toolbar.png)
  
 - If not done already, create a library (File -> Create Library) and your tool bit first (File -> Create Tool)
 - Once the tool is created, open the tool editor by double-clicking on the tool in the BTL main window.
