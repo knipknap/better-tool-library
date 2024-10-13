@@ -9,14 +9,14 @@ from .util import get_library_path_list, set_library_path
 
 FreeCADGui.addLanguagePath(translations_dir)
 ICON_FILE = os.path.join(icon_dir, 'tool-library.svg')
-HAS_CAM = 'CAMWorkbench' in FreeCADGui.listWorkbenches()
 TOOLBAR_NAME = "btl_toolbar"
 
 class OpenBTL:
     """Opens the Better Tool Library dialog."""
 
     def GetResources(self):
-        wb = 'CAM' if HAS_CAM else 'Path'
+        has_cam = 'CAMWorkbench' in FreeCADGui.listWorkbenches()
+        wb = 'CAM' if has_cam else 'Path'
         return {
             'Pixmap': f'{wb}_ToolTable',
             'Accel': "P, T",
