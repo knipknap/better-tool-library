@@ -82,15 +82,17 @@ def on_workbench_activated(workbench):
         return
 
     # Create a toolbar if it does not yet exist.
-    toolbar = QtGui.QToolBar(mw)
-    toolbar.setObjectName(TOOLBAR_NAME)
-    mw.addToolBar(toolbar)
+    toolbar = mw.findChild(QtGui.QToolBar, TOOLBAR_NAME)
+    if not toolbar:
+        toolbar = QtGui.QToolBar(mw)
+        toolbar.setObjectName(TOOLBAR_NAME)
+        mw.addToolBar(toolbar)
 
-    # Add the library editor button.
-    tool_button = QtGui.QToolButton(mw)
-    tool_button.setIcon(QtGui.QPixmap(ICON_FILE))
-    tool_button.clicked.connect(on_library_open_clicked)
-    toolbar.addWidget(tool_button)
+        # Add the library editor button.
+        tool_button = QtGui.QToolButton(mw)
+        tool_button.setIcon(QtGui.QPixmap(ICON_FILE))
+        tool_button.clicked.connect(on_library_open_clicked)
+        toolbar.addWidget(tool_button)
 
     # Hack: Replace FreeCAD tool library by BTL by monkey-patching
     # the path workbench.
