@@ -1,13 +1,11 @@
 # Better Tool Library (BTL)
 
-Better Tool Library (BTL) is a FreeCAD addon (plugin) that replaces the built-in tool library
-for the Path workbench.
+Better Tool Library (BTL) is a [FreeCAD](https://www.freecad.org/) addon (plugin) that replaces the built-in tool library
+for the CAM (previously known as the 'Path') workbench.
 It also provides a standalone tool if you want to use your library outside of FreeCAD.
 
-> **Warning**
-> I advise you make a backup of your tool library. I guarantee for nothing,
-> there may be bugs.
-
+> [!WARNING]
+> I advise you make a backup of your tool library. I guarantee for nothing, there may be bugs.
 
 ## Feature Comparison
 
@@ -49,14 +47,14 @@ It also provides a standalone tool if you want to use your library outside of Fr
 
 ### Installation via the FreeCAD addon manager
 
-- Open FreeCAD
-- Open the Addon Manager via *Tools -> Addon manager*
-- Search for *Better Tool Library*
-- Click it
-- Click *Install*
+- Start FreeCAD
+- Open the [Addon Manager](https://wiki.freecad.org/Std_AddonMgr) via *Tools -> Addon manager*
+- Search for *Better Tool Library* and click on it
+- Press *Install*
+- You should see a prompt to restart FreeCAD, choose to restart
 
-To run it, just **open the Path workbench** and there should be a new icon at the
-end of the toolbar:
+To run it, start FreeCAD and simply **open the CAM workbench**.  
+There should be a new icon at the end of the toolbar:
 
 ![Toolbar](media/toolbar.png)
 
