@@ -297,7 +297,7 @@ class Tool(object):
         diameter = self.shape.get_diameter()
         fluted_inertia = (math.pi * ((diameter*0.8) / 2)**4) / 4
 
-        # Moment of inertia equation for a SOLID round beam (shank partion of the end mill)
+        # Moment of inertia equation for a SOLID round beam (shank portion of the end mill)
         # https://en.wikipedia.org/wiki/List_of_area_moments_of_inertia
         shank_d = self.shape.get_shank_diameter()
         if shank_d:
