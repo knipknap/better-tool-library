@@ -44,7 +44,7 @@ It also provides a standalone tool if you want to use your library outside of Fr
 
 ### Prerequisites
 
-- Better Tool Library (BTL) is compatible with FreeCAD 0.19, 0.21, and 0.22.
+- Better Tool Library (BTL) is compatible with any FreeCAD version greater than or equal to version 0.19.
 - If you installed FreeCAD from source, you may also need to install the [Python requirements](requirements.txt). If you are using the Appimage this step is not necessary, as BTL has no requirements that are not already included in the Appimage.
 
 ### Installation via the FreeCAD addon manager
