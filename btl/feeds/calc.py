@@ -328,7 +328,7 @@ class FeedCalc(object):
 
           (error_distance, error, params)
 
-        - error (str): An error message, if the result is invalid. None otherwse.
+        - error (str): An error message, if the result is invalid. None otherwise.
         - params (dict): The list of params, as stored in .all_params.
         """
         random.seed(1) # we don't want true randomness, rather reproducible results

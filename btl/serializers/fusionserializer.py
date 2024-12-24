@@ -26,7 +26,7 @@ MATERIAL_MAP = {
 #  I.E.: chamfer mills & spot_drills
 # Custom form tools, thread mills, and taps are not supported yet
 # (thread mills can be single or multi-pitch, we would need to generate the
-# shape files at runtime in order to suppport them properly)
+# shape files at runtime in order to support them properly)
 SHAPE_FILES = {
     # milling
     "ball end mill": "ball_end_mill",

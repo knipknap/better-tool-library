@@ -347,7 +347,7 @@ class FCSerializer(Serializer):
         tool = Tool(attrs['name'], shape, id=id, filename=filename)
 
         # Load known attributes. Since the serialized file does not indicate
-        # param types, we need to explicitely load known non-str attributes.
+        # param types, we need to explicitly load known non-str attributes.
         tool_attrs = attrs.get("attribute", {})
         stickout = tool_attrs.pop('btl-stickout', None)
         if stickout:
