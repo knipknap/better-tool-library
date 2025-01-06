@@ -102,7 +102,7 @@ if __name__ == '__main__':
             self.setGeometry(100, 100, 500, 250)
 
             layout = QVBoxLayout()
-            self.curve_widget = CurveFittingWidget()
+            self.curve_widget = CurveWidget()
             layout.addWidget(self.curve_widget)
 
             central_widget = QWidget()
