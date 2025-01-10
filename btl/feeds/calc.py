@@ -23,6 +23,29 @@ class FloatConst(FloatParam):
     is_internal = True
 
 class FeedCalc(object):
+    """
+    The general functionality of the calculator.
+    The concept can be explained as follows:
+    
+      1. Choose a random speed, chipload, depth of cut, and width of cut.
+      2. Calculate the resulting behavior of a machine/endmill/material at those values.
+         This includes calculating the following:
+            - Required feed
+            - Required power and torque
+            - Resulting tool deflection
+            - Dozens of additional parameters
+      3. Check for hard constraints. For example, if the tool deflection is so large that
+         the tool would break, dismiss the result and repeat from step 1.
+      4. Rate the result by an "error distance". This is a "quality score" calculated by
+         how far away the values are from a desired outcome. Examples:
+            - Desirable: High material removal rate.
+            - Undesirable: High power requirement, low depth of cut, etc.
+      5. "Randomly" change the input parameters and go back to step 1.
+         This is not actually random, but based on a mathematical minimization algorithm.
+         I.e. if a random change resulted in a better result, change the input values in
+         the same direction. Otherwise, change another dimension (=input value) randomly.
+      6. Choose the result with the smallest error distance.
+    """
     def __init__(self, machine, endmill, material, op=operation.Slotting):
         self.machine = machine
         self.endmill = endmill
