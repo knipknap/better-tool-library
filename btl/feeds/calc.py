@@ -40,10 +40,10 @@ class FeedCalc(object):
          how far away the values are from a desired outcome. Examples:
             - Desirable: High material removal rate.
             - Undesirable: High power requirement, low depth of cut, etc.
-      5. "Randomly" change the input parameters and go back to step 1.
+      5. "Randomly" change the input parameters and go back to step 2.
          This is not actually random, but based on a mathematical minimization algorithm.
          I.e. if a random change resulted in a better result, change the input values in
-         the same direction. Otherwise, change another dimension (=input value) randomly.
+         the same direction. Otherwise, change another dimension (=input value).
       6. Choose the result with the smallest error distance.
     """
     def __init__(self, machine, endmill, material, op=operation.Slotting):
