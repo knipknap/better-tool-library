@@ -6,9 +6,14 @@ calculator that "renders and simulates" your tool.
 
 It can also visualize the result.
 
-Credits: The algorithm is based on the work done by Bryan Turner.
+## Credits
+
+The algorithm was originally based on the work done by Bryan Turner.
 Check out [his work](https://github.com/brturn/feeds-and-speeds)!
 
+While the specific algorithm has since been substantially changed in BTL, the
+high level concept remains the same: Using mathematical minimization over a
+set of random input values to find the best possible outcome.
 
 ## Features
 
