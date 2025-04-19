@@ -8,23 +8,21 @@ from .library import LibraryUI
 from .util import get_library_path_list, set_library_path
 
 FreeCADGui.addLanguagePath(translations_dir)
-ICON_FILE = os.path.join(icon_dir, 'tool-library.svg')
+ICON_FILE = os.path.join(icon_dir, "tool-library.svg")
 TOOLBAR_NAME = "btl_toolbar"
 
 class OpenBTL:
     """Opens the Better Tool Library dialog."""
 
     def GetResources(self):
-        has_cam = 'CAMWorkbench' in FreeCADGui.listWorkbenches()
-        wb = 'CAM' if has_cam else 'Path'
         return {
-            'Pixmap': f'{wb}_ToolTable',
-            'Accel': "P, T",
+            "Pixmap": ICON_FILE,
+            "Accel": "P, T",
             "MenuText": QT_TRANSLATE_NOOP(
-                "btl", "ToolBit Library editor"
+                "btl", "ToolBit Library editor BTL"
             ),
             "ToolTip": QT_TRANSLATE_NOOP(
-                "btl", "Open an editor to manage ToolBit libraries"
+                "btl", "Open an editor to manage ToolBit libraries BTL"
             ),
             "CmdType": "ForEdit",
         }
@@ -55,7 +53,7 @@ def on_library_open_clicked():
             serializer = serializers.FCSerializer(lib_base_dir)
             break
         except OSError as err:
-            msg = f'Error writing to tool directory {lib_base_dir}: {err}.\n'
+            msg = f"Error writing to tool directory {lib_base_dir}: {err}.\n"
             FreeCAD.Console.PrintUserError(msg)
 
     if serializer is None:
@@ -77,13 +75,17 @@ def _remove_toolbars(mw):
 
 def on_workbench_activated(workbench):
     mw = FreeCADGui.getMainWindow()
-    if workbench not in ('PathWorkbench', 'CAMWorkbench'):
+    if workbench != PathCamWbName:
         _remove_toolbars(mw)
         return
 
     # Create a toolbar if it does not yet exist.
     toolbar = mw.findChild(QtGui.QToolBar, TOOLBAR_NAME)
-    if not toolbar:
+
+    toolBatItems = sum(FreeCADGui.getWorkbench(PathCamWbName).getToolbarItems().values(), [])
+    btlInToolBar = True if (btlCommandName in toolBatItems) else False
+
+    if not btlInToolBar and not toolbar:
         toolbar = QtGui.QToolBar(mw)
         toolbar.setObjectName(TOOLBAR_NAME)
         mw.addToolBar(toolbar)
@@ -99,8 +101,14 @@ def on_workbench_activated(workbench):
     from Path.Tool.Gui import BitLibrary
     BitLibrary.ToolBitLibrary = BitLibraryReplacer
 
-    print(f'Better Tool Library {__version__} loaded successfully.')
+    print(f"Better Tool Library {__version__} loaded successfully.")
 
-FreeCADGui.addCommand("Path_ToolBitLibraryOpen", OpenBTL())
-FreeCADGui.addCommand("CAM_ToolBitLibraryOpen", OpenBTL())
+if "CAMWorkbench" in FreeCADGui.listWorkbenches():
+    PathCamWbName = "CAMWorkbench"
+    btlCommandName = "CAM_ToolBitLibraryOpenBTL"
+elif "PathWorkbench" in FreeCADGui.listWorkbenches():
+    PathCamWbName = "PathWorkbench"
+    btlCommandName = "Path_ToolBitLibraryOpen"
+
+FreeCADGui.addCommand(btlCommandName, OpenBTL())
 FreeCADGui.getMainWindow().workbenchActivated.connect(on_workbench_activated)
