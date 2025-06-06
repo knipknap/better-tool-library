@@ -1,3 +1,7 @@
+> [!WARNING]
+> 2025-06-06: BTL IS DEPRECATED AND NO LONGER SUPPORTED AFTER FREECAD 1.01! The core features have been added directly into FreeCAD, so I recommend you remove the addon. While not all features are available in FC yet, I will add improvements directly into FreeCAD from now on.
+
+
 # Better Tool Library (BTL)
 
 Better Tool Library (BTL) is a [FreeCAD](https://www.freecad.org/) addon (plugin) that replaces the built-in tool library
