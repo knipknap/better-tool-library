@@ -2,6 +2,7 @@
 <package format="1">
   <name>Better Tool Library</name>
   <description>A FreeCAD Path Addon to manage your tool library.</description>
+  <icon>btl/resources/icons/tool-library.svg</icon>
   <version>0.9.9</version>
   <maintainer email="knipknap@gmail.com">Samuel Abels</maintainer>
   <license file="LICENSE">MIT</license>
@@ -12,7 +13,6 @@
     <workbench>
       <classname>BetterToolLibrary</classname>
       <subdirectory>./</subdirectory>
-      <icon>resources/icons/tool-library.svg</icon>
       <freecadmin>0.19.0</freecadmin>
     </workbench>
   </content>
